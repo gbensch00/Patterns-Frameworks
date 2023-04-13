@@ -10,7 +10,7 @@ public class GameController {
   private GameModel model;
   private GameView view;
   
-
+//Testkommentar von Ulf
   public GameController(GameModel model, GameView view) {
     this.model = model;
     this.view = view;
