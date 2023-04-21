@@ -10,7 +10,7 @@ Dieser Zwischenstand wird auch in Moodle eingereicht.
 
 30. Juni 2023
 -> Architektur
-
+ 
 30. Juni 2023
 -> Schnittstellen
 

@@ -16,7 +16,7 @@ Welches Pattern (Laut Tony: Wenn MVC, dann wäre Observer Pattern zum Teil schon
 
 Welches UI-Framework?
 -> JavaFX
-
+ 
 Zusammenarbeit?
 -> Git 
 
