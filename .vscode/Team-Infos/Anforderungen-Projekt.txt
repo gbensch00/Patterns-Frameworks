@@ -1,0 +1,57 @@
+
+Welches Spiel?
+->
+
+Welche Architektur (MVC?)?
+->
+
+Welche Packages?
+->
+
+Welche Klassen?
+->
+
+Welches Pattern (Laut Tony: Wenn MVC, dann wäre Observer Pattern zum Teil schon dabei)?
+->
+
+Welches UI-Framework?
+-> JavaFX
+
+Zusammenarbeit?
+-> Git 
+
+Einspielung Code?
+-> im Branch einspielen
+-> Gemeinsam (Mittwochs)
+-----------------------------------------------------------------------
+
+Funktionale Anforderungen
+-> Grundsätzlich soll ein einfaches Multiplayer-Spiel für mind. 2 Spieler realisiert werden.
+-> Als Projektidee wird die Umsetzung oder Abwandlung eines bekannten Arcade-Klassikers vorgeschlagen, 
+z.B. Tetris, Tank, Snake, Pac-Man, Dig Dug oder Blobby Volley. Es kann auch ein Brettspiel oder ein Quizspiel 
+umgesetzt werden, wobei das GUI geeignet zu animieren bzw. das Spiel um nebenläufige Ereignisse zu erweitern ist. 
+Die Spielregeln des Spiels können gerne individuell angepasst werden. Es gibt viel Freiraum für kreative Ideen; die 
+finale Spielidee ist mit dem Modulbetreuer abzustimmen.
+-> Ein Spieler kann sich registrieren, einloggen und ausloggen.
+-> Für jeden Spieler wird eine Historie seiner gespielten Spiele erfasst und mittels einfacher Auswertungen dargestellt 
+-> Server-Komponente (Programmiersprache Java): Die registrierten Spieler und ihre Spielhistorie werden zentral in einer 
+(relationalen) Datenbank gespeichert. Es wird ein API für den Datenaustausch mit den Clients angeboten, über das Daten im 
+JSON- oder XML-Format ausgetauscht werden.
+-> Client-Komponente (JavaFX oder mobil)
+Der Client bietet ein grafisches UI und setzt die obigen funktionalen Anforderungen um. Für den Client ist JavaFX zu nutzen, 
+alternativ das Android Java Framework.
+
+Anforderungen aus Projekt (min. Zwei)
+Vorzugsweise bringt Ihr eigene Ideen für interessante Features oder Aspekte ein, die wir dann frühzeitig abstimmen. Die folgenden Liste enthält Beispiele für Zusatzanforderungen:
+
+-> Das GUI kann vom Spieler in nicht-trivialem Umfang individualisiert werden (z.B. über Skins). Die Einstellungen werden auf dem Server gespeichert.
+-> Es wird ein Framework für das objekt-relationale Mapping eingesetzt.
+-> Es werden auch Bilder zwischen Client und Server ausgetauscht (z.B. die Profilbilder der Anwender)
+-> Es wird eine fortgeschrittene Spielarchitektur umgesetzt, z.B. ECS.
+-> Die Authentifizierung erfolgt über JSON Web Tokens (JWT).
+-> Es gibt eine sinnvolle Verwendung von Threading außerhalb des GUI-Frameworks.
+
+Sonstige Anforderungen
+-> Die Projekte müssen eine README enthalten, die mindestens beschreibt, wie die Anwendung gebaut werden kann und welche 
+Voraussetzungen gelten (Java/Maven/Gradle Versionen etc.). Auch Informationen darüber, wie Clients und Server gestartet 
+werden, so dass sie miteinander funktionieren sind ggf. zu dokumentieren.

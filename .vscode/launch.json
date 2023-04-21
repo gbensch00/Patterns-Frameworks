@@ -4,6 +4,7 @@
     // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "type": "java",
             "name": "Current File",
@@ -15,8 +16,8 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
-            "projectName": "Patterns-Frameworks_2f692847",
-            "vmArgs": "--module-path /Users/tobiastrentzsch/Downloads/javafx-sdk-17.0.6/lib --add-modules javafx.controls,javafx.fxml",
+            "projectName": "Patterns-Frameworks_d98060eb",
+            "vmArgs": "--module-path /Users/ulfwillig/Downloads/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }
