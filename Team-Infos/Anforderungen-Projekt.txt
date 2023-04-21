@@ -1,9 +1,21 @@
 
 Welches Spiel?
+-> R-Type (Space) Horizontal
+
+----------------------------------
+|                                 |
+|   |   .   .   .                 |
+|                       |-|       |
+|                                 |
+|       |   .  .   .              |
+|                                 |
+----------------------------------
+
+Genaue Spielbeschreibung (Punktzahl, Tod, Zeit)?
 ->
 
-Welche Architektur (MVC?)?
-->
+Welche Architektur?
+-> MVC
 
 Welche Packages?
 ->
@@ -11,8 +23,11 @@ Welche Packages?
 Welche Klassen?
 ->
 
-Welches Pattern (Laut Tony: Wenn MVC, dann wäre Observer Pattern zum Teil schon dabei)?
+Welches Pattern (Laut Tony: Wenn MVC, dann wäre Observer Pattern zum Teil schon dabei bzw. geht es in die Richtung)?
 ->
+
+Welchen Server (XAMP, Netty, Jetty etc.) und wie Verbindung zum Datenaustausch (JSON, XML etc.)?
+-> 
 
 Welches UI-Framework?
 -> JavaFX
@@ -24,6 +39,40 @@ Einspielung Code?
 -> im Branch einspielen
 -> Gemeinsam (Mittwochs)
 -----------------------------------------------------------------------
+
+Tätigkeiten ausstehend
+
+- Anfertigung Mockups 
+- Besorgung Spielfiguren (Sprite?) und Hintergründe
+- Umsetzung in Scenebuilder (mit Controller-Klassen)
+- Klassenhierarchie erstellen (Klassendiagramm)
+- Spiel
+    
+    -> Spiellogik: Spieler, Gegner, Kollisionserkennung, ein Schuss oder mehrere, Punkteberechnung usw. 
+    -> Game: Verwaltet den Spielzustand und die Aktualisierung des Spielstands
+    -> Spieler: Spieler (Namen, ID und Punktestand, Bild), Gegner
+    -> Controller-Klassen
+    -> Anzeige Punktestand
+    -> Login und Registrierung (XML, JSON)
+    -> Netzwerk: Kommunikation zwischen den Spielern über das Netzwerk (JSON, XML)
+    -> Datenbank: Speicherung und den Zugriff auf die Spielerdaten (JDBC-Framework und SQLite?)
+    -> Database: Verwaltet den Zugriff auf die Datenbank.
+
+- Erstellung von UML-Komponenten- und Paketdiagrammen
+- Wenn noch Zeit: Chat-Funktion, Skins für Player, Sounds für Schießen
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Funktionale Anforderungen
 -> Grundsätzlich soll ein einfaches Multiplayer-Spiel für mind. 2 Spieler realisiert werden.
