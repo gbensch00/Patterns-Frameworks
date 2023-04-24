@@ -1,0 +1,5 @@
+
+Themen die in der Prüfung abgefragt werden (Stand 20.04.2023)
+
+-> Architekturmuster
+-> MVC

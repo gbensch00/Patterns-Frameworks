@@ -1,0 +1,13 @@
+
+-> Erkennbare und begründete logische Architektur
+-> Inhaltlich begründeter Einsatz mindestens eines Entwurfsmusters
+-> sinnvolle Nebenläufigkeit (kann auch innerhalb FX erfolgen)
+-> Online-Gruppenarbeit mit Git als Versionierungsverwaltung
+
+-> Anlässe für Nebenläufigkeit ergeben sich typischerweise durch das unabhängige zeitgleiche Agieren mehrerer 
+Spielgegenstände oder Spieler.
+
+-> Anlässe für eine Netzwerkverbindung ergeben sich z.B., indem
+das Spiel als server- oder P2P-basiertes Multiplayer-Spiel konzipiert wird eine serverbasierte Spielerauthentifizierung erfolgt
+ein Highscore-Katalog auf einem Server gespeichert wird Level-Daten oder Zwischenstände von einem Server geladen werden
+eine begleitende Chat-Kommunikation realisiert wird
