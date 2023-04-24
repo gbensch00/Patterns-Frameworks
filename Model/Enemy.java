@@ -1,16 +1,19 @@
     package Model;
-    
     public class Enemy {
     private int health;
     private int speed;
     private int xPos;
     private int yPos;
+    private int width;
+    private int height;
 
-    public Enemy(int health, int speed, int xPos, int yPos) {
+    public Enemy(int health, int speed, int xPos, int yPos, int width, int height) {
         this.health = health;
         this.speed = speed;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.width = width;
+        this.height = height;
     }
 
     public int getHealth() {
@@ -29,12 +32,20 @@
         return yPos;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public void setYPos(int yPos) {
         this.yPos = yPos;
     }
 
     public void move() {
-        yPos += speed;
+        xPos -= speed;
     }
 
     public void takeDamage(int damage) {
