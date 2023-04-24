@@ -20,6 +20,8 @@ import javafx.scene.control.TextField;
 import Controller.GameController;
 import Model.GameModel;
 import View.GameView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class LoginController {
 
@@ -48,7 +50,13 @@ public class LoginController {
 	private Button createUserAccount;
 	@FXML
 	private Button abbrechenCreateUserAccount;
-	
+	@FXML
+	private TextField RegisterUserNameField;
+	@FXML
+	private PasswordField RegisterUserPasswordField;
+	@FXML
+	private Button RegisterButton;
+
 	@FXML
 	private Button devLogin;
 
@@ -137,7 +145,7 @@ public class LoginController {
 		stage.show();
 		// ((Node) (event.getSource())).getScene().getWindow().hide();
 	}
-	
+
 	@FXML
 	public void switchToLoginScreen(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
@@ -147,8 +155,61 @@ public class LoginController {
 		stage.show();
 		((Node) (event.getSource())).getScene().getWindow().hide();
 	}
-	
-	/*Für Testzwecke eine DevLogin der die Datenbankabfrage umgeht*/
+
+	@FXML
+	public void createNewUser(ActionEvent event) throws IOException {
+		if (event.getSource() == RegisterButton) {
+			String userName = RegisterUserNameField.getText();
+			String password = String.valueOf(RegisterUserPasswordField.getText());
+			try {
+				con = DriverManager.getConnection(this.url, this.user, this.password);
+				stmt = con.createStatement();
+				// Überprüfung, ob Nutzername bereits vergeben ist
+				String selectQuery = "SELECT * FROM PLAYER WHERE name = '" + userName + "'";
+				ResultSet rs = stmt.executeQuery(selectQuery);
+				if (rs.next()) { // Wenn es bereits einen Eintrag mit dem Nutzernamen gibt
+					Alert alert = new Alert(AlertType.WARNING);
+					alert.setTitle("Nutzername bereits vergeben");
+					alert.setHeaderText(null);
+					alert.setContentText("Der Nutzername " + userName + " ist bereits vergeben.");
+					alert.showAndWait();
+					return; // Methode beenden, wenn Nutzername bereits vergeben ist
+				}
+				String insertQuery = "INSERT INTO PLAYER (name, password) VALUES ('" + userName + "', '" + password
+						+ "')";
+				stmt.executeUpdate(insertQuery);
+				System.out.println("Nutzer erstellt");
+
+				// Erfolgs-Alert anzeigen
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Nutzer erstellt");
+				alert.setHeaderText(null);
+				alert.setContentText("Nutzer wurde erfolgreich erstellt");
+				final ActionEvent finalEvent = event; // Event in endgültige Variable umwandeln
+				alert.setOnHidden(evt -> {
+					Stage previousStage = (Stage) ((Node) finalEvent.getSource()).getScene().getWindow();
+					previousStage.close();
+				});
+				alert.showAndWait();
+
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			} finally {
+				try {
+					if (stmt != null)
+						stmt.close();
+					if (con != null)
+						con.close();
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+
+			System.out.println("Database Connection Closed");
+		}
+	}
+
+	/* Für Testzwecke eine DevLogin der die Datenbankabfrage umgeht */
 	@FXML
 	public void devLogin(ActionEvent event) throws IOException {
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
