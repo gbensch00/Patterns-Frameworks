@@ -1,7 +1,12 @@
+import java.io.File;
+
 import Controller.GameController;
 import Model.GameModel;
 import View.GameView;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -11,11 +16,11 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    GameModel model = new GameModel();
-    GameView view = new GameView();
-    GameController controller = new GameController(model, view);
+    FXMLLoader loader = new FXMLLoader(new File("welcome.fxml").toURI().toURL());
 
-    primaryStage.setScene(view.getScene());
+    Parent root = loader.load();
+    Scene scene = new Scene(root);
+    primaryStage.setScene(scene);
     primaryStage.show();
   }
 }
