@@ -61,7 +61,7 @@ public class LoginController {
 	private Button devLogin;
 
 	@FXML
-	public void userLogin(ActionEvent e) {
+	public void userLogin(ActionEvent e) throws IOException {
 
 		if (e.getSource() == LoginButton) {
 			String userID = userIDField.getText();
@@ -90,11 +90,17 @@ public class LoginController {
 						previousStage.close();
 
 						// Game Stage wird geöffnet
+						/*
+						 * Stage stage = new Stage(); GameModel model = new GameModel(); GameView view =
+						 * new GameView(); GameController controller = new GameController(model, view);
+						 * stage.setScene(view.getScene()); stage.show();
+						 */
+
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("lobby.fxml"));
+						Parent root = loader.load();
+						Scene scene = new Scene(root);
 						Stage stage = new Stage();
-						GameModel model = new GameModel();
-						GameView view = new GameView();
-						GameController controller = new GameController(model, view);
-						stage.setScene(view.getScene());
+						stage.setScene(scene);
 						stage.show();
 
 					}
