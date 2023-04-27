@@ -37,6 +37,8 @@ public class LoginController {
 	Connection con = null;
 	Statement stmt = null;
 	ResultSet rs = null;
+	
+	private String loggedInUserName;
 
 	@FXML
 	private Button LoginButton;
@@ -56,6 +58,7 @@ public class LoginController {
 	private PasswordField RegisterUserPasswordField;
 	@FXML
 	private Button RegisterButton;
+
 
 	@FXML
 	private Button devLogin;
@@ -82,6 +85,7 @@ public class LoginController {
 					String userpassword = rs.getString("password");
 
 					if (userID.equals(name) && password.equals(password)) {
+						loggedInUserName = name; // Benutzername speichern
 						System.out.println("Login erfolgreich");
 						System.out.println(userID + " " + name + " " + userpassword + " " + password);
 
@@ -98,10 +102,12 @@ public class LoginController {
 
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("lobby.fxml"));
 						Parent root = loader.load();
-						Scene scene = new Scene(root);
-						Stage stage = new Stage();
-						stage.setScene(scene);
-						stage.show();
+						LobbyController lobbyController = loader.getController();
+					    lobbyController.setLoggedInUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
+					    Scene scene = new Scene(root);
+					    Stage stage = new Stage();
+					    stage.setScene(scene);
+					    stage.show();
 
 					}
 

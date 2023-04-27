@@ -4,16 +4,18 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LobbyController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bad6f0;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LobbyController">
    <children>
-      <ColorPicker fx:id="cP" layoutX="529.0" layoutY="34.0" maxWidth="40.0" onAction="#colorChange" />
-      <Button fx:id="SinglePlayerButton" layoutX="235.0" layoutY="216.0" minWidth="100.0" mnemonicParsing="false" text="Single Player" />
-      <Button fx:id="MultiplayerButton" layoutX="235.0" layoutY="252.0" minWidth="100.0" mnemonicParsing="false" text="Multiplayer" />
+      <ColorPicker fx:id="cP" layoutX="535.0" layoutY="133.0" maxWidth="40.0" onAction="#colorChange" />
+      <Button fx:id="SinglePlayerButton" layoutX="235.0" layoutY="188.0" minWidth="100.0" mnemonicParsing="false" text="Single Player" />
+      <Button fx:id="MultiplayerButton" layoutX="235.0" layoutY="224.0" minWidth="100.0" mnemonicParsing="false" text="Multiplayer" />
       <Button fx:id="CloseButton" layoutX="210.0" layoutY="345.0" maxWidth="250.0" minWidth="150.0" mnemonicParsing="false" text="Beenden" />
-      <Button fx:id="SettingsButton" layoutX="235.0" layoutY="298.0" minWidth="100.0" mnemonicParsing="false" text="Einstellungen" />
+      <Button fx:id="SettingsButton" layoutX="235.0" layoutY="305.0" minWidth="100.0" mnemonicParsing="false" text="Einstellungen" />
       <Label layoutX="25.0" layoutY="89.0" text="Lobby">
          <font>
             <Font size="46.0" />
@@ -24,6 +26,16 @@
             <Font size="46.0" />
          </font>
       </Label>
-      <ToggleButton fx:id="ToggleButton" layoutX="483.0" layoutY="105.0" mnemonicParsing="false" onAction="#FontChange" text="ToggleButton" />
+      <ToggleButton fx:id="ToggleButton" layoutX="483.0" layoutY="105.0" mnemonicParsing="false" onAction="#FontChange" text="Schrift anpassen" />
+      <ImageView fitHeight="50.0" fitWidth="55.0" layoutX="511.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Bilder/UserAvatar/PlayerIcon1.png" />
+         </image></ImageView>
+      <Label fx:id="UserName" layoutX="512.0" layoutY="74.0" text="UserName">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Label>
+      <Button fx:id="SettingsButton1" layoutX="235.0" layoutY="259.0" minWidth="100.0" mnemonicParsing="false" text="Hichscores" />
    </children>
 </AnchorPane>

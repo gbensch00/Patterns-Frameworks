@@ -1,7 +1,15 @@
 package Controller;
 
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+
+
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +26,14 @@ import javafx.scene.text.FontWeight;
 
 public class LobbyController {
 	
+	String url = "jdbc:mysql://localhost:3306/TestDB";
+	String user = "root";
+	String password = "";
+	Connection con = null;
+	Statement stmt = null;
+	ResultSet rs = null;
+	String loggedInUserName;
+	
     @FXML
     private ColorPicker cP; // Farbauswahl-Element aus der FXML-Datei
 
@@ -33,6 +49,8 @@ public class LobbyController {
     private Button CloseButton;
     @FXML
     private Toggle ToggleButton;
+    @FXML
+    private Label UserName;
     
 
     // Methode, die aufgerufen wird, wenn eine neue Farbe ausgewählt wird
@@ -66,5 +84,40 @@ public class LobbyController {
     	        }
     	    }
     }
+    @FXML
+    public void setLoggedInUserName(String userName) {
+        UserName.setText("Hallo " + userName + "!");
+        loggedInUserName = userName;
+        try {
+            con = DriverManager.getConnection(this.url, this.user, this.password);
+            stmt = con.createStatement();
+            //Noitz an mich userName geht nicht weil es eine ID ist muss die ID auch übergeben!!!
+            rs = stmt.executeQuery("SELECT * FROM UserSettings WHERE UserID = '" + userName + "'");
+            if (rs.next()) {
+                String fontType = rs.getString("FontType");
+                int fontSize = rs.getInt("FontSize");
+                Blob avatar = rs.getBlob("Avatar");
+                
+                
+                // Hier könntest du die Werte auf dem UI setzen, z.B. in Textfelder oder Bildansichten
+                SinglePlayerButton.setFont(Font.font(fontType, FontWeight.NORMAL, fontSize));
+                System.out.println("Habe gesetzt "+ fontType + fontSize);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (stmt != null)
+                    stmt.close();
+                if (con != null)
+                    con.close();
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            }
+        }
+    }
+    }
 
-}
+
