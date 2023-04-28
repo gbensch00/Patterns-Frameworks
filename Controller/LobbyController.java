@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.image.*;
 
 public class LobbyController {
 	
@@ -33,6 +35,7 @@ public class LobbyController {
 	Statement stmt = null;
 	ResultSet rs = null;
 	String loggedInUserName;
+	String dbID;
 	
     @FXML
     private ColorPicker cP; // Farbauswahl-Element aus der FXML-Datei
@@ -50,7 +53,9 @@ public class LobbyController {
     @FXML
     private Toggle ToggleButton;
     @FXML
-    private Label UserName;
+    private Label UserName;		// Begrüßungslabel
+    @FXML 
+    private ImageView Avatar;	//Avatar für den User
     
 
     // Methode, die aufgerufen wird, wenn eine neue Farbe ausgewählt wird
@@ -80,26 +85,48 @@ public class LobbyController {
     	            
     	             }
     	        if (node instanceof Label) {
-    	        	((Label) node).setFont(Font.font(randomFontName, FontWeight.NORMAL, 46));
+    	        	((Label) node).setFont(Font.font(randomFontName, FontWeight.NORMAL, 14));
     	        }
     	    }
     }
     @FXML
     public void setLoggedInUserName(String userName) {
-        UserName.setText("Hallo " + userName + "!");
-        loggedInUserName = userName;
+        
+    	//Begrüßungstext für den Nutzer der sich einloggt
+    	UserName.setText("Hallo " + userName + "!");
+       
+        //Baut Datenbankverbindung auf
         try {
             con = DriverManager.getConnection(this.url, this.user, this.password);
             stmt = con.createStatement();
-            //Noitz an mich userName geht nicht weil es eine ID ist muss die ID auch übergeben!!!
-            rs = stmt.executeQuery("SELECT * FROM UserSettings WHERE UserID = '" + userName + "'");
+            rs = stmt.executeQuery("SELECT * FROM PLAYER WHERE name = '" + userName +"'" );
+           if (rs.next()) {
+             dbID = rs.getString("id");
+           
+           }
+           //Hier werden die Parameter aus der Tabelle UserSettings in der mySQL DB geladen
+           // FontType, FontSize und der Avatar
+            rs = stmt.executeQuery("SELECT * FROM UserSettings WHERE UserID = '" + dbID + "'");
             if (rs.next()) {
                 String fontType = rs.getString("FontType");
                 int fontSize = rs.getInt("FontSize");
+                //Bei neuen Einträgen in die DB ist der Avatar noch NULL daher wird hier eine
+                //Überprüfung gemacht ob der Wert NULL ist wenn ja lade ein Standardbild
+                if (rs.getBlob("Avatar") == null) {
+                	 InputStream inputStream = getClass().getResourceAsStream("/Bilder/UserAvatar/PlayerIcon1.png");
+                	 Image image = new Image(inputStream);
+                	 Avatar.setImage(image);
+                }
+                else {
                 Blob avatar = rs.getBlob("Avatar");
+                InputStream inputStream = avatar.getBinaryStream();
+            	Image image = new Image(inputStream);
                 
-                
-                // Hier könntest du die Werte auf dem UI setzen, z.B. in Textfelder oder Bildansichten
+            	// Weist das Bild der ImageView zu
+               
+                Avatar.setImage(image);
+                }
+                          
                 SinglePlayerButton.setFont(Font.font(fontType, FontWeight.NORMAL, fontSize));
                 System.out.println("Habe gesetzt "+ fontType + fontSize);
             }

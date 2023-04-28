@@ -80,7 +80,8 @@ public class LoginController {
 				stmt = con.createStatement();
 				rs = stmt.executeQuery("SELECT * FROM PLAYER");
 				while (rs.next()) {
-
+					
+					String dbID = rs.getString("id");
 					String name = rs.getString("name");
 					String userpassword = rs.getString("password");
 
