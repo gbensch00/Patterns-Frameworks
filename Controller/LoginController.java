@@ -1,7 +1,10 @@
 package Controller;
+import  Model.Sound;
+
 
 import java.awt.Color;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -39,6 +42,10 @@ public class LoginController {
 	ResultSet rs = null;
 	
 	private String loggedInUserName;
+	
+	
+	
+	private Sound startupSound;
 
 	@FXML
 	private Button LoginButton;
@@ -65,7 +72,20 @@ public class LoginController {
 
 	@FXML
 	public void userLogin(ActionEvent e) throws IOException {
+	
+	//Spielerei! beim Login wird die Intro.wav wiedergegeben	
+	/*	
+		String filename = "/res/Sounds/intro.wav";
+		URL url = getClass().getResource(filename);
+		if (url == null) {
+		    System.err.println("Couldn't find file: " + filename);
+		    return;
+		}
 
+		Sound sound = new Sound(url.getFile());
+		startupSound = sound;
+		startupSound.play();
+*/
 		if (e.getSource() == LoginButton) {
 			String userID = userIDField.getText();
 			String password = String.valueOf(userPasswordField.getText());
