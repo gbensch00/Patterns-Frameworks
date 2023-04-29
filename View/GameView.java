@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import Controller.GameController;
 import Model.Enemy;
 import Model.Player;
 import javafx.animation.AnimationTimer;
@@ -12,10 +13,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class GameView {
 
@@ -26,12 +30,13 @@ public class GameView {
     private Player player;
     private ArrayList<ImageView> bullets = new ArrayList<>();
     private Group bulletGroup = new Group();
-
+    
     private Pane root;
     private GraphicsContext gc;
     private AnimationTimer animationTimer;
     private long lastEnemyTime = 0;
     private long enemyCreationInterval = 1000000000; // 1 second
+    
 
     public GameView(double width, double height) {
         enemyImage = new Image("enemy.png");
@@ -49,6 +54,13 @@ public class GameView {
         ImageView background = new ImageView(new Image("/planet.jpg"));
         root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
 
+        // Erstellung des Labels für die Punkte
+        Label scoreLabel = new Label("Score: 0");
+        scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
+        scoreLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
+        scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
+        root.getChildren().add(scoreLabel); // Hinzufügen des Labels zum Root-Pane
+
         // In der AnimationTimer-Schleife die Position der ImageView kontinuierlich ändern
         animationTimer = new AnimationTimer() {
             private double backgroundOffset = 0;
@@ -64,7 +76,10 @@ public class GameView {
 
                 addEnemy(now);
                 update();
+                
+                //controller.checkCollision();
                 render();
+
             }
         };
         animationTimer.start();

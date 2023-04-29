@@ -1,7 +1,10 @@
 package Controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import Model.Enemy;
 import Model.GameModel;
 import View.GameView;
 import javafx.animation.AnimationTimer;
@@ -12,6 +15,7 @@ import javafx.scene.input.KeyCode;
 public class GameController {
   private GameModel model;
   private GameView view;
+  private Enemy enemy;
   private ImageView spaceship;
   private double velocityX = 0;
   private double velocityY = 0;
@@ -20,6 +24,8 @@ public class GameController {
   private boolean isLeftPressed = false;
   private boolean isRightPressed = false;
   private ArrayList<ImageView> bullets;
+  private ArrayList<Enemy> enemies;
+
 
   public GameController(GameModel model, GameView view) {
     this.model = model;
@@ -78,22 +84,24 @@ public class GameController {
 
         ArrayList<ImageView> bulletsToRemove = new ArrayList<>();
         for (ImageView bullet : bullets) {
-          bullet.setTranslateY(bullet.getTranslateY() - 10);
+          bullet.setTranslateX(bullet.getTranslateX() + 10);
           if (bullet.getTranslateY() < -100) {
             bulletsToRemove.add(bullet);
           }
         }
         bullets.removeAll(bulletsToRemove);
+        
       }
     };
     timer.start();
   }
 
   public void shoot() {
-    ImageView bullet = new ImageView("playerGun1.png");
-    bullet.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth() / 2 - bullet.getImage().getWidth() / 2);
-    bullet.setTranslateY(spaceship.getTranslateY());
+    ImageView bullet = new ImageView("playerGun1a.png");
+    bullet.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth());
+    bullet.setTranslateY(spaceship.getTranslateY() + spaceship.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
     bullets.add(bullet);
     view.addBullet(bullet);
-  }
+}
+
 }
