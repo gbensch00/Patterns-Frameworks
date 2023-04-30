@@ -1,5 +1,6 @@
 package Model;
 
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -31,6 +32,8 @@ public class Player extends ImageView {
     setRotate(0);
     setRotate(90);
   }
+
+  
 
   
   

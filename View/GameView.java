@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
-import Controller.GameController;
 import Model.Enemy;
 import Model.Player;
+import Model.GameModel;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -23,14 +25,14 @@ import javafx.scene.paint.Color;
 
 public class GameView {
 
-    private List<Enemy> enemies = new ArrayList<>();
+    private List<Enemy> enemies;
     private Image enemyImage;
     private Scene scene;
     private Label scoreLabel = new Label();
     private Player player;
-    private ArrayList<ImageView> bullets = new ArrayList<>();
-    private Group bulletGroup = new Group();
-    
+    private GameModel model;
+    private ArrayList<ImageView> bullets;
+    private Group bulletGroup = new Group();  
     private Pane root;
     private GraphicsContext gc;
     private AnimationTimer animationTimer;
@@ -39,8 +41,9 @@ public class GameView {
     
 
     public GameView(double width, double height) {
-        enemyImage = new Image("enemy.png");
-        player = new Player("player.png");
+        enemyImage = new Image("/Idle.png");
+        player = new Player("/player.png");
+        model = new GameModel();
 
         root = new Pane();
         root.getChildren().addAll(player, bulletGroup);
@@ -55,11 +58,14 @@ public class GameView {
         root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
 
         // Erstellung des Labels für die Punkte
-        Label scoreLabel = new Label("Score: 0");
+        Label scoreLabel = new Label("Score:0");
         scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
         scoreLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
         scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
         root.getChildren().add(scoreLabel); // Hinzufügen des Labels zum Root-Pane
+
+        // Binden der Punktzahl an das Label
+        scoreLabel.textProperty().bind(model.scoreProperty().asString("Punktzahl: %d"));
 
         // In der AnimationTimer-Schleife die Position der ImageView kontinuierlich ändern
         animationTimer = new AnimationTimer() {
@@ -67,6 +73,7 @@ public class GameView {
 
             @Override
             public void handle(long now) {
+                checkCollision();
                 // Hintergrundbild nach links bewegen
                 backgroundOffset -= 1;
                 if (backgroundOffset <= -background.getImage().getWidth()) {
@@ -76,10 +83,7 @@ public class GameView {
 
                 addEnemy(now);
                 update();
-                
-                //controller.checkCollision();
                 render();
-
             }
         };
         animationTimer.start();
@@ -97,7 +101,6 @@ public class GameView {
       }
   }
 
-
     public void update() {
         Iterator<Enemy> iterator = enemies.iterator();
         while (iterator.hasNext()) {
@@ -106,7 +109,7 @@ public class GameView {
             if (enemy.getXPos() < -100) {
                 iterator.remove();
             }
-        }
+        }     
     }
 
     public void render() {
@@ -129,8 +132,6 @@ public class GameView {
         return scoreLabel;
     }
 
-
-
     public void addBullet(ImageView bullet) {
         bullets.add(bullet);
         bulletGroup.getChildren().add(bullet);
@@ -139,4 +140,77 @@ public class GameView {
     public void stop() {
         animationTimer.stop();
     }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public Bounds getBoundsInParent(ImageView imageView) {
+        return imageView.getBoundsInParent();
+    }
+
+    public void checkCollision() {
+        List<ImageView> bulletsToRemove = new ArrayList<>();
+        List<Enemy> enemiesToRemove = new ArrayList<>();
+        for (ImageView bullet : bullets) {
+            for (Enemy enemy : enemies) {
+               
+                if (getBoundsInParent(bullet).intersects(enemy.getBounds())) {
+                    bulletsToRemove.add(bullet);
+                    enemiesToRemove.add(enemy);
+                }
+            }
+        }
+        bulletGroup.getChildren().removeAll(bulletsToRemove); // entferne Kugeln aus der bulletGroup
+        bullets.removeAll(bulletsToRemove); // entferne Kugeln aus der bullets-Liste
+        enemies.removeAll(enemiesToRemove);
+        
+        if (!enemiesToRemove.isEmpty()) {
+            model.setScore(model.getScore() + 1);
+        }
+
+        if (isPlayerHit()) {
+            stop();
+            showAlert("Game Over", "You were hit by an enemy!");
+        }
+    }
+    
+    //Trefferbereich wird definiert, der etwas kleiner ist als der Spieler selbst, indem ein Faktor von 0,5 
+    //auf die Höhe des Spielers angewendet wird. Die Methode verwendet dann diesen Trefferbereich, um zu überprüfen, 
+    //ob er sich mit dem Bereich eines Feindes überschneidet.
+    private boolean isPlayerHit() {
+        double hitThreshold = player.getBoundsInParent().getHeight() * 0.5;
+        Bounds playerBounds = new BoundingBox(
+            player.getBoundsInParent().getMinX() + hitThreshold,
+            player.getBoundsInParent().getMinY() + hitThreshold,
+            player.getBoundsInParent().getWidth() - hitThreshold * 2,
+            player.getBoundsInParent().getHeight() - hitThreshold * 2);
+        
+        for (Enemy enemy : enemies) {
+            Bounds enemyBounds = enemy.getBounds();
+            if (playerBounds.intersects(enemyBounds)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public void showAlert(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText("Du bist getroffen!");
+            alert.setContentText("Game Over! Deine Punktzahl ist: " + model.getScore());
+            alert.showAndWait();
+        });
+    }
+
+    public void setBullets(ArrayList<ImageView> bullets) {
+        this.bullets = bullets;
+      }
+      
+      public void setEnemies(List<Enemy> enemies) {
+        this.enemies = enemies;
+      }
 }
