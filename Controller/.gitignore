@@ -2,3 +2,5 @@
 /LoginController.class
 /LobbyController.class
 /DatabaseConnection.class
+/HighscoreController.class
+/HighscoreScene.class

@@ -69,23 +69,30 @@ public class LoginController {
 
 	@FXML
 	private Button devLogin;
-
+	
+	/*
+	@FXML 
+	public void initialize() {
+		//Spielerei! beim Login wird die Intro.wav wiedergegeben	
+		
+				String filename = "/res/Sounds/intro.wav";
+				URL url = getClass().getResource(filename);
+				if (url == null) {
+				    System.err.println("Couldn't find file: " + filename);
+				    return;
+				}
+				Sound sound = new Sound(url.getFile());
+				startupSound = sound;
+				startupSound.play();
+	}
+*/
 	@FXML
 	public void userLogin(ActionEvent e) throws IOException {
 	
-	//Spielerei! beim Login wird die Intro.wav wiedergegeben	
-	/*	
-		String filename = "/res/Sounds/intro.wav";
-		URL url = getClass().getResource(filename);
-		if (url == null) {
-		    System.err.println("Couldn't find file: " + filename);
-		    return;
-		}
+	
 
-		Sound sound = new Sound(url.getFile());
-		startupSound = sound;
-		startupSound.play();
-*/
+		
+
 		if (e.getSource() == LoginButton) {
 			String userID = userIDField.getText();
 			String password = String.valueOf(userPasswordField.getText());

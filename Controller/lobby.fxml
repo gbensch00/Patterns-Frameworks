@@ -36,7 +36,7 @@
             <Font size="12.0" />
          </font>
       </Label>
-      <Button fx:id="SettingsButton1" layoutX="235.0" layoutY="259.0" minWidth="100.0" mnemonicParsing="false" text="Hichscores" />
+      <Button fx:id="Highscores" layoutX="235.0" layoutY="259.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleHighscoreButton" text="Highscores" />
       <Button fx:id="SaveSettingsButton" layoutX="493.0" layoutY="174.0" mnemonicParsing="false" onAction="#saveSettings" text="Save Settings" />
       
     	

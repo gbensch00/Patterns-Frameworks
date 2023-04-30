@@ -25,7 +25,9 @@ import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -46,7 +48,7 @@ public class LobbyController {
 
 	String loggedInUserName;
 	String dbID;
-	 private Connection connection;
+	
 	
 	 private DatabaseConnection dbConnection;
 
@@ -69,6 +71,8 @@ public class LobbyController {
 	private Button MultiplayerButton;
 	@FXML
 	private Button SettingsButton;
+	@FXML
+	private Button Highscores;
 	@FXML
 	private Button CloseButton;
 	@FXML
@@ -234,6 +238,15 @@ public class LobbyController {
 			Stage stage = (Stage) CloseButton.getScene().getWindow();
 			stage.close();
 		}
+	}
+	
+	@FXML
+	private void handleHighscoreButton(ActionEvent event) throws IOException {
+		Stage stage = new Stage();
+		Parent root = FXMLLoader.load(getClass().getResource("highscores.fxml"));
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.show();
 	}
 
 }
