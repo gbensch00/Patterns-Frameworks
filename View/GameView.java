@@ -57,6 +57,7 @@ public class GameView {
         ImageView background = new ImageView(new Image("/planet.jpg"));
         root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
 
+        
         // Erstellung des Labels für die Punkte
         Label scoreLabel = new Label("Score:0");
         scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
@@ -75,7 +76,7 @@ public class GameView {
             public void handle(long now) {
                 checkCollision();
                 // Hintergrundbild nach links bewegen
-                backgroundOffset -= 1;
+                backgroundOffset -= 0.2;
                 if (backgroundOffset <= -background.getImage().getWidth()) {
                     backgroundOffset = 0;
                 }
@@ -205,6 +206,7 @@ public class GameView {
             alert.showAndWait();
         });
     }
+
 
     public void setBullets(ArrayList<ImageView> bullets) {
         this.bullets = bullets;
