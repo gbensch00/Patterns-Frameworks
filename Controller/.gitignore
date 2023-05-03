@@ -1,2 +1,6 @@
 /GameController$1.class
 /LoginController.class
+/LobbyController.class
+/DatabaseConnection.class
+/HighscoreController.class
+/HighscoreScene.class
