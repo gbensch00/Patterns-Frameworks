@@ -33,13 +33,19 @@ public class Main extends Application {
    launch(args);
  }
 
- @Override
- public void start(Stage primaryStage) throws Exception {
-   GameModel model = new GameModel();
-   GameView view = new GameView(600,600);
-   GameController controller = new GameController(model, view);
+@Override
+	public void start(Stage primaryStage) throws Exception {
 
-   primaryStage.setScene(view.getScene());
-   primaryStage.show();
- }
+		Parent root = FXMLLoader.load(getClass().getResource("/Controller/main.fxml"));
+		Scene scene = new Scene(root);
+		
+	/*Für spätere CSS-Anpassungen oder Intergration*/
+		
+		// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		
+		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
+		primaryStage.show();
+
+	}
 }
