@@ -1,7 +1,10 @@
 package Controller;
+import  Model.Sound;
+
 
 import java.awt.Color;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -37,6 +40,12 @@ public class LoginController {
 	Connection con = null;
 	Statement stmt = null;
 	ResultSet rs = null;
+	
+	private String loggedInUserName;
+	
+	
+	
+	private Sound startupSound;
 
 	@FXML
 	private Button LoginButton;
@@ -57,11 +66,32 @@ public class LoginController {
 	@FXML
 	private Button RegisterButton;
 
-	@FXML
-	private Button devLogin;
 
 	@FXML
-	public void userLogin(ActionEvent e) {
+	private Button devLogin;
+	
+	/*
+	@FXML 
+	public void initialize() {
+		//Spielerei! beim Login wird die Intro.wav wiedergegeben	
+		
+				String filename = "/res/Sounds/intro.wav";
+				URL url = getClass().getResource(filename);
+				if (url == null) {
+				    System.err.println("Couldn't find file: " + filename);
+				    return;
+				}
+				Sound sound = new Sound(url.getFile());
+				startupSound = sound;
+				startupSound.play();
+	}
+*/
+	@FXML
+	public void userLogin(ActionEvent e) throws IOException {
+	
+	
+
+		
 
 		if (e.getSource() == LoginButton) {
 			String userID = userIDField.getText();
@@ -77,11 +107,13 @@ public class LoginController {
 				stmt = con.createStatement();
 				rs = stmt.executeQuery("SELECT * FROM PLAYER");
 				while (rs.next()) {
-
+					
+					String dbID = rs.getString("id");
 					String name = rs.getString("name");
 					String userpassword = rs.getString("password");
 
 					if (userID.equals(name) && password.equals(password)) {
+						loggedInUserName = name; // Benutzername speichern
 						System.out.println("Login erfolgreich");
 						System.out.println(userID + " " + name + " " + userpassword + " " + password);
 
@@ -90,12 +122,20 @@ public class LoginController {
 						previousStage.close();
 
 						// Game Stage wird geöffnet
-						Stage stage = new Stage();
-						GameModel model = new GameModel();
-						GameView view = new GameView();
-						GameController controller = new GameController(model, view);
-						stage.setScene(view.getScene());
-						stage.show();
+						/*
+						 * Stage stage = new Stage(); GameModel model = new GameModel(); GameView view =
+						 * new GameView(); GameController controller = new GameController(model, view);
+						 * stage.setScene(view.getScene()); stage.show();
+						 */
+
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("lobby.fxml"));
+						Parent root = loader.load();
+						LobbyController lobbyController = loader.getController();
+					    lobbyController.setLoggedInUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
+					    Scene scene = new Scene(root);
+					    Stage stage = new Stage();
+					    stage.setScene(scene);
+					    stage.show();
 
 					}
 
@@ -216,7 +256,7 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView();
+		GameView view = new GameView(600, 600);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
