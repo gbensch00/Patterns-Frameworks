@@ -22,10 +22,13 @@ import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
+import Model.GameModel;
+import View.GameView;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,6 +45,15 @@ import javafx.scene.image.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+
+
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 public class LobbyController {
 
@@ -84,43 +96,14 @@ public class LobbyController {
 	@FXML
 	private Button SaveSettingsButton;
 
-	// Methode, die aufgerufen wird, wenn eine neue Farbe ausgewählt wird
-	@FXML
-	private void colorChange(ActionEvent event) {
-		Color color = cP.getValue(); // Die ausgewählte Farbe
-
-		// Setzen der Hintergrundfarbe der Szene auf die ausgewählte Farbe
-		anchorPane.setStyle("-fx-background-color: " + toRgbString(color) + ";");
-	}
-
-	// Hilfsmethode, um die Farbe in ein RGB-Format umzuwandeln
-	private String toRgbString(Color color) {
-		return "rgb(" + ((int) (color.getRed() * 255)) + ", " + ((int) (color.getGreen() * 255)) + ", "
-				+ ((int) (color.getBlue() * 255)) + ")";
-	}
-
-	@FXML
-	private void FontChange(ActionEvent event) {
-
-		List<String> fontNames = Arrays.asList("Arial", "Helvetica", "Times New Roman", "Courier New", "Verdana",
-				"Georgia");
-		String randomFontName = fontNames.get((int) (Math.random() * fontNames.size()));
-
-		for (Node node : anchorPane.getChildren()) {
-			if (node instanceof Button) {
-				((Button) node).setFont(Font.font(randomFontName, FontWeight.NORMAL, 14));
-
-			}
-			if (node instanceof Label) {
-				((Label) node).setFont(Font.font(randomFontName, FontWeight.NORMAL, 14));
-			}
-		}
-	}
+		
+	
 
 	
 	 @FXML
 	    public void setLoggedInUserName(String userName) {
 			UserName.setText("Hallo " + userName + "!");
+			this.loggedInUserName = userName;
 	        try {
 	            Connection connection = dbConnection.getConnection();
 	            Statement statement = connection.createStatement();
@@ -138,6 +121,7 @@ public class LobbyController {
 					String fontType = resultSet.getString("FontType");
 					int fontSize = resultSet.getInt("FontSize");
 					String backgroundColor = resultSet.getString("Backgroundcolor");
+					Color bgC = Color.valueOf(backgroundColor);
 					// Bei neuen Einträgen in die DB ist der Avatar noch NULL daher wird hier eine
 					// Überprüfung gemacht ob der Wert NULL ist wenn ja lade ein Standardbild
 					if (resultSet.getBlob("Avatar") == null) {
@@ -159,8 +143,21 @@ public class LobbyController {
 							((Button) node).setFont(Font.font(fontType, FontWeight.NORMAL, fontSize));
 						}
 					}
+					
+					
+				
+					
+					Stop[] stops = new Stop[] { new Stop(0, bgC), new Stop(1, Color.LIGHTBLUE) };
+					LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
 
-					anchorPane.setStyle("-fx-background-color: " + backgroundColor + ";");
+					// Setze den Farbverlauf als Hintergrundbild
+					BackgroundFill fill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+					Background background = new Background(fill);
+					anchorPane.setBackground(background); 
+					
+					
+
+					
 				}
 	            
 	        }} catch (SQLException e) {
@@ -175,53 +172,6 @@ public class LobbyController {
 	            e.printStackTrace();
 	        }
 	    }
-
-	 
-	    @FXML
-	    private void saveSettings(ActionEvent event) throws IOException {
-	        Connection connection = null;
-	        PreparedStatement pstmt = null;
-	        try {
-	            connection = dbConnection.getConnection();
-	            String fontType = ((Button) SinglePlayerButton).getFont().getFamily();
-	            int fontSize = (int) ((Button) SinglePlayerButton).getFont().getSize();
-	            Color color = cP.getValue();
-	            String colorValue = String.format("#%02X%02X%02X", (int) (color.getRed() * 255),
-	                                (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
-	            String updateQuery = "UPDATE UserSettings SET FontType = ?, FontSize = ?, Backgroundcolor = ? WHERE UserID = ?";
-	            pstmt = connection.prepareStatement(updateQuery);
-	            pstmt.setString(1, fontType);
-	            pstmt.setInt(2, fontSize);
-	            pstmt.setString(3,colorValue);
-	            pstmt.setString(4, dbID);
-	            pstmt.executeUpdate();
-	            
-	            
-	            
-	            // Execute the SQL statement
-	            int rowsUpdated = pstmt.executeUpdate();
-
-	            // Erfolgsmeldung anzeigen
-	            System.out.println(rowsUpdated + " Einstellungen wurden gespeichert!");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } finally {
-	            // Ressourcen freigeben
-	            try {
-	                if (pstmt != null)
-	                    pstmt.close();
-	                if (connection != null)
-	                    connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-
-
-	 
-		
-	
 
 
 	@FXML
@@ -241,12 +191,52 @@ public class LobbyController {
 	}
 	
 	@FXML
+	private void handleSinglePlayerButton(ActionEvent event) {
+		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		previousStage.close();
+		Stage stage = new Stage();
+		GameModel model = new GameModel();
+		GameView view = new GameView();
+		GameController controller = new GameController(model, view);
+		stage.setScene(view.getScene());
+		stage.show();
+	}
+	
+	@FXML
+	private void handleMultiPlayerButton(ActionEvent event) {
+		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		previousStage.close();
+		Stage stage = new Stage();
+		GameModel model = new GameModel();
+		GameView view = new GameView();
+		GameController controller = new GameController(model, view);
+		stage.setScene(view.getScene());
+		stage.show();
+	}
+	
+	@FXML
 	private void handleHighscoreButton(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
 		Parent root = FXMLLoader.load(getClass().getResource("highscores.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
+	}
+	
+	@FXML
+	private void handleSettingsButton(ActionEvent event) throws IOException, SQLException {
+		
+		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		previousStage.close();
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+		Parent root = loader.load();
+		SettingsController settingsController = loader.getController();
+	    settingsController.setUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
+	    Scene scene = new Scene(root);
+	    Stage stage = new Stage();
+	    stage.setScene(scene);
+	    stage.show();
 	}
 
 }

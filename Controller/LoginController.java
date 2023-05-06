@@ -128,7 +128,7 @@ public class LoginController {
 						 * stage.setScene(view.getScene()); stage.show();
 						 */
 
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("lobby.fxml"));
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("cockpit.fxml"));
 						Parent root = loader.load();
 						LobbyController lobbyController = loader.getController();
 					    lobbyController.setLoggedInUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben

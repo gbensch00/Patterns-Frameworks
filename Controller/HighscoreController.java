@@ -43,7 +43,7 @@ public class HighscoreController {
     }
     
     public ResultSet getAllHighscores() throws SQLException {
-        String query = "SELECT name, highscore FROM PLAYER ORDER BY highscore DESC";
+        String query = "SELECT name, highscore FROM PLAYER ORDER BY highscore DESC LIMIT 10";
         PreparedStatement statement = dbConnection.getConnection().prepareStatement(query);
         ResultSet resultSet = statement.executeQuery();
         return resultSet;

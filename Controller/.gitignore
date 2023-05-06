@@ -4,3 +4,5 @@
 /DatabaseConnection.class
 /HighscoreController.class
 /HighscoreScene.class
+/GameController.class
+/SettingsController.class
