@@ -1,19 +1,18 @@
 package Controller;
 
 import java.util.ArrayList;
-
+import Model.Enemy;
 import Model.GameModel;
 import View.GameView;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import Model.Player;
 
 public class GameController {
   private GameModel model;
   private GameView view;
-  //private ImageView spaceship = view.getPlayer();
+  private ImageView spaceship;
   private double velocityX = 0;
   private double velocityY = 0;
   private boolean isUpPressed = false;
@@ -21,18 +20,19 @@ public class GameController {
   private boolean isLeftPressed = false;
   private boolean isRightPressed = false;
   private ArrayList<ImageView> bullets;
+  private ArrayList<Enemy> enemies;
+
 
   public GameController(GameModel model, GameView view) {
     this.model = model;
     this.view = view;
     Scene scene = view.getScene();
-    ImageView spaceship = view.getPlayer();
-
-    //Bullets sind eine ArrayList, weil man damit mehrere Bullets gleichzeitig haben und generieren kann. Wenn der Spieler schießt, wird ein neues Bullet Objekt erstellt und zu der ArrayList hinzugefügt. Der Controller loopt dann in der timer Funktion in jeder Frame durch die ArrayList und updated die Position oder entfernt sie aus der Scene.
+    spaceship = view.getPlayer();
     bullets = new ArrayList<>();
-
-    view.getScoreLabel().textProperty().bind(model.scoreProperty().asString());
-
+    enemies = new ArrayList<>();
+    view.setBullets(bullets);
+    view.setEnemies(enemies);
+  
     scene.setOnKeyPressed(event -> {
       KeyCode keyCode = event.getCode();
       if (keyCode == KeyCode.W) {
@@ -48,7 +48,7 @@ public class GameController {
         isRightPressed = true;
         velocityX = 5;
       } else if (keyCode == KeyCode.SPACE) {
-       // shoot();
+        shoot();
       }
     });
 
@@ -56,7 +56,6 @@ public class GameController {
       KeyCode keyCode = event.getCode();
       if (keyCode == KeyCode.W) {
         isUpPressed = false;
-        // wenn W gedrückt = true dann velocityY = 5, wenn false dann velocityY = 0
         velocityY = isDownPressed ? 5 : 0;
       } else if (keyCode == KeyCode.A) {
         isLeftPressed = false;
@@ -73,30 +72,54 @@ public class GameController {
     AnimationTimer timer = new AnimationTimer() {
       @Override
       public void handle(long now) {
-        model.setScore(model.getScore() + 1);
+    
         double newX = spaceship.getTranslateX() + velocityX;
         double newY = spaceship.getTranslateY() + velocityY;
-        System.out.println(velocityX + velocityY);
         spaceship.setTranslateX(newX);
         spaceship.setTranslateY(newY);
-
-        /* for (ImageView bullet : bullets) {
-          bullet.setTranslateY(bullet.getTranslateY() - 10);
+    
+        ArrayList<ImageView> bulletsToRemove = new ArrayList<>();
+        for (ImageView bullet : bullets) {
+          bullet.setTranslateX(bullet.getTranslateX() + 10);
           if (bullet.getTranslateY() < -100) {
-            bullet.setImage(null);
+            bulletsToRemove.add(bullet);
           }
-        }*/ 
+        }
+        bullets.removeAll(bulletsToRemove);
       }
     };
     timer.start();
-  }
- /*  public void shoot() {
-    ImageView bullet = new ImageView("playerGun1.png");
-    bullet.setTranslateX(view.getPlayer().getTranslateX() + view.getPlayer().getFitWidth() / 2 - bullet.getImage().getWidth() / 2);
-    bullet.setTranslateY(view.getPlayer().getTranslateY());
-    bullets.add(bullet);
-    view.addBullet(bullet);
-    
-  }*/
-} 
+  }    
 
+  public void shoot() {
+    // Erstelle ein neues ImageView-Objekt für die Kugel
+    ImageView bullet = new ImageView("playerGun1a.png");
+
+    // Setze die Anfangsposition der Kugel auf der rechten Seite des Raumschiffs
+    bullet.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth());
+    bullet.setTranslateY(spaceship.getTranslateY() + spaceship.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
+
+    // Füge das Kugel-ImageView der Liste der Kugeln hinzu
+    bullets.add(bullet);
+
+    // Übergib das Objekt an die View-Klasse, um es auf dem Bildschirm anzuzeigen
+    view.addBullet(bullet);
+}
+
+public ArrayList<ImageView> getBullets() {
+  return bullets;
+}
+
+public ArrayList<Enemy> getEnemies() {
+  return enemies;
+}
+
+public void increaseScore() {
+  model.setScore(model.getScore() + 1);
+}
+
+public GameModel getModel() {
+  return model;
+}
+
+}
