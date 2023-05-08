@@ -8,6 +8,8 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class GameController {
   private GameModel model;
@@ -22,10 +24,12 @@ public class GameController {
   private ArrayList<ImageView> bullets;
   private ArrayList<Enemy> enemies;
 
-
   public GameController(GameModel model, GameView view) {
+    
     this.model = model;
     this.view = view;
+    // Lade den Sound für das Schießen
+
     Scene scene = view.getScene();
     spaceship = view.getPlayer();
     bullets = new ArrayList<>();
@@ -92,18 +96,43 @@ public class GameController {
   }    
 
   public void shoot() {
-    // Erstelle ein neues ImageView-Objekt für die Kugel
-    ImageView bullet = new ImageView("playerGun1a.png");
 
-    // Setze die Anfangsposition der Kugel auf der rechten Seite des Raumschiffs
-    bullet.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth());
-    bullet.setTranslateY(spaceship.getTranslateY() + spaceship.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
+    if(getNewScore() < 5) {
+        // Erstelle ein neues ImageView-Objekt für die Kugel
+        ImageView bullet = new ImageView("/res/enemy/playerGun1a.png");
+        Media sound = model.getshootSound();
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
+        // Setze die Anfangsposition der Kugel auf der rechten Seite des Raumschiffs
+        bullet.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth());
+        bullet.setTranslateY(spaceship.getTranslateY() + spaceship.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
 
-    // Füge das Kugel-ImageView der Liste der Kugeln hinzu
-    bullets.add(bullet);
+        // Füge das Kugel-ImageView der Liste der Kugeln hinzu
+        bullets.add(bullet);
+        
+        // Übergib das Objekt an die View-Klasse, um es auf dem Bildschirm anzuzeigen
+        view.addBullet(bullet);
 
-    // Übergib das Objekt an die View-Klasse, um es auf dem Bildschirm anzuzeigen
-    view.addBullet(bullet);
+    } else if(getNewScore() >= 5) {
+        ImageView bullet1 = new ImageView("/res/enemy/playerGun1a.png");
+        ImageView bullet2 = new ImageView("/res/enemy/playerGun1a.png");
+        Media sound = model.getshootSound();
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
+        // Setze die Anfangsposition der Kugeln auf der rechten Seite des Raumschiffs
+        bullet1.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth());
+        bullet1.setTranslateY(spaceship.getTranslateY() + spaceship.getFitHeight() / 2 - bullet1.getImage().getHeight() / 2 + 16);
+
+        bullet2.setTranslateX(spaceship.getTranslateX() + spaceship.getFitWidth());
+        bullet2.setTranslateY(spaceship.getTranslateY() + spaceship.getFitHeight() / 2 - bullet2.getImage().getHeight() / 2 + 32);
+
+        // Füge die Kugel-ImageViews der Liste der Kugeln hinzu
+        bullets.add(bullet1);
+        bullets.add(bullet2);
+
+        // Übergib die Objekte an die View-Klasse, um sie auf dem Bildschirm anzuzeigen
+        view.addBullet(bullet1, bullet2);       
+    }
 }
 
 public ArrayList<ImageView> getBullets() {
@@ -114,12 +143,12 @@ public ArrayList<Enemy> getEnemies() {
   return enemies;
 }
 
-public void increaseScore() {
-  model.setScore(model.getScore() + 1);
+public int getScore() {
+  return model.scoreProperty().get();
 }
 
-public GameModel getModel() {
-  return model;
+public int getNewScore() {
+  return view.getNewScore();
 }
 
 }
