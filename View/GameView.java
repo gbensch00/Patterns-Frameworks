@@ -1,9 +1,12 @@
 package View;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import Controller.HighscoreController;
 import Model.Enemy;
 import Model.Player;
 import Model.GameModel;
@@ -41,9 +44,15 @@ public class GameView {
     private double startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
     private Pane heartsPane;
-
-    public GameView(double width, double height) {
-        enemyImage = new Image("/Idle.png");
+    
+    private String PlayerName1;
+    private String PlayerName2;
+    
+    public GameView(double width, double height, String playername) {
+        
+    	this.PlayerName1 = playername;
+    	System.out.println("Hello " + playername + " ready to kick some asses ?");
+    	enemyImage = new Image("/Idle.png");
         player = new Player("/player.png", startingHealth);
         player.setRotate(90);
         model = new GameModel();
@@ -192,6 +201,17 @@ public class GameView {
             if (player.getHealth().getValue() == 0) {
                 stop();
                 showAlert("Game Over", "You were hit by an enemy!");
+                
+                              
+               //Verbindung zur DB wird aufgebaut und Punktestand in die DB geschrieben
+                HighscoreController hcs = new HighscoreController();
+                try {
+					hcs.updateHighscore(PlayerName1, model.getScore());
+					System.out.println("Neuer Punktestand für "+ PlayerName1 + " in der Datenbank ist " +model.getScore());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
             
         }
