@@ -26,7 +26,6 @@ import javafx.stage.Stage;
 //    primaryStage.show();
 //  }
 //}
-
 public class Main extends Application {
   private ArrayList<ImageView> bullets;
  public static void main(String[] args) {

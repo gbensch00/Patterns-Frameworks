@@ -57,7 +57,6 @@ public class GameView {
         root.getChildren().addAll(player);
         scene = new Scene(root, 900, 900);
       }
-    
 
     public GameView(double width, double height) {
         enemyImage = new Image("/res/enemy/Idle.png");

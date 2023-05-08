@@ -150,5 +150,4 @@ public int getScore() {
 public int getNewScore() {
   return view.getNewScore();
 }
-
 }

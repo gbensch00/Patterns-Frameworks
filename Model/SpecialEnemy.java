@@ -12,7 +12,6 @@ public class SpecialEnemy extends Enemy {
         super(health, speed, xPos, yPos, width, height);
         this.image = image;
     }
-    
 
     public Image getImage() {
         return image;
