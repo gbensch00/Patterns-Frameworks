@@ -141,7 +141,7 @@ public ArrayList<ImageView> getBullets() {
 
 public ArrayList<Enemy> getEnemies() {
   return enemies;
-}
+} 
 
 public int getScore() {
   return model.scoreProperty().get();

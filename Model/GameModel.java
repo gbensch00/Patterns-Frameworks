@@ -27,7 +27,7 @@ public Media getHitSound() {
 
   public void setScore(int score) {
     this.score.set(score);
-}
+} 
 
   public IntegerProperty scoreProperty() {
     return score;

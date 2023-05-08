@@ -9,7 +9,7 @@ public class Player extends ImageView {
   private Player player;
   private double velocity = 10;
   //Zeile von gideon 03.05.
-  private DoubleProperty health;
+  private DoubleProperty health; 
 
   public Player(String imagePath) {
     super(new Image(imagePath));

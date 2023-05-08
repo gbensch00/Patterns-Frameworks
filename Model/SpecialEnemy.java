@@ -6,7 +6,7 @@ public class SpecialEnemy extends Enemy {
     private Image image;
     private int xVelocity;
     private double yVelocity;
-    private int rotate;
+    private int rotate; 
 
     public SpecialEnemy(int health, int speed, int xPos, int yPos, int width, int height, Image image) {
         super(health, speed, xPos, yPos, width, height);

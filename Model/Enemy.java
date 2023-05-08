@@ -1,7 +1,7 @@
 package Model;
 
 import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds; 
+import javafx.geometry.Bounds;  
 
 public class Enemy {
 private int health;

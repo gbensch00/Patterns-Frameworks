@@ -45,7 +45,7 @@ public class GameView {
     private long enemyCreationInterval = 1000000000; // 1 second
     private long startTime = System.nanoTime();
     private int newScore = 0;
-    private boolean isGameOver = false;
+    private boolean isGameOver = false; 
 
     // //Von Tobi am 03.05. eingefügt
     public GameView() {
