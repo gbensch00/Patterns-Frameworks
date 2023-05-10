@@ -23,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -46,6 +47,8 @@ public class GameView {
     private long startTime = System.nanoTime();
     private int newScore = 0;
     private boolean isGameOver = false; 
+    private MediaPlayer hitSound;
+
 
     // //Von Tobi am 03.05. eingefügt
     public GameView() {
@@ -67,7 +70,7 @@ public class GameView {
         root = new Pane();
         root.getChildren().addAll(player, bulletGroup);
         scene = new Scene(root, width, height);
-
+        hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);
         root.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
@@ -239,6 +242,8 @@ public class GameView {
     }
 
     public void checkCollision() {
+        
+
         List<ImageView> bulletsToRemove = new ArrayList<>();
         List<Enemy> enemiesToRemove = new ArrayList<>();
         List<SpecialEnemy> specialEnemiesToRemove = new ArrayList<>();
@@ -250,9 +255,7 @@ public class GameView {
                 if (getBoundsInParent(bullet).intersects(enemy.getBounds())) {
                     bulletsToRemove.add(bullet);
                     enemiesToRemove.add(enemy);
-                    Media sound = model.getHitSound();
-                    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-                    mediaPlayer.play();
+                    playHitSound(); 
                 }
             }
         }
@@ -264,9 +267,7 @@ public class GameView {
                     bulletsToRemove.add(bullet);
                     specialEnemiesToRemove.add(specialEnemy);
                     specialEnemyHit = true;
-                    Media sound = model.getHitSound();
-                    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-                    mediaPlayer.play();
+                    playHitSound(); 
                 }
             }
         }
@@ -346,4 +347,15 @@ public class GameView {
     public int getNewScore() {
         return newScore;
     }
+
+    public void setHitSound(MediaPlayer hitSound) {
+        this.hitSound = hitSound;
+    }
+
+    public void playHitSound() {
+        hitSound.stop();
+        hitSound.seek(Duration.ZERO);
+        hitSound.play();
+    }
+    
 }

@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 public class GameController {
   private GameModel model;
@@ -23,12 +24,19 @@ public class GameController {
   private boolean isRightPressed = false;
   private ArrayList<ImageView> bullets;
   private ArrayList<Enemy> enemies;
+  private MediaPlayer shootSound;
+  
 
   public GameController(GameModel model, GameView view) {
     
     this.model = model;
     this.view = view;
     // Lade den Sound für das Schießen
+    // Lade den Sound für das Schießen
+   // Media shootSound = model.getshootSound(); // Update the method name
+    shootSound = new MediaPlayer(model.getshootSound());
+    
+
 
     Scene scene = view.getScene();
     spaceship = view.getPlayer();
@@ -97,6 +105,11 @@ public class GameController {
 
   public void shoot() {
 
+    // Play the shoot sound without creating a new MediaPlayer object
+    shootSound.stop();
+    shootSound.seek(Duration.ZERO);
+    shootSound.play();
+    
     if(getNewScore() < 5) {
         // Erstelle ein neues ImageView-Objekt für die Kugel
         ImageView bullet = new ImageView("/res/enemy/playerGun1a.png");
