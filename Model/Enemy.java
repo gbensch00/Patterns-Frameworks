@@ -10,6 +10,8 @@ private int xPos;
 private int yPos;
 private int width;
 private int height;
+private int hitPoints = 1; // Anzahl der Trefferpunkte des Gegners
+
 
 public Enemy(int health, int speed, int xPos, int yPos, int width, int height) {
     this.health = health;
@@ -18,6 +20,14 @@ public Enemy(int health, int speed, int xPos, int yPos, int width, int height) {
     this.yPos = yPos;
     this.width = width;
     this.height = height;
+}
+
+public void hit() {
+    hitPoints--; // Verringere die Trefferpunkte um 1
+}
+
+public boolean isDestroyed() {
+    return hitPoints <= 0; // Überprüfe, ob die Trefferpunkte null oder kleiner sind
 }
 
 public int getHealth() {
@@ -56,11 +66,12 @@ public void takeDamage(int damage) {
     health -= damage;
 }
 public Bounds getBounds() {
-    double x = getXPos();
-    double y = getYPos();
-    double width = getWidth();
-    double height = getHeight();
-    return new BoundingBox(x, y, width, height);
+    return new BoundingBox(
+            getXPos(),
+            getYPos(),
+            getWidth(),
+            getHeight()
+    );
 }
 
 }

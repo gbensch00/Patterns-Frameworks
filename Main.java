@@ -1,14 +1,8 @@
-import java.io.File;
-import java.util.ArrayList;
 
 import Controller.GameController;
 import Model.GameModel;
 import View.GameView;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage; 
 
 //public class Main extends Application {
@@ -27,7 +21,6 @@ import javafx.stage.Stage;
 //  }
 //}
 public class Main extends Application {
-  private ArrayList<ImageView> bullets;
  public static void main(String[] args) {
    launch(args);
  }

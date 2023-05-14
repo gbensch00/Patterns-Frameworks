@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Player extends ImageView {
-  private Player player;
   private double velocity = 10;
   //Zeile von gideon 03.05.
   private DoubleProperty health; 

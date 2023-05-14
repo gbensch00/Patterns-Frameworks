@@ -32,4 +32,6 @@ public Media getHitSound() {
   public IntegerProperty scoreProperty() {
     return score;
   }
+
+  
 }

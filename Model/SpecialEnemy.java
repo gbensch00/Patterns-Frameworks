@@ -1,5 +1,7 @@
 package Model;
 
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 
 public class SpecialEnemy extends Enemy {
@@ -7,6 +9,7 @@ public class SpecialEnemy extends Enemy {
     private int xVelocity;
     private double yVelocity;
     private int rotate; 
+
 
     public SpecialEnemy(int health, int speed, int xPos, int yPos, int width, int height, Image image) {
         super(health, speed, xPos, yPos, width, height);
@@ -39,6 +42,15 @@ public class SpecialEnemy extends Enemy {
 
     public void setRotate(int rotate) {
         this.rotate = rotate;
+    }
+
+    public Bounds getBounds() {
+        return new BoundingBox(
+                getXPos(),
+                getYPos(),
+                getWidth(),
+                getHeight()
+        );
     }
 }
 
