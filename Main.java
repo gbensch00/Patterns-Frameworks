@@ -1,5 +1,3 @@
-import java.io.File;
-import java.util.ArrayList;
 
 import Controller.GameController;
 import Model.GameModel;
@@ -8,8 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+import javafx.stage.Stage; 
 
 //public class Main extends Application {
 //  public static void main(String[] args) {
@@ -26,7 +23,6 @@ import javafx.stage.Stage;
 //    primaryStage.show();
 //  }
 //}
-
 public class Main extends Application {
  
  public static void main(String[] args) {

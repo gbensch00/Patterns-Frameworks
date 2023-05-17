@@ -256,7 +256,7 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(600, 600);
+		GameView view = new GameView();
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();

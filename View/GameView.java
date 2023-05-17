@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Random;
 import Model.Enemy;
 import Model.Player;
+import Model.SpecialEnemy;
 import Model.GameModel;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,32 +21,51 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.media.MediaPlayer;
 
 public class GameView {
 
-    private List<Enemy> enemies;
     private Image enemyImage;
+    private List<SpecialEnemy> specialEnemies = new ArrayList<>();
+    private List<Enemy> enemies = new ArrayList<>();
+    private long lastSpecialEnemyTime = 0L;
     private Scene scene;
-    private Label scoreLabel = new Label();
-    private Player player;
+    public Player player;
     private GameModel model;
-    private ArrayList<ImageView> bullets;
-    private Group bulletGroup = new Group();  
+    public Group bulletGroup = new Group();  
     private Pane root;
     private GraphicsContext gc;
     private AnimationTimer animationTimer;
     private long lastEnemyTime = 0;
     private long enemyCreationInterval = 1000000000; // 1 second
+    private long startTime = System.nanoTime();
+    private boolean isGameOver = false; 
+    private MediaPlayer hitSound;
+    private Label scoreLabel;
+
+    // //Von Tobi am 03.05. eingefügt
+    // public GameView() {
+    //     Pane root = new Pane();
+    //     player = new Player("/res/enemy/player.png");
+    //     /*this.bullets = bullets;
+    //     Group bulletGroup = new Group();
+    //     bulletGroup.getChildren().addAll(bullets); */
+    //     root.getChildren().addAll(player);
+    //     scene = new Scene(root, 900, 900);
+    //   }
+
     private double startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
     private Pane heartsPane;
 
     public GameView(double width, double height) {
+        enemyImage = new Image("/res/enemy/Idle.png");
+        player = new Player("/res/enemy/player.png");
         enemyImage = new Image("/Idle.png");
         player = new Player("/player.png", startingHealth);
         player.setRotate(90);
         model = new GameModel();
-
+        enemies = new ArrayList<>();
         for (int i = 0; i < startingHealth; i++) {
             ImageView heart = new ImageView(new Image("heart.png"));
 
@@ -62,25 +80,29 @@ public class GameView {
         root.getChildren().addAll(player, bulletGroup);
         root.getChildren().addAll(heartsPane);
         scene = new Scene(root, width, height);
-
+        hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);
         root.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
 
         // Hintergrundbild erstellen und der Szene hinzufügen
-        ImageView background = new ImageView(new Image("/planet.jpg"));
+        ImageView background = new ImageView(new Image("/res/enemy/planet.jpg"));
         root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
 
         
         // Erstellung des Labels für die Punkte
-        Label scoreLabel = new Label("Score:0");
+        scoreLabel = new Label("Score:0");
         scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
         scoreLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
         scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
         root.getChildren().add(scoreLabel); // Hinzufügen des Labels zum Root-Pane
 
-        // Binden der Punktzahl an das Label
-        scoreLabel.textProperty().bind(model.scoreProperty().asString("Punktzahl: %d"));
+        // Erstellung des Labels für die verbleibende Zeit
+         Label timeLabel = new Label("Time: 60");
+        timeLabel.setTranslateX(scene.getWidth() - 100); // Platzieren des Labels am rechten Rand
+         timeLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
+         timeLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
+         root.getChildren().add(timeLabel); // Hinzufügen des Labels zum Root-Pane
 
         // In der AnimationTimer-Schleife die Position der ImageView kontinuierlich ändern
         animationTimer = new AnimationTimer() {
@@ -88,14 +110,28 @@ public class GameView {
 
             @Override
             public void handle(long now) {
-                checkCollision();
+                
+                //Zeit
+                if (!isGameOver) {
+                
+                    long gameTime = now - startTime;
+                    if (gameTime > 60_000_000_000L) { // 60 Sekunden sind vergangen, das Spiel ist vorbei
+                        stop();
+                        showAlertWon("Vorbei", "Time's up!");
+                    } else {
+                        // verbleibende Spielzeit berechnen
+                        long remainingTime = 60_000_000_000L - gameTime;
+                        int remainingSeconds = (int) (remainingTime / 1_000_000_000);
+                        String timeString = String.format("%02d:%02d", remainingSeconds / 60, remainingSeconds % 60);
+                        timeLabel.setText("Time: " + timeString); // Zeit-Label aktualisieren
+                    }
+                }
                 // Hintergrundbild nach links bewegen
                 backgroundOffset -= 0.2;
                 if (backgroundOffset <= -background.getImage().getWidth()) {
                     backgroundOffset = 0;
                 }
                 background.setTranslateX(backgroundOffset);
-
                 addEnemy(now);
                 update();
                 render();
@@ -105,17 +141,51 @@ public class GameView {
     }
 
     private void addEnemy(long currentTime) {
-      if (currentTime - lastEnemyTime > enemyCreationInterval) {
-          int xPos = (int) scene.getWidth(); // setze xPos auf rechten Rand
-          int yPos = new Random().nextInt((int) scene.getHeight()); // wähle yPos zufällig zwischen 0 und Fensterhöhe
-          int width = 100;
-          int height = 50;
-          Enemy enemy = new Enemy(100, 5, xPos, yPos, width, height); // setze Geschwindigkeit in horizontaler Richtung auf 5, damit der Gegner nach links fliegt
-          enemies.add(enemy);
-          lastEnemyTime = currentTime;
-      }
-  }
+        int xPos = (int) scene.getWidth();
+        int yPos = new Random().nextInt((int) scene.getHeight());
+        int width = 100;
+        int height = 50;
+    
+        // Normale Gegner hinzufügen
+        if (currentTime - startTime <= 30_000_000_000L) {
+            if (currentTime - lastEnemyTime > enemyCreationInterval) {
+                addNormalEnemy(xPos, yPos, width, height);
+            }
+        } else {
+            if (currentTime - lastEnemyTime > enemyCreationInterval && enemies.size() < 30) {
+                addNormalEnemy(xPos, yPos, width, height);
+                enemyCreationInterval -= 100_000_000;
+            }
+        }
+    
+        // Spezielle Gegner hinzufügen
+        if (currentTime - startTime >= 20_000_000_000L && currentTime - startTime <= 120_000_000_000L) {
+            if (currentTime - lastSpecialEnemyTime > 5_000_000_000L && specialEnemies.size() < 5) {
+                addSpecialEnemy(xPos, width, height);
+            }
+        }
+    }
+    
+    private void addNormalEnemy(int xPos, int yPos, int width, int height) {
+        Enemy enemy = new Enemy(100, 5, xPos, yPos, width, height);
+        enemies.add(enemy);
+        lastEnemyTime = System.nanoTime();
+    }
+    
+    private void addSpecialEnemy(int xPos, int width, int height) {
+        int specialXPos = xPos;
+        int specialYPos = (int) (Math.random() * scene.getHeight());
+        int specialWidth = 100;
+        int specialHeight = 100;
+        Image specialEnemyImage = Math.random() < 0.5 ? new Image("/res/enemy/Ship1.png") : new Image("/res/enemy/sp.png");
+        SpecialEnemy specialEnemy = new SpecialEnemy(50, 5, specialXPos, specialYPos, specialWidth, specialHeight, specialEnemyImage);
+        specialEnemies.add(specialEnemy);
+        enemies.add(specialEnemy);
+        lastSpecialEnemyTime = System.nanoTime();
+    }
 
+  //Diese Methode aktualisiert die Positionen der Feinde (Enemies) in einer Liste (ArrayList) 
+  //und entfernt diejenigen, die den linken Bildschirmrand verlassen haben.
     public void update() {
         Iterator<Enemy> iterator = enemies.iterator();
         while (iterator.hasNext()) {
@@ -129,28 +199,15 @@ public class GameView {
 
     public void render() {
         gc.clearRect(0, 0, root.getWidth(), root.getHeight());
-
+    
         for (Enemy enemy : enemies) {
-            gc.drawImage(enemyImage, enemy.getXPos(), enemy.getYPos(), enemy.getWidth(), enemy.getHeight());
+            if (enemy instanceof SpecialEnemy) {
+                gc.drawImage(((SpecialEnemy) enemy).getImage(), enemy.getXPos(), enemy.getYPos(), enemy.getWidth(), enemy.getHeight());
+            } else {
+                gc.drawImage(enemyImage, enemy.getXPos(), enemy.getYPos(), enemy.getWidth(), enemy.getHeight());
+            }
         }
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Label getScoreLabel() {
-        return scoreLabel;
-    }
-
-    public void addBullet(ImageView bullet) {
-        bullets.add(bullet);
-        bulletGroup.getChildren().add(bullet);
-    }
+    }    
 
     public void stop() {
         animationTimer.stop();
@@ -229,12 +286,49 @@ public class GameView {
         });
     }
 
+    public void showAlertWon(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Spielende");
+            alert.setHeaderText("Du bist ein Champion");
+            alert.setContentText("Deine Punktzahl ist: " + model.getScore());
+            alert.showAndWait();
+        });
+    }
 
-    public void setBullets(ArrayList<ImageView> bullets) {
-        this.bullets = bullets;
-      }
-      
-      public void setEnemies(List<Enemy> enemies) {
+    public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;
-      }
+    }
+    
+    public void setSpecialEnemies(List<SpecialEnemy> specialEnemies) {
+        this.specialEnemies = specialEnemies;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+    
+    public List<SpecialEnemy> getSpecialEnemies() {
+        return specialEnemies;
+    }
+    
+    public Group getBulletGroup() {
+        return bulletGroup;
+    }
+    
+    public Scene getScene() {
+        return scene;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setScoreLabel(int score) {
+        scoreLabel.setText("Score: " + score);
+    }
+
+    public void setModel(GameModel model) {
+        this.model = model;
+    }
 }
