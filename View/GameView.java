@@ -8,8 +8,11 @@ import Model.Enemy;
 import Model.Player;
 import Model.SpecialEnemy;
 import Model.GameModel;
+import Model.HealthBar;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -54,15 +57,15 @@ public class GameView {
     //     scene = new Scene(root, 900, 900);
     //   }
 
-    private double startingHealth = 3;
+    private int startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
     private Pane heartsPane;
+    private HealthBar healthBar;
 
     public GameView(double width, double height) {
         enemyImage = new Image("/res/enemy/Idle.png");
-        player = new Player("/res/enemy/player.png");
-        enemyImage = new Image("/Idle.png");
-        player = new Player("/player.png", startingHealth);
+        player = new Player("/res/enemy/player.png", startingHealth);
+       
         player.setRotate(90);
         model = new GameModel();
         enemies = new ArrayList<>();
@@ -79,6 +82,7 @@ public class GameView {
         root = new Pane();
         root.getChildren().addAll(player, bulletGroup);
         root.getChildren().addAll(heartsPane);
+        healthBar = new HealthBar(player, heartsPane);
         scene = new Scene(root, width, height);
         hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);
@@ -213,67 +217,9 @@ public class GameView {
         animationTimer.stop();
     }
 
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
 
     public Bounds getBoundsInParent(ImageView imageView) {
         return imageView.getBoundsInParent();
-    }
-
-    public void checkCollision() {
-        List<ImageView> bulletsToRemove = new ArrayList<>();
-        List<Enemy> enemiesToRemove = new ArrayList<>();
-        for (ImageView bullet : bullets) {
-            for (Enemy enemy : enemies) {
-               
-                if (getBoundsInParent(bullet).intersects(enemy.getBounds())) {
-                    bulletsToRemove.add(bullet);
-                    enemiesToRemove.add(enemy);
-                }
-            }
-        }
-        bulletGroup.getChildren().removeAll(bulletsToRemove); // entferne Kugeln aus der bulletGroup
-        bullets.removeAll(bulletsToRemove); // entferne Kugeln aus der bullets-Liste
-        enemies.removeAll(enemiesToRemove);
-        
-        if (!enemiesToRemove.isEmpty()) {
-            model.setScore(model.getScore() + 1);
-        }
-
-        if (isPlayerHit()) {
-            player.decreaseHealth(1);
-            hearts.remove(hearts.size() - 1);
-            heartsPane.getChildren().remove(heartsPane.getChildren().size() - 1);
-            System.out.println(player.getHealth().getValue());
-            if (player.getHealth().getValue() == 0) {
-                stop();
-                showAlert("Game Over", "You were hit by an enemy!");
-            }
-            
-        }
-    }
-    
-    //Trefferbereich wird definiert, der etwas kleiner ist als der Spieler selbst, indem ein Faktor von 0,5 
-    //auf die Höhe des Spielers angewendet wird. Die Methode verwendet dann diesen Trefferbereich, um zu überprüfen, 
-    //ob er sich mit dem Bereich eines Feindes überschneidet.
-    private boolean isPlayerHit() {
-        double hitThreshold = player.getBoundsInParent().getHeight() * 0.5;
-        Bounds playerBounds = new BoundingBox(
-            player.getBoundsInParent().getMinX() + hitThreshold,
-            player.getBoundsInParent().getMinY() + hitThreshold,
-            player.getBoundsInParent().getWidth() - hitThreshold * 2,
-            player.getBoundsInParent().getHeight() - hitThreshold * 2);
-        
-        for (Enemy enemy : enemies) {
-            Bounds enemyBounds = enemy.getBounds();
-            if (playerBounds.intersects(enemyBounds)) {
-                enemies.remove(enemy);
-                return true;
-            }
-        }
-        
-        return false;
     }
 
     public void showAlert(String title, String message) {
