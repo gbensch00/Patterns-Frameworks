@@ -21,15 +21,19 @@ import javafx.util.Duration;
 public class GameController {
   private GameModel model;
   private GameView view;
-  private double velocityX = 0;
-  private double velocityY = 0;
+ 
   private boolean isUpPressed = false;
   private boolean isDownPressed = false;
   private boolean isLeftPressed = false;
   private boolean isRightPressed = false;
+  private boolean isUpPressed2 = false;
+  private boolean isDownPressed2 = false;
+  private boolean isLeftPressed2 = false;
+  private boolean isRightPressed2 = false;
   private MediaPlayer shootSound;
   private boolean isGameOver = false;
   private Player player;
+  private Player player2;
   private List<ImageView> bullets;
   public List<Enemy> enemies;
   public List<SpecialEnemy> specialEnemies;
@@ -51,53 +55,180 @@ public class GameController {
     enemies = view.getEnemies(); 
     specialEnemies = view.getSpecialEnemies();
     // Spieler-Objekt von der GameView erhalten
-    player = view.getPlayer(); 
+    player = view.getPlayer1();
    
+    
     scene.setOnKeyPressed(event -> {
       KeyCode keyCode = event.getCode();
       if (keyCode == KeyCode.W) {
         isUpPressed = true;
-        velocityY = -5;
+        player.setVelocityX(-5);
       } else if (keyCode == KeyCode.A) {
        isLeftPressed = true;
-        velocityX = -5;
+        player.setVelocityY(-5); 
       } else if (keyCode == KeyCode.S) {
         isDownPressed = true;
-        velocityY = 5;
+        player.setVelocityX(5);
       } else if (keyCode == KeyCode.D) {
         isRightPressed = true;
-        velocityX = 5;
+        player.setVelocityY(5);
       } else if (keyCode == KeyCode.SPACE) {
-        shoot();
+        shoot(player);
       }
     });
 
     scene.setOnKeyReleased(event -> {
       KeyCode keyCode = event.getCode();
-      if (keyCode == KeyCode.W) {
+     
+       if (keyCode == KeyCode.W) {
         isUpPressed = false;
-        velocityY = isDownPressed ? 5 : 0;
-      } else if (keyCode == KeyCode.A) {
+        if (isDownPressed) {
+            player.setVelocityX(5);
+        } else {
+            player.setVelocityX(0);
+        }
+    } else if (keyCode == KeyCode.A) {
         isLeftPressed = false;
-        velocityX = isRightPressed ? 5 : 0;
-      } else if (keyCode == KeyCode.S) {
+        if (isRightPressed) {
+            player.setVelocityY(5);
+        } else {
+            player.setVelocityY(0);
+        }
+    } else if (keyCode == KeyCode.S) {
         isDownPressed = false;
-        velocityY = isUpPressed ? -5 : 0;
-      } else if (keyCode == KeyCode.D) {
+        if (isUpPressed) {
+            player.setVelocityX(-5);
+        } else {
+            player.setVelocityX(0);
+        }
+    } else if (keyCode == KeyCode.D) {
         isRightPressed = false;
-        velocityX = isLeftPressed ? -5 : 0;
+        if (isLeftPressed) {
+            player.setVelocityY(-5);
+        } else {
+            player.setVelocityY(0);
+        }
+       
       }
     });
+
+   if(view.getPlayer2() != null) {
+      player2 = view.getPlayer2();
+
+     scene.setOnKeyPressed(event -> {
+       KeyCode keyCode = event.getCode();
+       if (keyCode == KeyCode.W) {
+        isUpPressed = true;
+        player.setVelocityX(-5);
+      } else if (keyCode == KeyCode.A) {
+       isLeftPressed = true;
+        player.setVelocityY(-5); 
+      } else if (keyCode == KeyCode.S) {
+        isDownPressed = true;
+        player.setVelocityX(5);
+      } else if (keyCode == KeyCode.D) {
+        isRightPressed = true;
+        player.setVelocityY(5);
+      } else if (keyCode == KeyCode.SPACE) {
+        shoot(player);
+      }
+      else if (keyCode == KeyCode.UP) {
+        isUpPressed2 = true;
+        player2.setVelocityX(-5);
+      } else if (keyCode == KeyCode.LEFT) {
+       isLeftPressed2 = true;
+        player2.setVelocityY(-5); 
+      } else if (keyCode == KeyCode.DOWN) {
+        isDownPressed2 = true;
+        player2.setVelocityX(5);
+      } else if (keyCode == KeyCode.RIGHT) {
+        isRightPressed2 = true;
+        player2.setVelocityY(5);
+      } else if (keyCode == KeyCode.ENTER) {
+        shoot(player2);
+      }
+    });
+
+    scene.setOnKeyReleased(event -> {
+      KeyCode keyCode = event.getCode();
+     if (keyCode == KeyCode.W) {
+        isUpPressed = false;
+        if (isDownPressed) {
+            player.setVelocityX(5);
+        } else {
+            player.setVelocityX(0);
+        }
+    } else if (keyCode == KeyCode.A) {
+        isLeftPressed = false;
+        if (isRightPressed) {
+            player.setVelocityY(5);
+        } else {
+            player.setVelocityY(0);
+        }
+    } else if (keyCode == KeyCode.S) {
+        isDownPressed = false;
+        if (isUpPressed) {
+            player.setVelocityX(-5);
+        } else {
+            player.setVelocityX(0);
+        }
+    } else if (keyCode == KeyCode.D) {
+        isRightPressed = false;
+        if (isLeftPressed) {
+            player.setVelocityY(-5);
+        } else {
+            player.setVelocityY(0);
+        }
+       
+      }
+      else  if (keyCode == KeyCode.UP) {
+        isUpPressed2 = false;
+        if (isDownPressed2) {
+            player2.setVelocityX(5);
+        } else {
+            player2.setVelocityX(0);
+        }
+    } else if (keyCode == KeyCode.LEFT) {
+        isLeftPressed2 = false;
+        if (isRightPressed2) {
+            player2.setVelocityY(5);
+        } else {
+            player2.setVelocityY(0);
+        }
+    } else if (keyCode == KeyCode.DOWN) {
+        isDownPressed2 = false;
+        if (isUpPressed2) {
+            player2.setVelocityX(-5);
+        } else {
+            player2.setVelocityX(0);
+        }
+    } else if (keyCode == KeyCode.RIGHT) {
+        isRightPressed2 = false;
+        if (isLeftPressed2) {
+            player2.setVelocityY(-5);
+        } else {
+            player2.setVelocityY(0);
+        }
+       
+      }
+    }); 
+    }
 
     AnimationTimer timer = new AnimationTimer() {
       @Override
       public void handle(long now) {
         checkCollision();
-         double newX = player.getTranslateX() + velocityX;
-         double newY = player.getTranslateY() + velocityY;
+         double newX = player.getTranslateX() + player.getVelocityX();
+         double newY = player.getTranslateY() + player.getVelocityY();
          player.setTranslateX(newX);
          player.setTranslateY(newY);
-    
+        
+         if(view.getPlayer2() != null) {
+          double newX2 = player2.getTranslateX() + player2.getVelocityX();
+         double newY2 = player2.getTranslateY() + player2.getVelocityY();
+         player2.setTranslateX(newX2);
+         player2.setTranslateY(newY2);
+         }
         ArrayList<ImageView> bulletsToRemove = new ArrayList<>();
         for (ImageView bullet : bullets) {
           bullet.setTranslateX(bullet.getTranslateX() + 10);
@@ -114,7 +245,7 @@ public class GameController {
   view.setSpecialEnemies(specialEnemies);
   }    
 
-  public void shoot() {
+  public void shoot(Player player) {
 
     shootSound.stop();
     shootSound.seek(Duration.ZERO);
@@ -171,7 +302,11 @@ public void checkCollision() {
   int scoreIncrease = calculateScoreIncrease(enemiesToRemove, specialEnemiesToRemove);
   updateScore(scoreIncrease);
 
-  checkPlayerHit();
+  checkPlayerHit(player);
+  if(view.getPlayer2() != null) {
+    checkPlayerHit(player2);
+  }
+  
 }
 
 private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, List<SpecialEnemy> specialEnemies,
@@ -231,8 +366,8 @@ private void updateScore(int scoreIncrease) {
   view.setScoreLabel(model.getScore());
 }
 
-private void checkPlayerHit() {
-  if (isPlayerHit()) {
+private void checkPlayerHit(Player player) {
+  if (isPlayerHit(player)) {
     player.updateHealth(-1);
     
     if (player.getHealth() <= 0) {
@@ -244,7 +379,7 @@ private void checkPlayerHit() {
   }
 } 
 
-private boolean isPlayerHit() {
+private boolean isPlayerHit(Player player) {
   double hitThreshold = player.getBoundsInParent().getHeight() * 0.5;
   Bounds playerBoundsInScene = player.localToScene(player.getBoundsInLocal());
   Bounds playerBounds = new BoundingBox(

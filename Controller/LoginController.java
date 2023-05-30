@@ -69,6 +69,8 @@ public class LoginController {
 
 	@FXML
 	private Button devLogin;
+	@FXML
+	private Button mp;
 	
 	/*
 	@FXML 
@@ -256,7 +258,17 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800,800);
+		GameView view = new GameView(800, 800, false);
+		GameController controller = new GameController(model, view);
+		stage.setScene(view.getScene());
+		stage.show();
+	}
+	public void mp(ActionEvent event) throws IOException {
+		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		previousStage.close();
+		Stage stage = new Stage();
+		GameModel model = new GameModel();
+		GameView view = new GameView(800,800, true);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();

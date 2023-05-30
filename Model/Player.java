@@ -13,7 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Player extends ImageView implements PropertyChangeListener {
-  private double velocity = 10;
+  private double velocityX = 0;
+  private double velocityY = 0;
   //Zeile von gideon 03.05.
   private int health;
   private PropertyChangeSupport propertyChangeSupport;
@@ -28,21 +29,21 @@ public class Player extends ImageView implements PropertyChangeListener {
     return health;
   }
 
-  public void moveDown() {
-    setTranslateY(getTranslateY() + velocity);
-    setRotate(180);
+  public double getVelocityX() {
+    return velocityY;
   }
 
-  public void moveLeft() {
-    setTranslateX(getTranslateX() - velocity);
-    setRotate(-90);
+  public double getVelocityY() {
+    return velocityX;
   }
 
-  public void moveRight() {
-    setTranslateX(getTranslateX() + velocity);
-    setRotate(0);
-    setRotate(90);
+  public void setVelocityX(double velocityX) {
+    this.velocityX = velocityX;
   }
+  public void setVelocityY(double velocityY) {
+    this.velocityY = velocityY;
+  }
+  
 
   public void updateHealth(int healthChange) {
     int oldHealth = this.health;

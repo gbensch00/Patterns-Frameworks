@@ -33,7 +33,8 @@ public class GameView {
     private List<Enemy> enemies = new ArrayList<>();
     private long lastSpecialEnemyTime = 0L;
     private Scene scene;
-    public Player player;
+    public Player player1;
+    public Player player2;
     private GameModel model;
     public Group bulletGroup = new Group();  
     private Pane root;
@@ -60,13 +61,15 @@ public class GameView {
     private int startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
     private Pane heartsPane;
+    private Pane heartsPane2;
     private HealthBar healthBar;
 
-    public GameView(double width, double height) {
+    public GameView(double width, double height, boolean multiplayer) {
         enemyImage = new Image("/res/enemy/Idle.png");
-        player = new Player("/res/enemy/player.png", startingHealth);
-       
-        player.setRotate(90);
+        player1 = new Player("/res/enemy/player.png", startingHealth);
+        player1.setRotate(90);
+        player1.setTranslateY(200);
+
         model = new GameModel();
         enemies = new ArrayList<>();
         for (int i = 0; i < startingHealth; i++) {
@@ -79,10 +82,20 @@ public class GameView {
         }
         heartsPane = new Pane();
         heartsPane.getChildren().addAll(hearts);
+       
         root = new Pane();
-        root.getChildren().addAll(player, bulletGroup);
+        root.getChildren().addAll(player1, bulletGroup);
         root.getChildren().addAll(heartsPane);
-        healthBar = new HealthBar(player, heartsPane);
+        healthBar = new HealthBar(player1, heartsPane);
+        if (multiplayer == true) {
+            player2 = new Player("/res/enemy/player.png", startingHealth);
+            player2.setRotate(90);
+            player2.setTranslateY(300);
+            heartsPane2 = new Pane();
+            heartsPane2.getChildren().addAll(hearts);
+            root.getChildren().addAll(player2);
+            root.getChildren().addAll(heartsPane2);
+        }
         scene = new Scene(root, width, height);
         hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);
@@ -266,9 +279,13 @@ public class GameView {
         return scene;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getPlayer1() {
+        return player1;
     }
+    public Player getPlayer2() {
+        return player2;
+    }
+
 
     public void setScoreLabel(int score) {
         scoreLabel.setText("Score: " + score);
