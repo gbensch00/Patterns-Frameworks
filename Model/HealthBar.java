@@ -26,9 +26,7 @@ public class HealthBar implements PropertyChangeListener {
     if (evt.getPropertyName().equals("health")) {
       int oldValue = (int) evt.getOldValue();
       int newValue = (int) evt.getNewValue();
-      System.out.println("before: " + player.getHealth());
-      player.setHealth(newValue);
-      System.out.println("after: " + player.getHealth());
+     
       if (oldValue > newValue) {
         heartsPane.getChildren().clear();
         for (int i = 0; i < newValue; i++) {

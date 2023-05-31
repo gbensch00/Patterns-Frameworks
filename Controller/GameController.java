@@ -380,8 +380,8 @@ private void checkPlayerHit(Player player) {
   if (view.getPlayer2() != null) { 
     if (isPlayerHit(player2)) {
       player.updateHealth(-1, player2, "two");
-      view.updateSecondHealthBar(player.getHealth());
-      if (player.getHealth() <= 0) {
+      view.updateSecondHealthBar(player.getHealth2());
+      if (player.getHealth2() <= 0) {
       isGameOver = true;
       view.stop();
       view.showAlert("Game Over", "You were hit by an enemy!");
