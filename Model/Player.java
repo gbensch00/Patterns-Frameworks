@@ -18,6 +18,7 @@ public class Player extends ImageView implements PropertyChangeListener {
   //Zeile von gideon 03.05.
   private int health;
   private PropertyChangeSupport propertyChangeSupport;
+  
 
   public Player(String imagePath, int startingHealth) {
     super(new Image(imagePath));
@@ -27,6 +28,10 @@ public class Player extends ImageView implements PropertyChangeListener {
 
   public int getHealth() {
     return health;
+  }
+
+  public void setHealth(int newHealth) {
+    this.health = newHealth;
   }
 
   public double getVelocityX() {
@@ -45,11 +50,19 @@ public class Player extends ImageView implements PropertyChangeListener {
   }
   
 
-  public void updateHealth(int healthChange) {
+  public void updateHealth(int healthChange, Player player, String playerSelector) {
     int oldHealth = this.health;
+    System.out.println("before: " + this.health);
     this.health += healthChange;
+     System.out.println("before: " + this.health);
     System.out.println("this.health: " + this.health);
-    propertyChangeSupport.firePropertyChange("health", oldHealth, health);
+    if (playerSelector == "one") {
+      propertyChangeSupport.firePropertyChange("health", oldHealth, health);
+    } else if (playerSelector == "two") {
+      
+     propertyChangeSupport.firePropertyChange("health2", oldHealth, health);
+    }
+    
   }
     
    // Methods to register and unregister PropertyChangeListeners

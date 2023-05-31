@@ -368,14 +368,25 @@ private void updateScore(int scoreIncrease) {
 
 private void checkPlayerHit(Player player) {
   if (isPlayerHit(player)) {
-    player.updateHealth(-1);
-    
+    player.updateHealth(-1, player, "one");
+
     if (player.getHealth() <= 0) {
       isGameOver = true;
       view.stop();
       view.showAlert("Game Over", "You were hit by an enemy!");
     }
-    
+
+  }
+  if (view.getPlayer2() != null) { 
+    if (isPlayerHit(player2)) {
+      player.updateHealth(-1, player2, "two");
+      view.updateSecondHealthBar(player.getHealth());
+      if (player.getHealth() <= 0) {
+      isGameOver = true;
+      view.stop();
+      view.showAlert("Game Over", "You were hit by an enemy!");
+    }
+    }
   }
 } 
 
@@ -407,6 +418,8 @@ public void addBullet(ImageView bullet) {
 }
 
 public void addBullet(ImageView bullet1, ImageView bullet2) {
-  view.getBulletGroup().getChildren().addAll(bullet1, bullet2);  
+  view.getBulletGroup().getChildren().addAll(bullet1, bullet2);
 }
+
+
 }

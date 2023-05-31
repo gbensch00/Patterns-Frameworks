@@ -60,6 +60,7 @@ public class GameView {
 
     private int startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
+    private ArrayList<ImageView> hearts2 = new ArrayList<>();
     private Pane heartsPane;
     private Pane heartsPane2;
     private HealthBar healthBar;
@@ -74,10 +75,8 @@ public class GameView {
         enemies = new ArrayList<>();
         for (int i = 0; i < startingHealth; i++) {
             ImageView heart = new ImageView(new Image("heart.png"));
-
             heart.setTranslateX(10 + (i * 10));
             heart.setTranslateY(10);
-
             hearts.add(heart);
         }
         heartsPane = new Pane();
@@ -91,8 +90,16 @@ public class GameView {
             player2 = new Player("/res/enemy/player.png", startingHealth);
             player2.setRotate(90);
             player2.setTranslateY(300);
+            for (int i = 0; i < startingHealth; i++) {
+            ImageView heart2 = new ImageView(new Image("heart.png"));
+
+            heart2.setTranslateX(10 + (i * 10));
+            heart2.setTranslateY(40);
+
+            hearts2.add(heart2);
+        }
             heartsPane2 = new Pane();
-            heartsPane2.getChildren().addAll(hearts);
+            heartsPane2.getChildren().addAll(hearts2);
             root.getChildren().addAll(player2);
             root.getChildren().addAll(heartsPane2);
         }
@@ -213,7 +220,15 @@ public class GameView {
             }
         }     
     }
+public void updateSecondHealthBar(int health) {
 
+    int heartsToRemove = hearts2.size() - health;
+    if (heartsToRemove > 0) {
+        hearts2.subList(hearts2.size() - heartsToRemove, hearts2.size()).clear();
+        heartsPane2.getChildren().clear();
+        heartsPane2.getChildren().addAll(hearts2);
+    }
+}
     public void render() {
         gc.clearRect(0, 0, root.getWidth(), root.getHeight());
     
