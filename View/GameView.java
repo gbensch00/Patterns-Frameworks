@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import Controller.HighscoreController;
+
 import Model.Enemy;
 import Model.Player;
 import Model.GameModel;
@@ -26,6 +27,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+
 public class GameView {
 
     private List<Enemy> enemies;
@@ -44,14 +46,20 @@ public class GameView {
     private double startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
     private Pane heartsPane;
+   
     
     private String PlayerName1;
-    private String PlayerName2;
+    private String PlayerName2 = "guest";
+    
+   
+    
     
     public GameView(double width, double height, String playername) {
         
     	this.PlayerName1 = playername;
     	System.out.println("Hello " + playername + " ready to kick some asses ?");
+    	
+       	
     	enemyImage = new Image("/Idle.png");
         player = new Player("/player.png", startingHealth);
         player.setRotate(90);
@@ -106,7 +114,9 @@ public class GameView {
                 background.setTranslateX(backgroundOffset);
 
                 addEnemy(now);
+             
                 update();
+             
                 render();
             }
         };
@@ -124,6 +134,8 @@ public class GameView {
           lastEnemyTime = currentTime;
       }
   }
+    
+    
 
     public void update() {
         Iterator<Enemy> iterator = enemies.iterator();
@@ -135,6 +147,7 @@ public class GameView {
             }
         }     
     }
+    
 
     public void render() {
         gc.clearRect(0, 0, root.getWidth(), root.getHeight());

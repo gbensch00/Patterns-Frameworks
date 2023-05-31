@@ -51,6 +51,7 @@ public class SettingsController {
 	private Connection connection;
 	boolean somethingChanged = false;
 	Color savedBackgroundColor;
+	String savedResolution;
 	
 	@FXML
 	Button BackButton;
@@ -91,7 +92,7 @@ public class SettingsController {
 	    List<String> fontSizes = Arrays.asList("8", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72");
 	    FontSize.getItems().addAll(fontSizes);
 	    
-	    List<String> windowSizes = Arrays.asList("800x600", "1024x786");
+	    List<String> windowSizes = Arrays.asList("800x600", "1024x786", "1280x720","1920x1080");
 	    WindowSize.getItems().addAll(windowSizes);
 	 
 	    
@@ -120,6 +121,7 @@ public class SettingsController {
 	                String bgColorStr = settingResultSet.getString("Backgroundcolor");
 	                this.savedBackgroundColor = Color.valueOf(bgColorStr);
 	                this.savedAvatar = settingResultSet.getBytes("Avatar");
+	                this.savedResolution = settingResultSet.getString("Resolution");
 	                
 	                System.out.println("Fontname "+  this.savedFontName + "FontSize "+ this.savedFontSize + "BGC "+this.savedBackgroundColor + "Avatar "+ this.savedAvatar );
 	            }
@@ -166,13 +168,14 @@ public class SettingsController {
 	       //  this.savedBackgroundColor = cP.getValue();
 	        String colorValue = String.format("#%02X%02X%02X", (int) (savedBackgroundColor.getRed() * 255),
 	                            (int) (savedBackgroundColor.getGreen() * 255), (int) (savedBackgroundColor.getBlue() * 255));
-	        String updateQuery = "UPDATE UserSettings SET Backgroundcolor = ?, Avatar = ?, FontType = ?, FontSize = ? WHERE UserID = ?";
+	        String updateQuery = "UPDATE UserSettings SET Backgroundcolor = ?, Avatar = ?, FontType = ?, FontSize = ?, Resolution = ? WHERE UserID = ?";
 	        pstmt = connection.prepareStatement(updateQuery);
 	        pstmt.setString(1,colorValue);
 	        pstmt.setBytes(2, this.savedAvatar);
 	        pstmt.setString(3, this.savedFontName);
 	        pstmt.setString(4, this.savedFontSize);
-	        pstmt.setString(5, dbID);
+	        pstmt.setString(5, this.savedResolution);
+	        pstmt.setString(6, dbID);
 	        pstmt.executeUpdate();
 	        int rowsUpdated = pstmt.executeUpdate();
 	        System.out.println(rowsUpdated + " Einstellungen wurden gespeichert!");
@@ -236,6 +239,10 @@ public class SettingsController {
 	    } 
 	}
 
+	@FXML
+	private void ResolutionChange(ActionEvent event) {
+		this.savedResolution = WindowSize.getValue();
+	}
 	
 	public void AvatarChange(ActionEvent e) throws IOException {
 		 FileChooser fileChooser = new FileChooser();

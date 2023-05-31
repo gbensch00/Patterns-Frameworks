@@ -18,9 +18,10 @@ import java.io.IOException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Files;
-
+import javafx.scene.control.TextInputDialog;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 
 import Model.GameModel;
 import View.GameView;
@@ -46,7 +47,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -57,20 +57,23 @@ import javafx.scene.paint.Stop;
 
 public class LobbyController {
 
-
 	String loggedInUserName;
+	String PlayerTwoName = "guest";
 	String dbID;
+	private DatabaseConnection dbConnection;
+	String resolution;
+	int width;
+	int height;
 	
 	
-	 private DatabaseConnection dbConnection;
 
-	    public LobbyController() {
-	        try {
-	            dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3306/TestDB", "root", "");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+	public LobbyController() {
+		try {
+			dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3306/TestDB", "root", "");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@FXML
 	private ColorPicker cP; // Farbauswahl-Element aus der FXML-Datei
@@ -96,31 +99,34 @@ public class LobbyController {
 	@FXML
 	private Button SaveSettingsButton;
 
-		
-	
+	@FXML
+	public void setLoggedInUserName(String userName) {
+		UserName.setText("Hallo " + userName + "!");
+		this.loggedInUserName = userName;
+		try {
+			Connection connection = dbConnection.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM PLAYER WHERE name = '" + userName + "'");
+			if (resultSet.next()) {
+				String dbID = resultSet.getString("id");
+				this.dbID = dbID;
+				// ...
 
-	
-	 @FXML
-	    public void setLoggedInUserName(String userName) {
-			UserName.setText("Hallo " + userName + "!");
-			this.loggedInUserName = userName;
-	        try {
-	            Connection connection = dbConnection.getConnection();
-	            Statement statement = connection.createStatement();
-	            ResultSet resultSet = statement.executeQuery("SELECT * FROM PLAYER WHERE name = '" + userName + "'");
-	            if (resultSet.next()) {
-	                String dbID = resultSet.getString("id");
-	                this.dbID = dbID;
-	                // ...
-	            
-	            // Hier werden die Parameter aus der Tabelle UserSettings in der mySQL DB
+				// Hier werden die Parameter aus der Tabelle UserSettings in der mySQL DB
 				// geladen
 				// FontType, FontSize und der Avatar
-	            resultSet = statement.executeQuery("SELECT * FROM UserSettings WHERE UserID = '" + dbID + "'");
+				resultSet = statement.executeQuery("SELECT * FROM UserSettings WHERE UserID = '" + dbID + "'");
 				if (resultSet.next()) {
 					String fontType = resultSet.getString("FontType");
 					int fontSize = resultSet.getInt("FontSize");
 					String backgroundColor = resultSet.getString("Backgroundcolor");
+					
+					this.resolution = resultSet.getString("Resolution");
+						String[] dimensions = resolution.split("x");
+						this.width = Integer.parseInt(dimensions[0]);
+						this.height = Integer.parseInt(dimensions[1]);
+					
+					
 					Color bgC = Color.valueOf(backgroundColor);
 					// Bei neuen Einträgen in die DB ist der Avatar noch NULL daher wird hier eine
 					// Überprüfung gemacht ob der Wert NULL ist wenn ja lade ein Standardbild
@@ -143,36 +149,30 @@ public class LobbyController {
 							((Button) node).setFont(Font.font(fontType, FontWeight.NORMAL, fontSize));
 						}
 					}
-					
-					
-				
-					
+
 					Stop[] stops = new Stop[] { new Stop(0, bgC), new Stop(1, Color.LIGHTBLUE) };
 					LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
 
 					// Setze den Farbverlauf als Hintergrundbild
 					BackgroundFill fill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
 					Background background = new Background(fill);
-					anchorPane.setBackground(background); 
-					
-					
+					anchorPane.setBackground(background);
 
-					
 				}
-	            
-	        }} catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
 
-	    public void close() {
-	        try {
-	            dbConnection.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public void close() {
+		try {
+			dbConnection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@FXML
 	private void handleCloseButton(ActionEvent event) {
@@ -189,31 +189,56 @@ public class LobbyController {
 			stage.close();
 		}
 	}
-	
+
 	@FXML
 	private void handleSinglePlayerButton(ActionEvent event) {
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(600,600, this.loggedInUserName);
+		GameView view = new GameView(width, height, this.loggedInUserName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
 	}
-	
+
 	@FXML
 	private void handleMultiPlayerButton(ActionEvent event) {
+
+		// Abfrage zum zweiten Spieler
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Zweiter Spieler");
+		alert.setHeaderText(null);
+		alert.setContentText("Gibt es einen zweiten Spieler?");
+		ButtonType buttonTypeYes = new ButtonType("Ja");
+		ButtonType buttonTypeNo = new ButtonType("Nein");
+		alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+		// Zeigt den Dialog an und wartet auf Benutzerinteraktion
+		ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+
+		if (result == buttonTypeYes) {
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Spielername");
+			dialog.setHeaderText(null);
+			dialog.setContentText("Wie heißt der zweite Spieler?");
+			Optional<String> resultName = dialog.showAndWait();
+			this.PlayerTwoName = resultName.orElse("guest");
+
+		}
+
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(600,600, this.loggedInUserName);
+		GameView view = new GameView(800, 600, this.loggedInUserName);
+		// GameView view = new GameView(600,600, this.loggedInUserName,PlayerTwoName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
+		System.out.println("Hallo " + PlayerTwoName + " Bist du bereit?");
 	}
-	
+
 	@FXML
 	private void handleHighscoreButton(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
@@ -222,21 +247,21 @@ public class LobbyController {
 		stage.setScene(scene);
 		stage.show();
 	}
-	
+
 	@FXML
 	private void handleSettingsButton(ActionEvent event) throws IOException, SQLException {
-		
+
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		previousStage.close();
-		
+
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
 		Parent root = loader.load();
 		SettingsController settingsController = loader.getController();
-	    settingsController.setUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
-	    Scene scene = new Scene(root);
-	    Stage stage = new Stage();
-	    stage.setScene(scene);
-	    stage.show();
+		settingsController.setUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
+		Scene scene = new Scene(root);
+		Stage stage = new Stage();
+		stage.setScene(scene);
+		stage.show();
 	}
 
 }

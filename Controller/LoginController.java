@@ -114,20 +114,12 @@ public class LoginController {
 
 					if (userID.equals(name) && password.equals(password)) {
 						loggedInUserName = name; // Benutzername speichern
-						System.out.println("Login erfolgreich");
-						System.out.println(userID + " " + name + " " + userpassword + " " + password);
-
+						
 						// Login Stage wird geschlossen
 						Stage previousStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 						previousStage.close();
 
-						// Game Stage wird geöffnet
-						/*
-						 * Stage stage = new Stage(); GameModel model = new GameModel(); GameView view =
-						 * new GameView(); GameController controller = new GameController(model, view);
-						 * stage.setScene(view.getScene()); stage.show();
-						 */
-
+					
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("cockpit.fxml"));
 						Parent root = loader.load();
 						LobbyController lobbyController = loader.getController();
@@ -139,9 +131,8 @@ public class LoginController {
 
 					}
 
-					else {
-						System.out.println("Login nicht erfolgreich");
-					}
+					
+					
 
 				}
 

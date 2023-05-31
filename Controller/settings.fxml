@@ -16,7 +16,7 @@
       </Label>
       <ComboBox fx:id="FontStyle" layoutX="225.0" layoutY="149.0" onAction="#FontChange" prefWidth="150.0" />
       <ComboBox fx:id="FontSize" layoutX="225.0" layoutY="193.0" onAction="#FontSizeChange" prefWidth="150.0" />
-      <ComboBox fx:id="WindowSize" layoutX="225.0" layoutY="242.0" prefWidth="150.0" />
+      <ComboBox fx:id="WindowSize" layoutX="225.0" layoutY="242.0" onAction="#ResolutionChange" prefWidth="150.0" />
       <ColorPicker fx:id="cP" layoutX="225.0" layoutY="300.0" onAction="#colorChange" prefHeight="26.0" prefWidth="150.0" />
       <Label layoutX="80.0" layoutY="154.0" text="Schriftart" />
       <Label layoutX="80.0" layoutY="198.0" text="Schriftgröße" />
