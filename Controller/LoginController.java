@@ -1,10 +1,8 @@
 package Controller;
-import  Model.Sound;
 
 
-import java.awt.Color;
+
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -20,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import Controller.GameController;
 import Model.GameModel;
 import View.GameView;
 import javafx.scene.control.Alert;
@@ -34,18 +31,28 @@ public class LoginController {
 	 * (mysql-connector.java-8.0.25.jar) zu finden im Ordner Extra Lib
 	 */
 
-	String url = "jdbc:mysql://localhost:3306/TestDB";
-	String user = "root";
-	String password = "";
-	Connection con = null;
+	String DBURL = "jdbc:mysql://localhost:3306/TestDB";
+	String DBUser = "root";
+	String DBPassword = "";
 	Statement stmt = null;
 	ResultSet rs = null;
-	
-	private String loggedInUserName = "";
-	
-	
-	
-	private Sound startupSound;
+
+	private String loggedInUserName = "guest";
+	private UserDAO userDAO;
+
+	public LoginController() {
+		// Code zur Initialisierung der Verbindung zur Datenbank
+		try {
+			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
+			userDAO = new UserDAOImpl(con);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public LoginController(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
 
 	@FXML
 	private Button LoginButton;
@@ -66,32 +73,11 @@ public class LoginController {
 	@FXML
 	private Button RegisterButton;
 
-
 	@FXML
 	private Button devLogin;
-	
-	/*
-	@FXML 
-	public void initialize() {
-		//Spielerei! beim Login wird die Intro.wav wiedergegeben	
-		
-				String filename = "/res/Sounds/intro.wav";
-				URL url = getClass().getResource(filename);
-				if (url == null) {
-				    System.err.println("Couldn't find file: " + filename);
-				    return;
-				}
-				Sound sound = new Sound(url.getFile());
-				startupSound = sound;
-				startupSound.play();
-	}
-*/
+
 	@FXML
 	public void userLogin(ActionEvent e) throws IOException {
-	
-	
-
-		
 
 		if (e.getSource() == LoginButton) {
 			String userID = userIDField.getText();
@@ -102,56 +88,34 @@ public class LoginController {
 			 * Eintrag einzeln Wollte ich gerne noch anpassen, dass sobald der gültige
 			 * Nutzer gefunden wurde dann auch der Login passiert
 			 */
-			try {
-				con = DriverManager.getConnection(this.url, this.user, this.password);
-				stmt = con.createStatement();
-				rs = stmt.executeQuery("SELECT * FROM PLAYER");
-				while (rs.next()) {
-					
-					String dbID = rs.getString("id");
-					String name = rs.getString("name");
-					String userpassword = rs.getString("password");
+			// Aufruf des DAO, um den Benutzer abzurufen
+			User user = userDAO.getUserByName(userID);
 
-					if (userID.equals(name) && password.equals(password)) {
-						loggedInUserName = name; // Benutzername speichern
-						
-						// Login Stage wird geschlossen
-						Stage previousStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-						previousStage.close();
+			if (user != null && password.equals(user.getPassword())) {
+				// Benutzer gefunden und Passwort stimmt überein
 
-					
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("cockpit.fxml"));
-						Parent root = loader.load();
-						LobbyController lobbyController = loader.getController();
-					    lobbyController.setLoggedInUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
-					    Scene scene = new Scene(root);
-					    Stage stage = new Stage();
-					    stage.setScene(scene);
-					    stage.show();
+				loggedInUserName = user.getUsername(); // Benutzername speichern
+				
+				// Login Stage wird geschlossen
+				Stage previousStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+				previousStage.close();
 
-					}
-
-					
-					
-
-				}
-
-			} catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally {
-				try {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				} catch (SQLException sqle) {
-					sqle.printStackTrace();
-				}
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("cockpit.fxml"));
+				Parent root = loader.load();
+				LobbyController lobbyController = loader.getController();
+				lobbyController.setLoggedInUserName(user); // Benutzernamen an das FXML-Controller-Objekt
+																// übergeben
+				Scene scene = new Scene(root);
+				Stage stage = new Stage();
+				stage.setScene(scene);
+				stage.show();
+			} else {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Falsches Password oder Nutzer nicht gefunden");
+				alert.setHeaderText(null);
+				alert.setContentText("Falsches Password oder Nutzer nicht gefunden");
+				alert.showAndWait();
 			}
-
-			System.out.println("Database Connection Closed");
 
 		}
 
@@ -188,55 +152,27 @@ public class LoginController {
 	}
 
 	@FXML
-	public void createNewUser(ActionEvent event) throws IOException {
+	public void createNewUser(ActionEvent event) throws IOException, SQLException {
 		if (event.getSource() == RegisterButton) {
 			String userName = RegisterUserNameField.getText();
 			String password = String.valueOf(RegisterUserPasswordField.getText());
-			try {
-				con = DriverManager.getConnection(this.url, this.user, this.password);
-				stmt = con.createStatement();
-				// Überprüfung, ob Nutzername bereits vergeben ist
-				String selectQuery = "SELECT * FROM PLAYER WHERE name = '" + userName + "'";
-				ResultSet rs = stmt.executeQuery(selectQuery);
-				if (rs.next()) { // Wenn es bereits einen Eintrag mit dem Nutzernamen gibt
-					Alert alert = new Alert(AlertType.WARNING);
-					alert.setTitle("Nutzername bereits vergeben");
-					alert.setHeaderText(null);
-					alert.setContentText("Der Nutzername " + userName + " ist bereits vergeben.");
-					alert.showAndWait();
-					return; // Methode beenden, wenn Nutzername bereits vergeben ist
-				}
-				String insertQuery = "INSERT INTO PLAYER (name, password) VALUES ('" + userName + "', '" + password
-						+ "')";
-				stmt.executeUpdate(insertQuery);
-				System.out.println("Nutzer erstellt");
 
-				// Erfolgs-Alert anzeigen
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Nutzer erstellt");
-				alert.setHeaderText(null);
-				alert.setContentText("Nutzer wurde erfolgreich erstellt");
-				final ActionEvent finalEvent = event; // Event in endgültige Variable umwandeln
-				alert.setOnHidden(evt -> {
-					Stage previousStage = (Stage) ((Node) finalEvent.getSource()).getScene().getWindow();
-					previousStage.close();
-				});
-				alert.showAndWait();
+			User newUser = new User(userName, password); // Erstelle ein neues User-Objekt
 
-			} catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally {
-				try {
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				} catch (SQLException sqle) {
-					sqle.printStackTrace();
-				}
-			}
+			userDAO.createUser(newUser); // Aufruf der createUser-Methode des UserDAO
+			System.out.println("Nutzer erstellt");
 
-			System.out.println("Database Connection Closed");
+			// Erfolgs-Alert anzeigen
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Nutzer erstellt");
+			alert.setHeaderText(null);
+			alert.setContentText("Nutzer wurde erfolgreich erstellt");
+			final ActionEvent finalEvent = event; // Event in endgültige Variable umwandeln
+			alert.setOnHidden(evt -> {
+				Stage previousStage = (Stage) ((Node) finalEvent.getSource()).getScene().getWindow();
+				previousStage.close();
+			});
+			alert.showAndWait();
 		}
 	}
 

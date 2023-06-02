@@ -65,11 +65,21 @@ public class LobbyController {
 	int width;
 	int height;
 	
+	String DBURL = "jdbc:mysql://localhost:3306/TestDB";
+	String DBUser = "root";
+	String DBPassword = "";
 	
+	private UserSettingsDAO userSettingsDAO;
+	
+	//private UserDAO userDAO;
 
 	public LobbyController() {
 		try {
 			dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3306/TestDB", "root", "");
+			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
+			userSettingsDAO = new UserSettingsDAOImpl(con);
+		//	userDAO = new UserDAOImpl(con);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -100,53 +110,53 @@ public class LobbyController {
 	private Button SaveSettingsButton;
 
 	@FXML
-	public void setLoggedInUserName(String userName) {
-		UserName.setText("Hallo " + userName + "!");
-		this.loggedInUserName = userName;
-		try {
-			Connection connection = dbConnection.getConnection();
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM PLAYER WHERE name = '" + userName + "'");
-			if (resultSet.next()) {
-				String dbID = resultSet.getString("id");
-				this.dbID = dbID;
-				// ...
-
-				// Hier werden die Parameter aus der Tabelle UserSettings in der mySQL DB
-				// geladen
-				// FontType, FontSize und der Avatar
-				resultSet = statement.executeQuery("SELECT * FROM UserSettings WHERE UserID = '" + dbID + "'");
-				if (resultSet.next()) {
-					String fontType = resultSet.getString("FontType");
-					int fontSize = resultSet.getInt("FontSize");
-					String backgroundColor = resultSet.getString("Backgroundcolor");
-					
-					this.resolution = resultSet.getString("Resolution");
-						String[] dimensions = resolution.split("x");
-						this.width = Integer.parseInt(dimensions[0]);
-						this.height = Integer.parseInt(dimensions[1]);
-					
+	public void setLoggedInUserName(User userName) { 
+	    UserName.setText("Hallo " + userName.getUsername() + "!");
+	    this.loggedInUserName = userName.getUsername();
+	    
+	  
+	   
+	    try {
+	    	//User user = userDAO.getUserByName(userName);
+	    	String userID = String.valueOf(userName.getId());
+	    	
+	    	UserSettings userSettings = userSettingsDAO.getUserSettingsByUserId(userID);
+	    	
+	    	//lediglich Fehlerüberprüfung kann später gelöscht werden
+	    	if (userSettings == null) {
+	    		System.out.println(userSettings);
+	    	}
+	     
+	        if (userSettings != null) {
+	            String fontType = userSettings.getFontType();
+	            String fontSize = userSettings.getFontSize();
+	            String backgroundColor = userSettings.getBackgroundColor();
+	            String resolution = userSettings.getResolution();
+	            this.dbID = String.valueOf(userSettings.getUserId());	
+	            System.out.println("ID lautet "+this.dbID);
+	            
+	            String[] dimensions = resolution.split("x");
+	            this.width = Integer.parseInt(dimensions[0]);
+	            this.height = Integer.parseInt(dimensions[1]);
 					
 					Color bgC = Color.valueOf(backgroundColor);
 					// Bei neuen Einträgen in die DB ist der Avatar noch NULL daher wird hier eine
 					// Überprüfung gemacht ob der Wert NULL ist wenn ja lade ein Standardbild
-					if (resultSet.getBlob("Avatar") == null) {
+					if (userSettings.getSavedAvatar() == null) {
 						InputStream inputStream = getClass().getResourceAsStream("/res/UserAvatar/PlayerIcon1.png");
 						Image image = new Image(inputStream);
 						Avatar.setImage(image);
 					} else {
-						Blob avatar = resultSet.getBlob("Avatar");
-						InputStream inputStream = avatar.getBinaryStream();
-						Image image = new Image(inputStream);
-
-						// Weist das Bild der ImageView zu
-
-						Avatar.setImage(image);
+						
+						byte[] avatarBytes = userSettings.getSavedAvatar();
+						ByteArrayInputStream inputStream = new ByteArrayInputStream(avatarBytes);
+					    Image image = new Image(inputStream);
+					    Avatar.setImage(image);
 					}
 
 					for (Node node : anchorPane.getChildren()) {
 						if (node instanceof Button) {
-							((Button) node).setFont(Font.font(fontType, FontWeight.NORMAL, fontSize));
+							((Button) node).setFont(Font.font(fontType));
 						}
 					}
 
@@ -160,7 +170,7 @@ public class LobbyController {
 
 				}
 
-			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -257,7 +267,8 @@ public class LobbyController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
 		Parent root = loader.load();
 		SettingsController settingsController = loader.getController();
-		settingsController.setUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
+		settingsController.setUserName(this.dbID); // Benutzernamen an das FXML-Controller-Objekt übergeben
+		
 		Scene scene = new Scene(root);
 		Stage stage = new Stage();
 		stage.setScene(scene);
