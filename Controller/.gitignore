@@ -6,3 +6,10 @@
 /HighscoreScene.class
 /GameController.class
 /SettingsController.class
+/Upgrade.class
+/UserDAO.class
+/User.class
+/UserDAOImpl.class
+/UserSettings.class
+/UserSettingsDAO.class
+/UserSettingsDAOImpl.class

@@ -2,3 +2,6 @@
 /GameModel.class
 /Player.class
 /Enemy.class
+/Server.class
+/Server$CreateUserHandler.class
+/Server$LoginHandler.class

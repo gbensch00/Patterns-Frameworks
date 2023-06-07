@@ -1,7 +1,9 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Controller.GameController;
 import Model.GameModel;
+import Model.Server;
 import View.GameView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,20 +21,24 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		Thread serverThread = new Thread(() -> {
+			try {
+				Server.startServer();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		serverThread.setDaemon(true);
+		serverThread.start();
 
-		
-		
-		
 		Parent root = FXMLLoader.load(getClass().getResource("/Controller/main.fxml"));
 		Scene scene = new Scene(root);
-		
-	/*Für spätere CSS-Anpassungen oder Intergration*/
-		
-		// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		
+
+		// Weitere Anpassungen für die Szene...
+
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
-
 	}
+
 }

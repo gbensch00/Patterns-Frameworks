@@ -70,17 +70,28 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	public void createUser(User user) {
-		try {
-	        String query = "INSERT INTO PLAYER (name, password) VALUES (?, ?)";
-	        PreparedStatement pstmt = con.prepareStatement(query);
+	    try {
+	        String query1 = "SELECT * FROM PLAYER WHERE name = ?";
+	        PreparedStatement pstmt = con.prepareStatement(query1);
 	        pstmt.setString(1, user.getUsername());
-	        pstmt.setString(2, user.getPassword());
-	        pstmt.executeUpdate();
+	        ResultSet resultSet = pstmt.executeQuery();
+
+	        if (!resultSet.next()) {
+	            String query2 = "INSERT INTO PLAYER (name, password) VALUES (?, ?)";
+	            PreparedStatement insertStatement = con.prepareStatement(query2);
+	            insertStatement.setString(1, user.getUsername());
+	            insertStatement.setString(2, user.getPassword());
+	            insertStatement.executeUpdate();
+	        } else {
+	            // User with the same username already exists
+	            System.out.println("User with the same username already exists");
+	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-		
 	}
+		
+	
 
 	@Override
 	public void updateUser(User user) {

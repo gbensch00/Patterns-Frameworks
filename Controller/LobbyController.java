@@ -64,22 +64,22 @@ public class LobbyController {
 	String resolution;
 	int width;
 	int height;
-	
+
 	String DBURL = "jdbc:mysql://localhost:3306/TestDB";
 	String DBUser = "root";
 	String DBPassword = "";
-	
+
 	private UserSettingsDAO userSettingsDAO;
-	
-	//private UserDAO userDAO;
+
+	// private UserDAO userDAO;
 
 	public LobbyController() {
 		try {
 			dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3306/TestDB", "root", "");
 			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
 			userSettingsDAO = new UserSettingsDAOImpl(con);
-		//	userDAO = new UserDAOImpl(con);
-			
+			// userDAO = new UserDAOImpl(con);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -110,67 +110,64 @@ public class LobbyController {
 	private Button SaveSettingsButton;
 
 	@FXML
-	public void setLoggedInUserName(User userName) { 
-	    UserName.setText("Hallo " + userName.getUsername() + "!");
-	    this.loggedInUserName = userName.getUsername();
-	    
-	  
-	   
-	    try {
-	    	//User user = userDAO.getUserByName(userName);
-	    	String userID = String.valueOf(userName.getId());
-	    	
-	    	UserSettings userSettings = userSettingsDAO.getUserSettingsByUserId(userID);
-	    	
-	    	//lediglich Fehlerüberprüfung kann später gelöscht werden
-	    	if (userSettings == null) {
-	    		System.out.println(userSettings);
-	    	}
-	     
-	        if (userSettings != null) {
-	            String fontType = userSettings.getFontType();
-	            String fontSize = userSettings.getFontSize();
-	            String backgroundColor = userSettings.getBackgroundColor();
-	            String resolution = userSettings.getResolution();
-	            this.dbID = String.valueOf(userSettings.getUserId());	
-	            System.out.println("ID lautet "+this.dbID);
-	            
-	            String[] dimensions = resolution.split("x");
-	            this.width = Integer.parseInt(dimensions[0]);
-	            this.height = Integer.parseInt(dimensions[1]);
-					
-					Color bgC = Color.valueOf(backgroundColor);
-					// Bei neuen Einträgen in die DB ist der Avatar noch NULL daher wird hier eine
-					// Überprüfung gemacht ob der Wert NULL ist wenn ja lade ein Standardbild
-					if (userSettings.getSavedAvatar() == null) {
-						InputStream inputStream = getClass().getResourceAsStream("/res/UserAvatar/PlayerIcon1.png");
-						Image image = new Image(inputStream);
-						Avatar.setImage(image);
-					} else {
-						
-						byte[] avatarBytes = userSettings.getSavedAvatar();
-						ByteArrayInputStream inputStream = new ByteArrayInputStream(avatarBytes);
-					    Image image = new Image(inputStream);
-					    Avatar.setImage(image);
-					}
+	public void setLoggedInUserName(User userName) {
+		UserName.setText("Hallo " + userName.getUsername() + "!");
+		this.loggedInUserName = userName.getUsername();
 
-					for (Node node : anchorPane.getChildren()) {
-						if (node instanceof Button) {
-							((Button) node).setFont(Font.font(fontType));
-						}
-					}
+		try {
+			// User user = userDAO.getUserByName(userName);
+			String userID = String.valueOf(userName.getId());
 
-					Stop[] stops = new Stop[] { new Stop(0, bgC), new Stop(1, Color.LIGHTBLUE) };
-					LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+			UserSettings userSettings = userSettingsDAO.getUserSettingsByUserId(userID);
 
-					// Setze den Farbverlauf als Hintergrundbild
-					BackgroundFill fill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
-					Background background = new Background(fill);
-					anchorPane.setBackground(background);
+			// lediglich Fehlerüberprüfung kann später gelöscht werden
+			if (userSettings == null) {
+				System.out.println(userSettings);
+			}
 
+			if (userSettings != null) {
+				String fontType = userSettings.getFontType();
+				String fontSize = userSettings.getFontSize();
+				String backgroundColor = userSettings.getBackgroundColor();
+				String resolution = userSettings.getResolution();
+				this.dbID = String.valueOf(userSettings.getUserId());
+				System.out.println("ID lautet " + this.dbID);
+
+				String[] dimensions = resolution.split("x");
+				this.width = Integer.parseInt(dimensions[0]);
+				this.height = Integer.parseInt(dimensions[1]);
+
+				Color bgC = Color.valueOf(backgroundColor);
+				// Bei neuen Einträgen in die DB ist der Avatar noch NULL daher wird hier eine
+				// Überprüfung gemacht ob der Wert NULL ist wenn ja lade ein Standardbild
+				if (userSettings.getSavedAvatar() == null) {
+					InputStream inputStream = getClass().getResourceAsStream("/res/UserAvatar/PlayerIcon1.png");
+					Image image = new Image(inputStream);
+					Avatar.setImage(image);
+				} else {
+
+					byte[] avatarBytes = userSettings.getSavedAvatar();
+					ByteArrayInputStream inputStream = new ByteArrayInputStream(avatarBytes);
+					Image image = new Image(inputStream);
+					Avatar.setImage(image);
 				}
 
-			
+				for (Node node : anchorPane.getChildren()) {
+					if (node instanceof Button) {
+						((Button) node).setFont(Font.font(fontType));
+					}
+				}
+
+				Stop[] stops = new Stop[] { new Stop(0, bgC), new Stop(1, Color.LIGHTBLUE) };
+				LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+
+				// Setze den Farbverlauf als Hintergrundbild
+				BackgroundFill fill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+				Background background = new Background(fill);
+				anchorPane.setBackground(background);
+
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -268,7 +265,7 @@ public class LobbyController {
 		Parent root = loader.load();
 		SettingsController settingsController = loader.getController();
 		settingsController.setUserName(this.dbID); // Benutzernamen an das FXML-Controller-Objekt übergeben
-		
+
 		Scene scene = new Scene(root);
 		Stage stage = new Stage();
 		stage.setScene(scene);
