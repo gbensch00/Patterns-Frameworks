@@ -12,7 +12,7 @@
 	<children>
 		<ImageView fitHeight="448.0" fitWidth="638.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
 			<image>
-				<Image url="@../SpaceTypeLogin.png" />
+				<Image url="/res/oberflaechen/SpaceTypeLogin.png" />
 			</image>
 		</ImageView>
 		<Button fx:id="LoginButton" layoutX="104.0" layoutY="259.0" mnemonicParsing="false" onAction="#userLogin" text="Login" />

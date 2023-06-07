@@ -243,7 +243,7 @@ public class LobbyController {
 	@FXML
 	private void handleHighscoreButton(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
-		Parent root = FXMLLoader.load(getClass().getResource("highscores.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/highscores.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();

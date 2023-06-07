@@ -74,7 +74,7 @@ public class GameView {
         model = new GameModel();
         enemies = new ArrayList<>();
         for (int i = 0; i < startingHealth; i++) {
-            ImageView heart = new ImageView(new Image("heart.png"));
+            ImageView heart = new ImageView(new Image("/res/oberflaechen/heart.png"));
             heart.setTranslateX(10 + (i * 10));
             heart.setTranslateY(10);
             hearts.add(heart);
@@ -91,7 +91,7 @@ public class GameView {
             player2.setRotate(90);
             player2.setTranslateY(300);
             for (int i = 0; i < startingHealth; i++) {
-            ImageView heart2 = new ImageView(new Image("heart.png"));
+            ImageView heart2 = new ImageView(new Image("/res/oberflaechen/heart.png"));
 
             heart2.setTranslateX(10 + (i * 10));
             heart2.setTranslateY(40);

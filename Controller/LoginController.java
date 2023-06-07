@@ -34,6 +34,9 @@ public class LoginController {
 	 * (mysql-connector.java-8.0.25.jar) zu finden im Ordner Extra Lib
 	 */
 
+
+	//Von Gideon war die URL: String url = "jdbc:mysql://localhost:3306/TestDB";
+	//Von Ulf: Port 3306  war schon vergeben
 	String url = "jdbc:mysql://localhost:3307/test";
 	String user = "root";
 	String password = "";
@@ -130,7 +133,7 @@ public class LoginController {
 						 * stage.setScene(view.getScene()); stage.show();
 						 */
 
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("lobby.fxml"));
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/lobby.fxml"));
 						Parent root = loader.load();
 						LobbyController lobbyController = loader.getController();
 					    lobbyController.setLoggedInUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
@@ -181,7 +184,7 @@ public class LoginController {
 	@FXML
 	public void switchTocreateUser(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
-		Parent root = FXMLLoader.load(getClass().getResource("createrUser.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/createrUser.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
@@ -191,7 +194,7 @@ public class LoginController {
 	@FXML
 	public void switchToLoginScreen(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
-		Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/main.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();

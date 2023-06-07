@@ -13,7 +13,7 @@
    <children>
       <ImageView fitHeight="508.0" fitWidth="727.0" layoutX="-63.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../cockpit.png" />
+            <Image url="/res/oberflaechen/cockpit.png" />
          </image>
       </ImageView>
       <Button fx:id="SinglePlayerButton" layoutX="36.0" layoutY="126.0" maxHeight="57.0" minWidth="65.0" mnemonicParsing="false" onAction="#handleSinglePlayerButton" prefHeight="57.0" prefWidth="65.0" text="Single Player">

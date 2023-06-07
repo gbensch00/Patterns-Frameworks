@@ -48,7 +48,7 @@ public class Main extends Application {
  @Override
    public void start(Stage primaryStage) throws Exception {
  
-     Parent root = FXMLLoader.load(getClass().getResource("/Controller/main.fxml"));
+     Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/main.fxml"));
      Scene scene = new Scene(root);
      
    /*Für spätere CSS-Anpassungen oder Intergration*/

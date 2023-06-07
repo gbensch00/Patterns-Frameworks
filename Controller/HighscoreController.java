@@ -12,7 +12,7 @@ public class HighscoreController {
     
     public HighscoreController() {
     	 try {
-	            dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3306/TestDB", "root", "");
+	            dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3307/test", "root", "");
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }

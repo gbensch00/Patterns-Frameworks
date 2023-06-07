@@ -200,7 +200,7 @@ public class SettingsController {
 	
 		// Rückkehr zur Lobby
 		
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("cockpit.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/cockpit.fxml"));
 		Parent root = loader.load();
 		LobbyController lobbyController = loader.getController();
 		//lobbyController.setLoggedInUserName(savedUser); // UserObjekt an das FXML-Controller-Objekt übergeben
