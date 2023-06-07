@@ -18,6 +18,6 @@ public class DatabaseConnection {
 
     public void close() throws SQLException {
         connection.close();
-    }
+    } 
 
 }
