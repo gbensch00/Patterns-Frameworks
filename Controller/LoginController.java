@@ -34,7 +34,7 @@ public class LoginController {
 	 * (mysql-connector.java-8.0.25.jar) zu finden im Ordner Extra Lib
 	 */
 
-	String url = "jdbc:mysql://localhost:3306/TestDB";
+	String url = "jdbc:mysql://localhost:3307/test";
 	String user = "root";
 	String password = "";
 	Connection con = null;
@@ -69,6 +69,8 @@ public class LoginController {
 
 	@FXML
 	private Button devLogin;
+	@FXML
+	private Button mp;
 	
 	/*
 	@FXML 
@@ -256,7 +258,17 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView();
+		GameView view = new GameView(800, 800, false);
+		GameController controller = new GameController(model, view);
+		stage.setScene(view.getScene());
+		stage.show();
+	}
+	public void mp(ActionEvent event) throws IOException {
+		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		previousStage.close();
+		Stage stage = new Stage();
+		GameModel model = new GameModel();
+		GameView view = new GameView(800,800, true);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();

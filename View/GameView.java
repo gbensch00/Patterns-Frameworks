@@ -8,8 +8,11 @@ import Model.Enemy;
 import Model.Player;
 import Model.SpecialEnemy;
 import Model.GameModel;
+import Model.HealthBar;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +33,8 @@ public class GameView {
     private List<Enemy> enemies = new ArrayList<>();
     private long lastSpecialEnemyTime = 0L;
     private Scene scene;
-    public Player player;
+    public Player player1;
+    public Player player2;
     private GameModel model;
     public Group bulletGroup = new Group();  
     private Pane root;
@@ -54,13 +58,51 @@ public class GameView {
     //     scene = new Scene(root, 900, 900);
     //   }
 
-    public GameView(double width, double height) {
+    private int startingHealth = 3;
+    private ArrayList<ImageView> hearts = new ArrayList<>();
+    private ArrayList<ImageView> hearts2 = new ArrayList<>();
+    private Pane heartsPane;
+    private Pane heartsPane2;
+    private HealthBar healthBar;
+
+    public GameView(double width, double height, boolean multiplayer) {
         enemyImage = new Image("/res/enemy/Idle.png");
-        player = new Player("/res/enemy/player.png");
+        player1 = new Player("/res/enemy/player.png", startingHealth);
+        player1.setRotate(90);
+        player1.setTranslateY(200);
+
         model = new GameModel();
         enemies = new ArrayList<>();
+        for (int i = 0; i < startingHealth; i++) {
+            ImageView heart = new ImageView(new Image("heart.png"));
+            heart.setTranslateX(10 + (i * 10));
+            heart.setTranslateY(10);
+            hearts.add(heart);
+        }
+        heartsPane = new Pane();
+        heartsPane.getChildren().addAll(hearts);
+       
         root = new Pane();
-        root.getChildren().addAll(player, bulletGroup);
+        root.getChildren().addAll(player1, bulletGroup);
+        root.getChildren().addAll(heartsPane);
+        healthBar = new HealthBar(player1, heartsPane);
+        if (multiplayer == true) {
+            player2 = new Player("/res/enemy/player.png", startingHealth);
+            player2.setRotate(90);
+            player2.setTranslateY(300);
+            for (int i = 0; i < startingHealth; i++) {
+            ImageView heart2 = new ImageView(new Image("heart.png"));
+
+            heart2.setTranslateX(10 + (i * 10));
+            heart2.setTranslateY(40);
+
+            hearts2.add(heart2);
+        }
+            heartsPane2 = new Pane();
+            heartsPane2.getChildren().addAll(hearts2);
+            root.getChildren().addAll(player2);
+            root.getChildren().addAll(heartsPane2);
+        }
         scene = new Scene(root, width, height);
         hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);
@@ -122,6 +164,8 @@ public class GameView {
         animationTimer.start();
     }
 
+    
+
     private void addEnemy(long currentTime) {
         int xPos = (int) scene.getWidth();
         int yPos = new Random().nextInt((int) scene.getHeight());
@@ -178,7 +222,15 @@ public class GameView {
             }
         }     
     }
+public void updateSecondHealthBar(int health) {
 
+    int heartsToRemove = hearts2.size() - health;
+    if (heartsToRemove > 0) {
+        hearts2.subList(hearts2.size() - heartsToRemove, hearts2.size()).clear();
+        heartsPane2.getChildren().clear();
+        heartsPane2.getChildren().addAll(hearts2);
+    }
+}
     public void render() {
         gc.clearRect(0, 0, root.getWidth(), root.getHeight());
     
@@ -193,6 +245,11 @@ public class GameView {
 
     public void stop() {
         animationTimer.stop();
+    }
+
+
+    public Bounds getBoundsInParent(ImageView imageView) {
+        return imageView.getBoundsInParent();
     }
 
     public void showAlert(String title, String message) {
@@ -239,9 +296,13 @@ public class GameView {
         return scene;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getPlayer1() {
+        return player1;
     }
+    public Player getPlayer2() {
+        return player2;
+    }
+
 
     public void setScoreLabel(int score) {
         scoreLabel.setText("Score: " + score);
