@@ -203,7 +203,7 @@ public class LobbyController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(width, height, this.loggedInUserName);
+		GameView view = new GameView(width, height,false);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
@@ -238,7 +238,7 @@ public class LobbyController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800, 600, this.loggedInUserName);
+		GameView view = new GameView(800, 600,true);
 		// GameView view = new GameView(600,600, this.loggedInUserName,PlayerTwoName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());

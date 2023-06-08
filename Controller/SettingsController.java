@@ -203,7 +203,7 @@ public class SettingsController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/cockpit.fxml"));
 		Parent root = loader.load();
 		LobbyController lobbyController = loader.getController();
-		//lobbyController.setLoggedInUserName(savedUser); // UserObjekt an das FXML-Controller-Objekt übergeben
+		lobbyController.setLoggedInUserName(savedUser); // UserObjekt an das FXML-Controller-Objekt übergeben
 		Scene scene = new Scene(root);
 		Stage stage = new Stage();
 		stage.setScene(scene);
