@@ -17,8 +17,6 @@ public class HighscoreScene {
 	@FXML
 	private GridPane HighScores;
 
-	private HighscoreController highscoreController;
-
 	@FXML
 	public void initialize() {
 		try {

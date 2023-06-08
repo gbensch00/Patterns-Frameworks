@@ -57,7 +57,7 @@ public class SettingsController {
 	private UserSettingsDAO userSettingsDAO;
 	private User savedUser;
 
-	String DBURL = "jdbc:mysql://localhost:3307/test";
+	String DBURL = "jdbc:mysql://localhost:3307/TestDB";
 	String DBUser = "root";
 	String DBPassword = "";
 

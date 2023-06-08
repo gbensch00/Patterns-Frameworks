@@ -33,6 +33,7 @@ public class GameView {
     private List<Enemy> enemies = new ArrayList<>();
     private long lastSpecialEnemyTime = 0L;
     private Scene scene;
+    private Player player;
     public Player player1;
     public Player player2;
     private GameModel model;
@@ -46,25 +47,106 @@ public class GameView {
     private boolean isGameOver = false; 
     private MediaPlayer hitSound;
     private Label scoreLabel;
-
-    // //Von Tobi am 03.05. eingefügt
-    // public GameView() {
-    //     Pane root = new Pane();
-    //     player = new Player("/res/enemy/player.png");
-    //     /*this.bullets = bullets;
-    //     Group bulletGroup = new Group();
-    //     bulletGroup.getChildren().addAll(bullets); */
-    //     root.getChildren().addAll(player);
-    //     scene = new Scene(root, 900, 900);
-    //   }
-
     private int startingHealth = 3;
     private ArrayList<ImageView> hearts = new ArrayList<>();
     private ArrayList<ImageView> hearts2 = new ArrayList<>();
     private Pane heartsPane;
     private Pane heartsPane2;
     private HealthBar healthBar;
+    private String PlayerName1;
+    private String PlayerName2 = "guest";
 
+    //Konstruktor 1 Tobi
+    public GameView(double width, double height, String playername) {
+        
+    	this.PlayerName1 = playername;
+    	System.out.println("Hello " + playername + " ready to kick some asses ?");
+    	
+       	
+    	enemyImage = new Image("/res/enemy/Idle.png");
+        player = new Player("/res/enemy/player.png", startingHealth);
+        player.setRotate(90);
+        model = new GameModel();
+
+        for (int i = 0; i < startingHealth; i++) {
+            ImageView heart = new ImageView(new Image("/res/oberflaechen/heart.png"));
+
+            heart.setTranslateX(10 + (i * 10));
+            heart.setTranslateY(10);
+
+            hearts.add(heart);
+        }
+        heartsPane = new Pane();
+        heartsPane.getChildren().addAll(hearts);
+        root = new Pane();
+        root.getChildren().addAll(player, bulletGroup);
+        root.getChildren().addAll(heartsPane);
+        healthBar = new HealthBar(player, heartsPane);
+        scene = new Scene(root, width, height);
+        hitSound = new MediaPlayer(model.getHitSound());
+        Canvas canvas = new Canvas(width, height);
+        root.getChildren().add(canvas);
+        gc = canvas.getGraphicsContext2D();
+
+        // Hintergrundbild erstellen und der Szene hinzufügen
+        ImageView background = new ImageView(new Image("/res/enemy/planet.jpg"));
+        root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
+
+        
+        // Erstellung des Labels für die Punkte
+        Label scoreLabel = new Label("Score:0");
+        scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
+        scoreLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
+        scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
+        root.getChildren().add(scoreLabel); // Hinzufügen des Labels zum Root-Pane
+
+        // Erstellung des Labels für die verbleibende Zeit
+        Label timeLabel = new Label("Time: 60");
+        timeLabel.setTranslateX(scene.getWidth() - 100); // Platzieren des Labels am rechten Rand
+         timeLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
+         timeLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
+         root.getChildren().add(timeLabel); // Hinzufügen des Labels zum Root-Pane
+
+        // Binden der Punktzahl an das Label
+        scoreLabel.textProperty().bind(model.scoreProperty().asString("Punktzahl: %d"));
+
+        // In der AnimationTimer-Schleife die Position der ImageView kontinuierlich ändern
+        animationTimer = new AnimationTimer() {
+            private double backgroundOffset = 0;
+
+            @Override
+            public void handle(long now) {
+                
+                //Zeit
+                if (!isGameOver) {
+                
+                    long gameTime = now - startTime;
+                    if (gameTime > 60_000_000_000L) { // 60 Sekunden sind vergangen, das Spiel ist vorbei
+                        stop();
+                        showAlertWon("Vorbei", "Time's up!");
+                    } else {
+                        // verbleibende Spielzeit berechnen
+                        long remainingTime = 60_000_000_000L - gameTime;
+                        int remainingSeconds = (int) (remainingTime / 1_000_000_000);
+                        String timeString = String.format("%02d:%02d", remainingSeconds / 60, remainingSeconds % 60);
+                        timeLabel.setText("Time: " + timeString); // Zeit-Label aktualisieren
+                    }
+                }
+                // Hintergrundbild nach links bewegen
+                backgroundOffset -= 0.2;
+                if (backgroundOffset <= -background.getImage().getWidth()) {
+                    backgroundOffset = 0;
+                }
+                background.setTranslateX(backgroundOffset);
+                addEnemy(now);
+                update();
+                render();
+            }
+        };
+        animationTimer.start();
+    }
+
+    //Konstruktor 2 Gideon Multiplayer
     public GameView(double width, double height, boolean multiplayer) {
         enemyImage = new Image("/res/enemy/Idle.png");
         player1 = new Player("/res/enemy/player.png", startingHealth);
@@ -163,8 +245,6 @@ public class GameView {
         };
         animationTimer.start();
     }
-
-    
 
     private void addEnemy(long currentTime) {
         int xPos = (int) scene.getWidth();
@@ -294,6 +374,10 @@ public void updateSecondHealthBar(int health) {
     
     public Scene getScene() {
         return scene;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public Player getPlayer1() {

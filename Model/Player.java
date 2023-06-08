@@ -3,12 +3,6 @@ package Model;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.List;
-import java.util.Observer;
-
-import javafx.beans.Observable;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -68,8 +62,6 @@ public class Player extends ImageView implements PropertyChangeListener {
     System.out.println("before: " + this.health);
     this.health += healthChange;
      System.out.println("before: " + this.health);
-  
-    
       propertyChangeSupport.firePropertyChange("health", oldHealth, health);
     } else if (playerSelector == "two") {
       int oldHealth = this.health2;
@@ -77,8 +69,7 @@ public class Player extends ImageView implements PropertyChangeListener {
     this.health2 += healthChange;
      System.out.println("before: " + this.health2);
      propertyChangeSupport.firePropertyChange("health2", oldHealth, health2);
-    }
-    
+    }    
   }
     
    // Methods to register and unregister PropertyChangeListeners
@@ -95,7 +86,5 @@ public class Player extends ImageView implements PropertyChangeListener {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'propertyChange'");
     }
-
-
 
 }
