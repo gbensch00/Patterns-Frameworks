@@ -317,18 +317,17 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(600, 600, this.loggedInUserName);
+		GameView view = new GameView(800, 800, false);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
 	}
-
 	public void mp(ActionEvent event) throws IOException {
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800,800, this.loggedInUserName);
+		GameView view = new GameView(800,800, true);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
