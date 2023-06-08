@@ -30,7 +30,7 @@ public class HealthBar implements PropertyChangeListener {
       if (oldValue > newValue) {
         heartsPane.getChildren().clear();
         for (int i = 0; i < newValue; i++) {
-          ImageView heart = new ImageView(new Image("heart.png"));
+          ImageView heart = new ImageView(new Image("/res/oberflaechen/heart.png"));
 
           heart.setTranslateX(10 + (i * 10));
           heart.setTranslateY(10);
