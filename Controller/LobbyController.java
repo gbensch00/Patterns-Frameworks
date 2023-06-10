@@ -23,7 +23,12 @@ import javafx.scene.control.TextInputDialog;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import Model.DatabaseConnection;
 import Model.GameModel;
+import Model.User;
+import Model.UserSettings;
+import Model.UserSettingsDAO;
+import Model.UserSettingsDAOImpl;
 import View.GameView;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;

@@ -1,8 +1,9 @@
-package Controller;
+package View;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Controller.HighscoreController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

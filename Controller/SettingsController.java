@@ -9,6 +9,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+
+import Model.DatabaseConnection;
+import Model.User;
+import Model.UserDAO;
+import Model.UserDAOImpl;
+import Model.UserSettings;
+import Model.UserSettingsDAO;
+import Model.UserSettingsDAOImpl;
+
 import java.io.FileInputStream;
 
 import javafx.event.ActionEvent;

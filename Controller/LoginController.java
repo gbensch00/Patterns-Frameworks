@@ -36,6 +36,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import Model.GameModel;
 import Model.Server;
+import Model.User;
+import Model.UserDAO;
 import View.GameView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

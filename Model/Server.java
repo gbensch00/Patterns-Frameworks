@@ -14,10 +14,6 @@ import java.sql.SQLException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import Controller.User;
-import Controller.UserDAO;
-import Controller.UserDAOImpl;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
