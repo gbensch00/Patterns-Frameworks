@@ -4,6 +4,9 @@
 
 ![alt text](https://github.com/gbensch00/Patterns-Frameworks/blob/Ulf/res/oberflaechen/SpaceTypeLogin.png "Softwareprojekt SS 2023")
 
+## Spiel
+R-Type-Space Spiel
+
 ### Setup:
 Git Clone https://github.com/gbensch00/Patterns-Frameworks.git
 
@@ -44,6 +47,7 @@ Der Spieler kann hier gegen einen anderen Spieler antreten. Nach klick auf dem B
 
 Einzelspiel: Der Spieler bewegt sich mittels den Tasten w, s, a, d. Schießen kann der mit der Space-Taste. Ziel des Spiels ist es, in 60 Sekunden so viele wie möglich Gegner abzuschießen. Dabei gibt es einfache Gegner und spezielle Gegner. Beim Abschuss der einfachen Gegner bekommt der Spieler einen Punkt und beim Abschuss der Spezielgegner 5 Punkte. Der Spieler kann vom Gegner 3x getroffen werden. Nach dem dritten Treffer wird das Spiel beendet. Wird der Spieler nicht getroffen, so wird das Spiel automatisch nach 60 Sekunden beendet.
 
+
 ## Development
 
 ### Client starten
@@ -52,11 +56,17 @@ Einzelspiel: Der Spieler bewegt sich mittels den Tasten w, s, a, d. Schießen ka
 ### Server und Datenbank starten
 
 Für den Server wurde Xampp verwendet.
-
 Die Spieldaten werden in einer MySQL Datenbank gespeichert.
+
+### Architektur
+
+Wir haben uns für die MVC-Architektur entschieden, da es einen sinnvolle Verwendung beim einem Java-FX Spiel unterstützt.
 
 ### Dokumentation
 
-
 ### Frameworks und libraries
+
+### Threading-Verwendung
+
+### Verwendung Patterns
 
