@@ -31,3 +31,8 @@
 	-fx-font-size: 46px;
 	-fx-font-family: Speedy;
 }
+
+#highscoregrid{
+	-fx-font-size: 14px;
+	-fx-alignment: center;
+}
