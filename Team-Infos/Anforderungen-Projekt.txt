@@ -37,6 +37,9 @@ MVC als Struktur hatte ich ja in dem ersten Prototypen schon drin, hier einfach 
 - Trennung der Verantwortlichkeiten, indem die Logik in drei separate Komponenten getrennt wird, wodurch die Anwendung einfacher zu verstehen und zu 
   warten ist. Das macht es auch einfacher für mehrere Entwickler an verschiedenen Komponenten zu arbeiten ohne sich gegenseitig zu behindern.
 - MVC ist sehr skalierbar, weil man Komponenten hinzufügen und entfernen kann, ohne die anderen zu beeinträchtigen.
+- Beispiel zu konkreter Implementierung: Der GameController nimmt alle User-Inputs der Tastatur entgegen, wenn Inputs den WASD/Leertaste oder bei 2 Spielern auch den Pfeiltasten/Enter
+  entsprechen, werden die Funktionen Player.setVelocity() oder shoot() aufgerufen, die dann in den jeweiligen Model- oder Viewklassen veränderungen im Spiel wie hier zum Beispiel die 
+  Spielerbewegung bzw. die Schüsse erzeugen.
 // Gideon End
 
 Welchen Server (XAMP, Netty, Jetty etc.) und wie Verbindung zum Datenaustausch (JSON, XML etc.)?
