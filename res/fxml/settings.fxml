@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/Style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SettingsController">
+   <children>
+      <Label id="HeadLine" alignment="CENTER" contentDisplay="CENTER" layoutX="332.0" layoutY="98.0" text="SETTINGS">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="FontStyle" layoutX="377.0" layoutY="212.0" onAction="#FontChange" prefWidth="150.0" />
+      <ComboBox fx:id="FontSize" layoutX="377.0" layoutY="256.0" onAction="#FontSizeChange" prefWidth="150.0" />
+      <ComboBox fx:id="WindowSize" layoutX="377.0" layoutY="296.0" onAction="#ResolutionChange" prefWidth="150.0" />
+      <ColorPicker fx:id="cP" layoutX="377.0" layoutY="336.0" onAction="#colorChange" prefHeight="26.0" prefWidth="150.0" />
+      <Label layoutX="185.0" layoutY="217.0" text="Schriftart" />
+      <Label layoutX="185.0" layoutY="261.0" text="Schriftgröße" />
+      <Label layoutX="185.0" layoutY="341.0" text="Interface-Farbe" />
+      <Label layoutX="188.0" layoutY="301.0" text="Fenstergroeße" />
+      <Button fx:id="SaveSettings" layoutX="238.0" layoutY="496.0" mnemonicParsing="false" onAction="#saveSettings" text="Einstellungen speichern" />
+      <Button fx:id="BackButton" layoutX="70.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleBackButton" text="Zurück" />
+      <Button fx:id="ChangeAvatarButton" layoutX="616.0" layoutY="496.0" mnemonicParsing="false" onAction="#AvatarChange" text="Avatar ändern" />
+   </children>
+</AnchorPane>

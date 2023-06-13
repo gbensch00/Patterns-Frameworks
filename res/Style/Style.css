@@ -1,0 +1,33 @@
+
+
+.button {
+  
+    -fx-background-color: linear-gradient(to bottom, #0861fa 5%, #3d4754 100%);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: silver;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+   
+    
+    -fx-font-weight: bold;
+    -fx-padding: 12px 15px;
+   
+   
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #3d4754 5%, #0861fa 100%);
+}
+
+.button:pressed {
+    -fx-translate-y: 1px;
+}
+
+
+
+#HeadLine{
+	-fx-font-size: 46px;
+	-fx-font-family: Speedy;
+}

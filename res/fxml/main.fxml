@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: black;" stylesheets="@../Style/main.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+	<children>
+		<ImageView fitHeight="503.0" fitWidth="806.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../oberflaechen/SpaceTypeLogin.png" />
+			</image>
+		</ImageView>
+		<Button fx:id="LoginButton" layoutX="61.0" layoutY="357.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="41.0" prefWidth="97.0" text="Login" />
+		<Button fx:id="resetButton" layoutX="175.0" layoutY="357.0" mnemonicParsing="false" onAction="#reset" prefHeight="41.0" prefWidth="97.0" text="Reset" />
+		<TextField fx:id="userIDField" layoutX="61.0" layoutY="287.0" prefHeight="26.0" prefWidth="211.0" promptText="username" />
+		<PasswordField fx:id="userPasswordField" layoutX="61.0" layoutY="321.0" prefHeight="26.0" prefWidth="211.0" promptText="Password" />
+		<Label layoutX="608.0" layoutY="474.0" text="Noch keinen Account?" textFill="WHITE" />
+      <Button fx:id="createUserAccount" layoutX="651.0" layoutY="500.0" mnemonicParsing="false" onAction="#switchTocreateUser" text="Hier klicken" textFill="#1c1fdd" />
+      <Button fx:id="devLogin" layoutX="21.0" layoutY="500.0" mnemonicParsing="false" onAction="#devLogin" text="DevLogin" />
+			<Button fx:id="mp" layoutX="130.0" layoutY="500.0" mnemonicParsing="false" onAction="#mp" text="mp" />
+	</children>
+</AnchorPane>

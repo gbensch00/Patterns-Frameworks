@@ -31,7 +31,7 @@ public class Main extends Application {
 		serverThread.setDaemon(true);
 		serverThread.start();
 
-		Parent root = FXMLLoader.load(getClass().getResource("/Controller/main.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/main.fxml"));
 		Scene scene = new Scene(root);
 
 		// Weitere Anpassungen für die Szene...
