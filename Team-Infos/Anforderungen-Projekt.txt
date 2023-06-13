@@ -43,7 +43,9 @@ MVC als Struktur hatte ich ja in dem ersten Prototypen schon drin, hier einfach 
 // Gideon End
 
 Welchen Server (XAMP, Netty, Jetty etc.) und wie Verbindung zum Datenaustausch (JSON, XML etc.)?
--> 
+-> Zur einfacheren Bereitstellung eines Webservers und einer Datenbank wurde auf das Programm XAMP zurückgeriffen. Auf XAMP wurde über phpmyadmin eine Datenbank erstellt, die den klangvollen Namen TestDB erhalten hat. In dieser existieren zwei Tabellen zur Datenspeicherung. Zum einen die Tabelle PLAYER welche Informationen über Nutzernamen, Passwörter und Highscores enthält. Zum anderen die Tabelle UserSettings in der Informationen wie Avatar, FontSize, FontType, Resolution und BackgroundColor gespeichert sind. Diese Tabelle dient dazu, um User Custumizations durchführen zu können, um so z.B. das Interface farblich anzupassen oder Attribute wie Auflösung oder Schriftgröße zu ändern.
+
+Zum Anmelden wird beim Starten des Spieles nach den Login-Informationen verlangt, diese werden in den Feldern Username und Password eingetragen. Mit einem Klick auf Login werden diese Daten in eine XML-Datei umgewandelt und an den Server geschickt. Wenn die Übertragung erfolgreich war, wird die Benutzeroberfläche aktualisiert, um eine neue Szene (die "Lobby") angezeigt und die alte Szene (das Anmeldefenster) wird geschlossen. Sollte die Anmeldung nicht erfolgreich sein und false durch den Server gemeldet werden, erscheint ein Alert, in dem dem Nutzer mitgeteilt wird, dass der Nutzer nicht existiert oder das verwendete Passwort falsch ist.
 
 Welches UI-Framework?
 -> JavaFX
