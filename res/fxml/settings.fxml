@@ -18,12 +18,12 @@
       <ComboBox fx:id="FontSize" layoutX="377.0" layoutY="256.0" onAction="#FontSizeChange" prefWidth="150.0" />
       <ComboBox fx:id="WindowSize" layoutX="377.0" layoutY="296.0" onAction="#ResolutionChange" prefWidth="150.0" />
       <ColorPicker fx:id="cP" layoutX="377.0" layoutY="336.0" onAction="#colorChange" prefHeight="26.0" prefWidth="150.0" />
-      <Label layoutX="185.0" layoutY="217.0" text="Schriftart" />
-      <Label layoutX="185.0" layoutY="261.0" text="Schriftgröße" />
-      <Label layoutX="185.0" layoutY="341.0" text="Interface-Farbe" />
-      <Label layoutX="188.0" layoutY="301.0" text="Fenstergroeße" />
-      <Button fx:id="SaveSettings" layoutX="238.0" layoutY="496.0" mnemonicParsing="false" onAction="#saveSettings" text="Einstellungen speichern" />
-      <Button fx:id="BackButton" layoutX="70.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleBackButton" text="Zurück" />
-      <Button fx:id="ChangeAvatarButton" layoutX="616.0" layoutY="496.0" mnemonicParsing="false" onAction="#AvatarChange" text="Avatar ändern" />
+      <Label layoutX="185.0" layoutY="217.0" text="Font-Type" />
+      <Label layoutX="185.0" layoutY="261.0" text="Fontsize" />
+      <Label layoutX="185.0" layoutY="341.0" text="Interface-Color" />
+      <Label layoutX="188.0" layoutY="301.0" text="Windowsize" />
+      <Button fx:id="SaveSettings" layoutX="238.0" layoutY="496.0" mnemonicParsing="false" onAction="#saveSettings" text="Save Settings" />
+      <Button fx:id="BackButton" layoutX="70.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleBackButton" text="Back" />
+      <Button fx:id="ChangeAvatarButton" layoutX="616.0" layoutY="496.0" mnemonicParsing="false" onAction="#AvatarChange" text="Change Avatar" />
    </children>
 </AnchorPane>
