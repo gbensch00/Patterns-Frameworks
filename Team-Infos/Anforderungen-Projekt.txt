@@ -42,6 +42,15 @@ MVC als Struktur hatte ich ja in dem ersten Prototypen schon drin, hier einfach 
   Spielerbewegung bzw. die Schüsse erzeugen.
 // Gideon End
 
+Zu DAO:
+Das DAO (Data Access Object) Pattern ist ein Entwurfsmuster in der Softwareentwicklung, das sich auf die Trennung von Datenbankzugriffslogik und Geschäftslogik konzentriert. Es ermöglicht eine saubere und strukturierte Art, auf Datenbanken zuzugreifen, indem es eine Abstraktionsschicht zwischen der Datenbank und den restlichen Teilen einer Anwendung einführt.
+
+Das DAO Pattern besteht aus drei Hauptkomponenten:
+Datenobjekte: Diese repräsentieren Entitäten oder Datenbanktabellen und enthalten in der Regel Eigenschaften (Attribute) und Methoden, um auf die Daten zuzugreifen oder diese zu manipulieren.
+Datenzugriffsschicht (DAO): Die DAO-Komponente ist für den tatsächlichen Zugriff auf die Datenbank verantwortlich. Sie bietet Methoden zum Erstellen, Lesen, Aktualisieren und Löschen von Datenobjekten. Die DAO-Komponente kapselt die Datenbankdetails und abstrahiert diese vor der restlichen Anwendung.
+Geschäftslogik: Dies sind die übrigen Teile der Anwendung, die auf die Datenbank zugreifen möchten. Anstatt direkt auf die Datenbank zuzugreifen, verwenden sie die Methoden der DAO-Komponente, um Daten zu erhalten oder zu ändern.
+In unserem Spiel sind diese drei Hauptkomponenten User, UserSettings, UserDAO, UserSettingsDAO, UserDAOImpl und UserSettingsDAOImpl
+
 Welchen Server (XAMP, Netty, Jetty etc.) und wie Verbindung zum Datenaustausch (JSON, XML etc.)?
 -> Zur einfacheren Bereitstellung eines Webservers und einer Datenbank wurde auf das Programm XAMP zurückgeriffen. Auf XAMP wurde über phpmyadmin eine Datenbank erstellt, die den klangvollen Namen TestDB erhalten hat. In dieser existieren zwei Tabellen zur Datenspeicherung. Zum einen die Tabelle PLAYER welche Informationen über Nutzernamen, Passwörter und Highscores enthält. Zum anderen die Tabelle UserSettings in der Informationen wie Avatar, FontSize, FontType, Resolution und BackgroundColor gespeichert sind. Diese Tabelle dient dazu, um User Custumizations durchführen zu können, um so z.B. das Interface farblich anzupassen oder Attribute wie Auflösung oder Schriftgröße zu ändern.
 
