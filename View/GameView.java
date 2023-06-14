@@ -1,9 +1,12 @@
 package View;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import Controller.HighscoreController;
 import Model.Enemy;
 import Model.Player;
 import Model.SpecialEnemy;
@@ -56,7 +59,7 @@ public class GameView {
     private String PlayerName1;
     private String PlayerName2 = "guest";
 
-    //Konstruktor 1 Tobi
+  /*  //Konstruktor 1 Tobi
     public GameView(double width, double height, String playername) {
         
     	this.PlayerName1 = playername;
@@ -144,11 +147,14 @@ public class GameView {
             }
         };
         animationTimer.start();
-    }
+    } */
 
     //Konstruktor 2 Gideon Multiplayer
-    public GameView(double width, double height, boolean multiplayer) {
-        enemyImage = new Image("/res/enemy/Idle.png");
+    public GameView(double width, double height, boolean multiplayer, String Player1, String Player2) {
+        this.PlayerName1 = Player1;
+        this.PlayerName2 = Player2;
+    	
+    	enemyImage = new Image("/res/enemy/Idle.png");
         player1 = new Player("/res/enemy/player.png", startingHealth);
         player1.setRotate(90);
         player1.setTranslateY(200);
@@ -338,6 +344,12 @@ public void updateSecondHealthBar(int health) {
             alert.setTitle("Game Over");
             alert.setHeaderText("Du bist getroffen!");
             alert.setContentText("Game Over! Deine Punktzahl ist: " + model.getScore());
+            try {
+				updateHighscore();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             alert.showAndWait();
         });
     }
@@ -348,8 +360,20 @@ public void updateSecondHealthBar(int health) {
             alert.setTitle("Spielende");
             alert.setHeaderText("Du bist ein Champion");
             alert.setContentText("Deine Punktzahl ist: " + model.getScore());
+            try {
+				updateHighscore();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             alert.showAndWait();
         });
+    }
+    
+    public void  updateHighscore() throws SQLException{
+    	HighscoreController hsc = new HighscoreController();
+    	hsc.updateHighscore(PlayerName1, model.getScore());
+    	System.out.println("Highscore wurde auf " +model.getScore() + " gesetzt");
     }
 
     public void setEnemies(List<Enemy> enemies) {

@@ -56,6 +56,7 @@ public class LoginController {
 	Statement stmt = null;
 	ResultSet rs = null;
 */
+	private String defUser = "test99";
 	private String loggedInUserName = "guest";
 	private UserDAO userDAO;
 	private User loggedInUser;
@@ -319,7 +320,7 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800, 800, false);
+		GameView view = new GameView(800, 800, false, this.defUser, this.loggedInUserName );
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
@@ -329,7 +330,7 @@ public class LoginController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800,800, true);
+		GameView view = new GameView(800,800, true, this.defUser, this.loggedInUserName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
