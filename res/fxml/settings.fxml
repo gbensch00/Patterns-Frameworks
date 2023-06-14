@@ -4,26 +4,47 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/Style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SettingsController">
+<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="1020.0" stylesheets="@../Style/Style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SettingsController">
    <children>
-      <Label id="HeadLine" alignment="CENTER" contentDisplay="CENTER" layoutX="332.0" layoutY="98.0" text="SETTINGS">
+      <ImageView fitHeight="606.0" fitWidth="1094.0" layoutX="-1.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../oberflaechen/mjcockpit.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="50.0" arcWidth="50.0" height="404.0" layoutX="290.0" layoutY="63.0" opacity="0.83" stroke="BLACK" strokeType="INSIDE" width="421.0" />
+      <Label id="HeadLine" alignment="CENTER" contentDisplay="CENTER" layoutX="364.0" layoutY="85.0" text="SETTINGS" textFill="WHITE">
          <font>
             <Font size="30.0" />
          </font>
       </Label>
-      <ComboBox fx:id="FontStyle" layoutX="377.0" layoutY="212.0" onAction="#FontChange" prefWidth="150.0" />
-      <ComboBox fx:id="FontSize" layoutX="377.0" layoutY="256.0" onAction="#FontSizeChange" prefWidth="150.0" />
-      <ComboBox fx:id="WindowSize" layoutX="377.0" layoutY="296.0" onAction="#ResolutionChange" prefWidth="150.0" />
-      <ColorPicker fx:id="cP" layoutX="377.0" layoutY="336.0" onAction="#colorChange" prefHeight="26.0" prefWidth="150.0" />
-      <Label layoutX="185.0" layoutY="217.0" text="Font-Type" />
-      <Label layoutX="185.0" layoutY="261.0" text="Fontsize" />
-      <Label layoutX="185.0" layoutY="341.0" text="Interface-Color" />
-      <Label layoutX="188.0" layoutY="301.0" text="Windowsize" />
-      <Button fx:id="SaveSettings" layoutX="238.0" layoutY="496.0" mnemonicParsing="false" onAction="#saveSettings" text="Save Settings" />
-      <Button fx:id="BackButton" layoutX="70.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleBackButton" text="Back" />
-      <Button fx:id="ChangeAvatarButton" layoutX="616.0" layoutY="496.0" mnemonicParsing="false" onAction="#AvatarChange" text="Change Avatar" />
+      <ComboBox fx:id="FontStyle" layoutX="541.0" layoutY="221.0" onAction="#FontChange" prefWidth="150.0" />
+      <ComboBox fx:id="FontSize" layoutX="541.0" layoutY="265.0" onAction="#FontSizeChange" prefWidth="150.0" />
+      <ComboBox fx:id="WindowSize" layoutX="541.0" layoutY="305.0" onAction="#ResolutionChange" prefWidth="150.0" />
+      <ColorPicker fx:id="cP" layoutX="541.0" layoutY="345.0" onAction="#colorChange" prefHeight="26.0" prefWidth="150.0" />
+      <Label layoutX="345.0" layoutY="223.0" text="Font-Type" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="345.0" layoutY="267.0" text="Fontsize" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="345.0" layoutY="347.0" text="Interface-Color" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="348.0" layoutY="307.0" text="Windowsize" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Button fx:id="SaveSettings" layoutX="441.0" layoutY="503.0" mnemonicParsing="false" onAction="#saveSettings" text="Save Settings" />
+      <Button fx:id="BackButton" layoutX="47.0" layoutY="503.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="43.0" prefWidth="92.0" text="Back" />
+      <Button fx:id="ChangeAvatarButton" layoutX="425.0" layoutY="405.0" mnemonicParsing="false" onAction="#AvatarChange" prefHeight="43.0" prefWidth="150.0" text="Change Avatar" />
    </children>
 </AnchorPane>

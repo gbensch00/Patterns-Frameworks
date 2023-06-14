@@ -6,29 +6,32 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchorPane" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="1020.0" stylesheets="@../Style/Style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LobbyController">
    <children>
-      <ImageView fitHeight="578.0" fitWidth="1031.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="610.0" fitWidth="1046.0" layoutX="-5.0" layoutY="-19.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../oberflaechen/cockpitb.png" />
+            <Image url="@../oberflaechen/mjcockpit.png" />
          </image>
       </ImageView>
-      <Label fx:id="UserName" alignment="CENTER" layoutX="656.0" layoutY="286.0" prefHeight="57.0" prefWidth="143.0" text="UserName" textFill="WHITE" AnchorPane.bottomAnchor="257.0" AnchorPane.leftAnchor="656.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="286.0">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" height="74.0" layoutX="367.0" layoutY="41.0" opacity="0.75" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" style="-fx-border-radius: 10;" width="286.0" />
+      <Rectangle arcHeight="50.0" arcWidth="50.0" height="43.0" layoutX="825.0" layoutY="163.0" opacity="0.75" stroke="BLACK" strokeLineCap="ROUND" strokeType="INSIDE" width="162.0" />
+      <Label fx:id="UserName" alignment="CENTER" layoutX="802.0" layoutY="168.0" prefHeight="33.0" prefWidth="209.0" text="UserName" textFill="WHITE" AnchorPane.bottomAnchor="370.0" AnchorPane.leftAnchor="802.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="168.0">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="MultiplayerButton" layoutX="533.0" layoutY="482.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleMultiPlayerButton" prefHeight="43.0" prefWidth="138.0" text="Multiplayer" />
+      <Button fx:id="MultiplayerButton" layoutX="561.0" layoutY="427.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleMultiPlayerButton" prefHeight="43.0" prefWidth="138.0" text="Multiplayer" />
       <Button fx:id="CloseButton" layoutX="847.0" layoutY="482.0" minWidth="51.0" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="43.0" prefWidth="138.0" text="Eject" />
-      <Button fx:id="SettingsButton" layoutX="853.0" layoutY="24.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleSettingsButton" prefHeight="43.0" prefWidth="138.0" text="Einstellungen" />
-      <Label id="HeadLine" layoutX="404.0" layoutY="14.0" prefHeight="106.0" prefWidth="216.0" text="Cockpit" textFill="WHITE" AnchorPane.bottomAnchor="451.0" AnchorPane.leftAnchor="404.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="14.0">
+      <Button fx:id="SettingsButton" layoutX="837.0" layoutY="23.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleSettingsButton" prefHeight="43.0" prefWidth="138.0" text="Settings" />
+      <Label id="HeadLine" layoutX="402.0" layoutY="41.0" prefHeight="74.0" prefWidth="216.0" text="Cockpit" textFill="WHITE" AnchorPane.bottomAnchor="456.0" AnchorPane.leftAnchor="402.0" AnchorPane.rightAnchor="402.0" AnchorPane.topAnchor="41.0">
          <font>
             <Font size="46.0" />
          </font>
       </Label>
-      <ImageView fx:id="Avatar" fitHeight="84.0" fitWidth="86.0" layoutX="795.0" layoutY="176.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="311.0" AnchorPane.leftAnchor="795.0" AnchorPane.rightAnchor="141.0" AnchorPane.topAnchor="176.0">
+      <ImageView fx:id="Avatar" fitHeight="84.0" fitWidth="86.0" layoutX="863.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="409.0" AnchorPane.leftAnchor="863.0" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="78.0">
          <image>
             <Image url="@../UserAvatar/PlayerIcon1.png" />
          </image>
@@ -36,7 +39,7 @@
             <Rectangle2D />
          </viewport></ImageView>
       <Button fx:id="Highscores" layoutX="33.0" layoutY="482.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleHighscoreButton" prefHeight="43.0" prefWidth="138.0" text="Highscores" />
-      <Button fx:id="SinglePlayerButton" layoutX="363.0" layoutY="482.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleSinglePlayerButton" prefHeight="43.0" prefWidth="138.0" text="Singleplayer" />
+      <Button fx:id="SinglePlayerButton" layoutX="345.0" layoutY="427.0" minWidth="99.0" mnemonicParsing="false" onAction="#handleSinglePlayerButton" prefHeight="43.0" prefWidth="138.0" text="Singleplayer" />
       
     	
 
