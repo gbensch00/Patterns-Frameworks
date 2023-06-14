@@ -36,3 +36,13 @@
 	-fx-font-size: 14px;
 	-fx-alignment: center;
 }
+
+#HeadLineUserReg{
+	-fx-font-size: 35px;
+	-fx-font-family: Speedy;
+}
+
+#regbuttons{
+	-fx-font-family: Speedy;
+	  -fx-padding: 5px 10px;
+}
