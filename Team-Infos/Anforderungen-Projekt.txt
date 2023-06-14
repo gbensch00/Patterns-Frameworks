@@ -15,7 +15,7 @@ Genaue Spielbeschreibung (Punktzahl, Tod, Zeit)?
 ->
 
 Welche Architektur?
--> MVC
+-> MVC, DAO (Data Access Object), Observer Pattern und teilweisew auch Dependency Injection bei DB-abfragen.
 
 Welche Packages?
 ->
