@@ -58,15 +58,33 @@ Einzelspiel: Der Spieler bewegt sich mittels den Tasten w, s, a, d. Schießen ka
 Für den Server wurde Xampp verwendet.
 Die Spieldaten werden in einer MySQL Datenbank gespeichert.
 
-### Architektur
+Zur einfacheren Bereitstellung eines Webservers und einer Datenbank wurde auf das Programm XAMP zurückgeriffen. Auf XAMP wurde über phpmyadmin eine Datenbank erstellt, die den klangvollen Namen TestDB erhalten hat. In dieser existieren zwei Tabellen zur Datenspeicherung. Zum einen die Tabelle PLAYER welche Informationen über Nutzernamen, Passwörter und Highscores enthält. Zum anderen die Tabelle UserSettings in der Informationen wie Avatar, FontSize, FontType, Resolution und BackgroundColor gespeichert sind. Diese Tabelle dient dazu, um User Custumizations durchführen zu können, um so z.B. das Interface farblich anzupassen oder Attribute wie Auflösung oder Schriftgröße zu ändern.
 
-Wir haben uns für die MVC-Architektur entschieden, da es einen sinnvolle Verwendung beim einem Java-FX Spiel unterstützt.
+Zum Anmelden wird beim Starten des Spieles nach den Login-Informationen verlangt, diese werden in den Feldern Username und Password eingetragen. Mit einem Klick auf Login werden diese Daten in eine XML-Datei umgewandelt und an den Server geschickt. Wenn die Übertragung erfolgreich war, wird die Benutzeroberfläche aktualisiert, um eine neue Szene (die "Lobby") angezeigt und die alte Szene (das Anmeldefenster) wird geschlossen. Sollte die Anmeldung nicht erfolgreich sein und false durch den Server gemeldet werden, erscheint ein Alert, in dem dem Nutzer mitgeteilt wird, dass der Nutzer nicht existiert oder das verwendete Passwort falsch ist.
+
+### Architektur und Verwendung Pattern
+
+MVC, DAO (Data Access Object), Observer Pattern und teilweisew auch Dependency Injection bei DB-abfragen.
+
+MVC als Struktur hatte ich ja in dem ersten Prototypen schon drin, hier einfach mal die Vorteile bzw. der Sinn dahinter: 
+- Trennung der Verantwortlichkeiten, indem die Logik in drei separate Komponenten getrennt wird, wodurch die Anwendung einfacher zu verstehen und zu warten ist. Das macht es auch einfacher für mehrere Entwickler an verschiedenen Komponenten zu arbeiten ohne sich gegenseitig zu behindern.
+
+- MVC ist sehr skalierbar, weil man Komponenten hinzufügen und entfernen kann, ohne die anderen zu beeinträchtigen.
+- Beispiel zu konkreter Implementierung: Der GameController nimmt alle User-Inputs der Tastatur entgegen, wenn Inputs den WASD/Leertaste oder bei 2 Spielern auch den Pfeiltasten/Enter entsprechen, werden die Funktionen Player.setVelocity() oder shoot() aufgerufen, die dann in den jeweiligen Model- oder Viewklassen veränderungen im Spiel wie hier zum Beispiel die Spielerbewegung bzw. die Schüsse erzeugen.
+
+
+Observer Pattern eignet sich für ein R-Type Spiel sowieso gut: In dem Observer Pattern gibt es ein Subjekt an das ein oder mehrere 'Observer' gekoppelt sind, über die das Subjekt selbst gar nichts wissen muss, außer dass sie ein gewisses Interface implementieren. Ein Beispiel: In unserem R-Type Spiel ist der player character das Subjekt. Dieses Subjekt nimmt Schaden von einem Gegner, wodurch sich der health stat verringert. Das Subjekt benachrichtigt den dazugehörigen Observer, also die UI Komponente 'Health Bar', wie viel Health noch übrig bleibt und die Health Bar wird geupdated. Dasselbe könnte man z.B. mit Geschwindigkeits oder Schadenspowerups machen.
+
+Datenobjekte: Diese repräsentieren Entitäten oder Datenbanktabellen und enthalten in der Regel Eigenschaften (Attribute) und Methoden, um auf die Daten zuzugreifen oder diese zu manipulieren.
+Datenzugriffsschicht (DAO): Die DAO-Komponente ist für den tatsächlichen Zugriff auf die Datenbank verantwortlich. Sie bietet Methoden zum Erstellen, Lesen, Aktualisieren und Löschen von Datenobjekten. Die DAO-Komponente kapselt die Datenbankdetails und abstrahiert diese vor der restlichen Anwendung.
+Geschäftslogik: Dies sind die übrigen Teile der Anwendung, die auf die Datenbank zugreifen möchten. Anstatt direkt auf die Datenbank zuzugreifen, verwenden sie die Methoden der DAO-Komponente, um Daten zu erhalten oder zu ändern.
+In unserem Spiel sind diese drei Hauptkomponenten User, UserSettings, UserDAO, UserSettingsDAO, UserDAOImpl und UserSettingsDAOImpl
 
 ### Dokumentation
 
-### Frameworks und libraries
+### UI-Frameworks
+JavaFX
 
 ### Threading-Verwendung
 
-### Verwendung Patterns
 
