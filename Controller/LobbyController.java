@@ -249,7 +249,7 @@ public class LobbyController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800, 600, true,this.loggedInUserName, this.PlayerTwoName);
+		GameView view = new GameView(width, height, true,this.loggedInUserName, this.PlayerTwoName);
 		// GameView view = new GameView(600,600, this.loggedInUserName,PlayerTwoName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());

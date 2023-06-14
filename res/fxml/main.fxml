@@ -20,8 +20,8 @@
 		<Button fx:id="resetButton" layoutX="175.0" layoutY="357.0" mnemonicParsing="false" onAction="#reset" prefHeight="41.0" prefWidth="97.0" text="Reset" />
 		<TextField fx:id="userIDField" layoutX="61.0" layoutY="287.0" prefHeight="26.0" prefWidth="211.0" promptText="username" />
 		<PasswordField fx:id="userPasswordField" layoutX="61.0" layoutY="321.0" prefHeight="26.0" prefWidth="211.0" promptText="Password" />
-		<Label layoutX="596.0" layoutY="454.0" text="Noch keinen Account?" textFill="WHITE" />
-      <Button fx:id="createUserAccount" layoutX="639.0" layoutY="480.0" mnemonicParsing="false" onAction="#switchTocreateUser" text="Hier klicken" textFill="#1c1fdd" />
+		<Label layoutX="622.0" layoutY="453.0" text="No account yet ?" textFill="WHITE" />
+      <Button fx:id="createUserAccount" layoutX="639.0" layoutY="480.0" mnemonicParsing="false" onAction="#switchTocreateUser" text="Click here" textFill="#1c1fdd" />
       <Button fx:id="devLogin" layoutX="23.0" layoutY="546.0" mnemonicParsing="false" onAction="#devLogin" text="DevLogin" />
 			<Button fx:id="mp" layoutX="130.0" layoutY="546.0" mnemonicParsing="false" onAction="#mp" text="mp" />
       <Label layoutX="228.0" layoutY="89.0" text="SPACE-TYPE" textFill="WHITE">
@@ -29,12 +29,12 @@
             <Font size="47.0" />
          </font>
       </Label>
-      <Label layoutX="196.0" layoutY="548.0" text="Ein Softwareprojekt von" textFill="WHITE">
+      <Label layoutX="196.0" layoutY="548.0" text="A software project by" textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="196.0" layoutY="567.0" text="Gideo, Ulf und Tobias" textFill="WHITE">
+      <Label layoutX="196.0" layoutY="567.0" text="Gideo, Ulf and Tobias" textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
