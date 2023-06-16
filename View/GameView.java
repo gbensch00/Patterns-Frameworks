@@ -149,9 +149,11 @@ public class GameView {
     //Konstruktor 2 Gideon Multiplayer
     public GameView(double width, double height, boolean multiplayer) {
         enemyImage = new Image("/res/enemy/Idle.png");
-        player1 = new Player("/res/enemy/player.png", startingHealth);
-        player1.setRotate(90);
+        player1 = new Player("/res/enemy/player1.png", startingHealth);
+        player1.setRotate(180);
         player1.setTranslateY(200);
+        player1.setFitHeight(100);
+        player1.setFitWidth(100);
 
         model = new GameModel();
         enemies = new ArrayList<>();
@@ -169,9 +171,11 @@ public class GameView {
         root.getChildren().addAll(heartsPane);
         healthBar = new HealthBar(player1, heartsPane);
         if (multiplayer == true) {
-            player2 = new Player("/res/enemy/player.png", startingHealth);
-            player2.setRotate(90);
-            player2.setTranslateY(300);
+           player2 = new Player("/res/enemy/player2.png", startingHealth);
+        player2.setRotate(180);
+        player2.setTranslateY(400);
+        player2.setFitHeight(100);
+        player2.setFitWidth(100);
             for (int i = 0; i < startingHealth; i++) {
             ImageView heart2 = new ImageView(new Image("/res/oberflaechen/heart.png"));
 

@@ -261,7 +261,7 @@ public class GameController {
 
         // Setze die Anfangsposition der Kugel auf der rechten Seite des Spielers
         bullet.setTranslateX(player.getTranslateX() + player.getFitWidth());
-        bullet.setTranslateY(player.getTranslateY() + player.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
+        bullet.setTranslateY(player.getTranslateY() + player.getFitHeight() / 5 - bullet.getImage().getHeight() / 2 + 24);
 
         // Füge das Kugel-ImageView der Liste der Kugeln hinzu
         bullets.add(bullet);
