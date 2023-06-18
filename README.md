@@ -2,7 +2,8 @@
 
 ### Berliner Hochschule für Technik / Medieninformatik B. online
 
-![alt text]([https://github.com/gbensch00/Patterns-Frameworks/blob/Tobias/res/oberflaechen/Login.png] "Softwareprojekt SS 2023")
+![Alternativer Text](https://github.com/gbensch00/Patterns-Frameworks/blob/Tobi/res/oberflaechen/Login.png)
+
 
 ## Spiel
 R-Type-Space Spiel
