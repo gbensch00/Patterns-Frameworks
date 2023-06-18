@@ -69,7 +69,7 @@ public class UserDAOImpl implements UserDAO {
 	
 
 	@Override
-	public void createUser(User user) {
+	public boolean createUser(User user) {
 	    try {
 	        String query1 = "SELECT * FROM PLAYER WHERE name = ?";
 	        PreparedStatement pstmt = con.prepareStatement(query1);
@@ -82,13 +82,16 @@ public class UserDAOImpl implements UserDAO {
 	            insertStatement.setString(1, user.getUsername());
 	            insertStatement.setString(2, user.getPassword());
 	            insertStatement.executeUpdate();
+	            return true;
 	        } else {
 	            // User with the same username already exists
 	            System.out.println("User with the same username already exists");
+	            return false;
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+		return false;
 	}
 		
 	

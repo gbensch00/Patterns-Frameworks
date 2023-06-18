@@ -1,5 +1,6 @@
 package View;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,16 +8,22 @@ import java.util.List;
 import java.util.Random;
 
 import Controller.HighscoreController;
+import Controller.LobbyController;
 import Model.Enemy;
 import Model.Player;
 import Model.SpecialEnemy;
+import Model.User;
 import Model.GameModel;
 import Model.HealthBar;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,6 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.scene.media.MediaPlayer;
 
 public class GameView {
@@ -58,100 +66,14 @@ public class GameView {
     private HealthBar healthBar;
     private String PlayerName1;
     private String PlayerName2 = "guest";
+    
+    private User User1;
 
-  /*  //Konstruktor 1 Tobi
-    public GameView(double width, double height, String playername) {
-        
-    	this.PlayerName1 = playername;
-    	System.out.println("Hello " + playername + " ready to kick some asses ?");
-    	
-       	
-    	enemyImage = new Image("/res/enemy/Idle.png");
-        player = new Player("/res/enemy/player.png", startingHealth);
-        player.setRotate(90);
-        model = new GameModel();
-
-        for (int i = 0; i < startingHealth; i++) {
-            ImageView heart = new ImageView(new Image("/res/oberflaechen/heart.png"));
-
-            heart.setTranslateX(10 + (i * 10));
-            heart.setTranslateY(10);
-
-            hearts.add(heart);
-        }
-        heartsPane = new Pane();
-        heartsPane.getChildren().addAll(hearts);
-        root = new Pane();
-        root.getChildren().addAll(player, bulletGroup);
-        root.getChildren().addAll(heartsPane);
-        healthBar = new HealthBar(player, heartsPane);
-        scene = new Scene(root, width, height);
-        hitSound = new MediaPlayer(model.getHitSound());
-        Canvas canvas = new Canvas(width, height);
-        root.getChildren().add(canvas);
-        gc = canvas.getGraphicsContext2D();
-
-        // Hintergrundbild erstellen und der Szene hinzufügen
-        ImageView background = new ImageView(new Image("/res/enemy/planet.jpg"));
-        root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
-
-        
-        // Erstellung des Labels für die Punkte
-        Label scoreLabel = new Label("Score:0");
-        scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
-        scoreLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
-        scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
-        root.getChildren().add(scoreLabel); // Hinzufügen des Labels zum Root-Pane
-
-        // Erstellung des Labels für die verbleibende Zeit
-        Label timeLabel = new Label("Time: 60");
-        timeLabel.setTranslateX(scene.getWidth() - 100); // Platzieren des Labels am rechten Rand
-         timeLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
-         timeLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
-         root.getChildren().add(timeLabel); // Hinzufügen des Labels zum Root-Pane
-
-        // Binden der Punktzahl an das Label
-        scoreLabel.textProperty().bind(model.scoreProperty().asString("Punktzahl: %d"));
-
-        // In der AnimationTimer-Schleife die Position der ImageView kontinuierlich ändern
-        animationTimer = new AnimationTimer() {
-            private double backgroundOffset = 0;
-
-            @Override
-            public void handle(long now) {
-                
-                //Zeit
-                if (!isGameOver) {
-                
-                    long gameTime = now - startTime;
-                    if (gameTime > 60_000_000_000L) { // 60 Sekunden sind vergangen, das Spiel ist vorbei
-                        stop();
-                        showAlertWon("Vorbei", "Time's up!");
-                    } else {
-                        // verbleibende Spielzeit berechnen
-                        long remainingTime = 60_000_000_000L - gameTime;
-                        int remainingSeconds = (int) (remainingTime / 1_000_000_000);
-                        String timeString = String.format("%02d:%02d", remainingSeconds / 60, remainingSeconds % 60);
-                        timeLabel.setText("Time: " + timeString); // Zeit-Label aktualisieren
-                    }
-                }
-                // Hintergrundbild nach links bewegen
-                backgroundOffset -= 0.2;
-                if (backgroundOffset <= -background.getImage().getWidth()) {
-                    backgroundOffset = 0;
-                }
-                background.setTranslateX(backgroundOffset);
-                addEnemy(now);
-                update();
-                render();
-            }
-        };
-        animationTimer.start();
-    } */
+  
 
     //Konstruktor 2 Gideon Multiplayer
-    public GameView(double width, double height, boolean multiplayer, String Player1, String Player2) {
-        this.PlayerName1 = Player1;
+    public GameView(double width, double height, boolean multiplayer, User Player1, String Player2) {
+        this.User1 = Player1;
         this.PlayerName2 = Player2;
     	
     	enemyImage = new Image("/res/enemy/Idle.png");
@@ -200,7 +122,12 @@ public class GameView {
         // Hintergrundbild erstellen und der Szene hinzufügen
         ImageView background = new ImageView(new Image("/res/enemy/planet.jpg"));
         root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
-
+     
+        /*TOBI: Passt den Background an die Auflösung an die gesetzt wird!
+        	width sollte  nicht verwendet werden, da das Bild dann exakt auf die Auflösung gedrückt wird
+         	was dazu führt das wir im weißen Bereich des Bildes spielen.  */
+        //  background.setFitWidth(width);
+        background.setFitHeight(height);
         
         // Erstellung des Labels für die Punkte
         scoreLabel = new Label("Score:0");
@@ -367,7 +294,28 @@ public void updateSecondHealthBar(int health) {
 				e.printStackTrace();
 			}
             alert.showAndWait();
+            try {
+				backToMainMenu();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         });
+    }
+    
+    public void backToMainMenu() throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/cockpit.fxml"));
+		Parent root = loader.load();
+		LobbyController lobbyController = loader.getController();
+
+		lobbyController.setLoggedInUserName(this.User1);
+		Stage lobbyStage = new Stage();
+		lobbyStage.setScene(new Scene(root));
+		lobbyStage.show();
+
+		// Schließe die Login-Stage
+		Stage gameStage = (Stage) scene.getWindow();
+		gameStage.close();
     }
     
     public void  updateHighscore() throws SQLException{

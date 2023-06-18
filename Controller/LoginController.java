@@ -286,15 +286,18 @@ public class LoginController {
 					alert.setTitle("Nutzer erstellt");
 					alert.setHeaderText(null);
 					alert.setContentText("Nutzer wurde erfolgreich erstellt");
-					final ActionEvent finalEvent = event; // Event in endgültige Variable umwandeln
-					alert.setOnHidden(evt -> {
-						Stage previousStage = (Stage) ((Node) finalEvent.getSource()).getScene().getWindow();
-						previousStage.close();
-					});
 					alert.showAndWait();
+					switchToLoginScreen(event);
 				} else {
 					// FEHLERMELDUNG
 					System.out.println("Fehler bei der Nutzererstellung");
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Nutzer konte nicht erstellt werden");
+					alert.setHeaderText(null);
+					alert.setContentText("Nutzer existiert bereits, bitte einen anderen Nutzernamen wählen");
+					alert.showAndWait();
+					RegisterUserNameField.setText("");
+					RegisterUserPasswordField.setText("");
 				}
 
 			} catch (Exception ex) {

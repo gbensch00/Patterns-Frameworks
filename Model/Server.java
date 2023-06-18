@@ -119,14 +119,16 @@ public class Server {
         String userName = doc.getElementsByTagName("Username").item(0).getTextContent();
         String password = doc.getElementsByTagName("Password").item(0).getTextContent();
 
-        
         User newUser = new User(userName, password);
-		userDAO.createUser(newUser);
+        boolean success = userDAO.createUser(newUser);
 
-		// Sende eine Bestätigung an den Client
-		sendNewUserConfirmationToClient(clientSocket);
-		System.out.println("Neuer Benutzer erstellt");
-    
+        // Sende eine Bestätigung an den Client
+        if (success) {
+            sendNewUserConfirmationToClient(clientSocket);
+            System.out.println("Neuer Benutzer erstellt");
+        } else {
+            sendUserCreationFailureToClient(clientSocket);
+        }
     }
 
     private static void sendInvalidRequestToClient(Socket clientSocket) throws IOException {
