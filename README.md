@@ -66,14 +66,12 @@ Zum Anmelden wird beim Starten des Spieles nach den Login-Informationen verlangt
 
 MVC, DAO (Data Access Object), Observer Pattern und teilweisew auch Dependency Injection bei DB-abfragen.
 
-MVC als Struktur hatte ich ja in dem ersten Prototypen schon drin, hier einfach mal die Vorteile bzw. der Sinn dahinter: 
+MVC - Warum der Einsatz: 
 - Trennung der Verantwortlichkeiten, indem die Logik in drei separate Komponenten getrennt wird, wodurch die Anwendung einfacher zu verstehen und zu warten ist. Das macht es auch einfacher für mehrere Entwickler an verschiedenen Komponenten zu arbeiten ohne sich gegenseitig zu behindern.
-
 - MVC ist sehr skalierbar, weil man Komponenten hinzufügen und entfernen kann, ohne die anderen zu beeinträchtigen.
 - Beispiel zu konkreter Implementierung: Der GameController nimmt alle User-Inputs der Tastatur entgegen, wenn Inputs den WASD/Leertaste oder bei 2 Spielern auch den Pfeiltasten/Enter entsprechen, werden die Funktionen Player.setVelocity() oder shoot() aufgerufen, die dann in den jeweiligen Model- oder Viewklassen veränderungen im Spiel wie hier zum Beispiel die Spielerbewegung bzw. die Schüsse erzeugen.
 
-
-Observer Pattern eignet sich für ein R-Type Spiel sowieso gut: In dem Observer Pattern gibt es ein Subjekt an das ein oder mehrere 'Observer' gekoppelt sind, über die das Subjekt selbst gar nichts wissen muss, außer dass sie ein gewisses Interface implementieren. Ein Beispiel: In unserem R-Type Spiel ist der player character das Subjekt. Dieses Subjekt nimmt Schaden von einem Gegner, wodurch sich der health stat verringert. Das Subjekt benachrichtigt den dazugehörigen Observer, also die UI Komponente 'Health Bar', wie viel Health noch übrig bleibt und die Health Bar wird geupdated. Dasselbe könnte man z.B. mit Geschwindigkeits oder Schadenspowerups machen.
+Observer Pattern eignet sich für ein R-Type Spiel sehr gut: In dem Observer Pattern gibt es ein Subjekt an das ein oder mehrere 'Observer' gekoppelt sind, über die das Subjekt selbst gar nichts wissen muss, außer dass sie ein gewisses Interface implementieren. Ein Beispiel: In unserem R-Type Spiel ist der player character das Subjekt. Dieses Subjekt nimmt Schaden von einem Gegner, wodurch sich der health stat verringert. Das Subjekt benachrichtigt den dazugehörigen Observer, also die UI Komponente 'Health Bar', wie viel Health noch übrig bleibt und die Health Bar wird geupdated. Dasselbe könnte man z.B. mit Geschwindigkeits oder Schadenspowerups machen.
 
 Datenobjekte: Diese repräsentieren Entitäten oder Datenbanktabellen und enthalten in der Regel Eigenschaften (Attribute) und Methoden, um auf die Daten zuzugreifen oder diese zu manipulieren.
 Datenzugriffsschicht (DAO): Die DAO-Komponente ist für den tatsächlichen Zugriff auf die Datenbank verantwortlich. Sie bietet Methoden zum Erstellen, Lesen, Aktualisieren und Löschen von Datenobjekten. Die DAO-Komponente kapselt die Datenbankdetails und abstrahiert diese vor der restlichen Anwendung.
@@ -87,4 +85,6 @@ JavaFX
 
 ### Threading-Verwendung
 
+Threading wird in der Main für den Login Server verwendet. Der Thread muss geöffnet werden weil es sich um einen „ haltenden ? „ (ich hab keine Ahnung wie das nochmal heißt) Prozess handelt. Sprich hätten wir das nicht in einem Thread gepackt würde unsere Main.class das Main.Fxml nicht startet da der Server erst eine Verbindung haben möchte bevor er weiter macht.
+Dafür haben wir threading bei der DB verwendet.
 
