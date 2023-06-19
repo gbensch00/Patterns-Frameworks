@@ -11,7 +11,7 @@ public class GameModel {
 
   public GameModel() {
     hitSound = new Media(getClass().getResource("/res/Sounds/treffer.mp3").toString());
-    shootSound = new Media(getClass().getResource("/res/Sounds/shoot.mp3").toString());
+    shootSound = new Media(getClass().getResource("/res/Sounds/shoot.wav").toString());
 }
 public Media getshootSound() {
   return shootSound;

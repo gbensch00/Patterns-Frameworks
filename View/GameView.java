@@ -73,7 +73,10 @@ public class GameView {
 
     //Konstruktor 2 Gideon Multiplayer
     public GameView(double width, double height, boolean multiplayer, User Player1, String Player2) {
-        this.User1 = Player1;
+      
+    	
+    	this.User1 = Player1;
+        this.PlayerName1 = User1.getUsername();
         this.PlayerName2 = Player2;
     	
     	enemyImage = new Image("/res/enemy/Idle.png");
@@ -271,6 +274,7 @@ public void updateSecondHealthBar(int health) {
             alert.setTitle("Game Over");
             alert.setHeaderText("Du bist getroffen!");
             alert.setContentText("Game Over! Deine Punktzahl ist: " + model.getScore());
+            animationTimer.stop();
             try {
 				updateHighscore();
 			} catch (SQLException e) {
@@ -278,6 +282,12 @@ public void updateSecondHealthBar(int health) {
 				e.printStackTrace();
 			}
             alert.showAndWait();
+            try {
+				backToMainMenu();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         });
     }
 
@@ -287,6 +297,7 @@ public void updateSecondHealthBar(int health) {
             alert.setTitle("Spielende");
             alert.setHeaderText("Du bist ein Champion");
             alert.setContentText("Deine Punktzahl ist: " + model.getScore());
+            animationTimer.stop();
             try {
 				updateHighscore();
 			} catch (SQLException e) {

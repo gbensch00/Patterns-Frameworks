@@ -21,6 +21,7 @@ import javafx.util.Duration;
 public class GameController {
   private GameModel model;
   private GameView view;
+
  
   private boolean isUpPressed = false;
   private boolean isDownPressed = false;
@@ -45,7 +46,7 @@ public class GameController {
     // Übergebe das Model-Objekt an die GameView
     view.setModel(model); 
     // Lade den Sound für das Schießen
-    shootSound = new MediaPlayer(model.getshootSound());
+    this.shootSound = new MediaPlayer(model.getshootSound());
     Scene scene = view.getScene();
     
     bullets = view.getBulletGroup().getChildren().stream()
@@ -255,9 +256,9 @@ public class GameController {
     if (currentScore < 5) {
         // Erstelle ein neues ImageView-Objekt für die Kugel
         ImageView bullet = new ImageView("/res/enemy/playerGun1a.png");
-        Media sound = model.getshootSound();
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.play();
+     //   Media sound = model.getshootSound();
+    //    MediaPlayer mediaPlayer = new MediaPlayer(sound);
+    //    mediaPlayer.play();
 
         // Setze die Anfangsposition der Kugel auf der rechten Seite des Spielers
         bullet.setTranslateX(player.getTranslateX() + player.getFitWidth());
@@ -271,9 +272,9 @@ public class GameController {
     } else if (currentScore >= 5) {
         ImageView bullet1 = new ImageView("/res/enemy/playerGun1a.png");
         ImageView bullet2 = new ImageView("/res/enemy/playerGun1a.png");
-        Media sound = model.getshootSound();
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.play();
+     //   Media sound = model.getshootSound();
+     //   MediaPlayer mediaPlayer = new MediaPlayer(sound);
+     //   mediaPlayer.play();
 
         // Setze die Anfangsposition der Kugeln auf der rechten Seite des Spielers
         bullet1.setTranslateX(player.getTranslateX() + player.getFitWidth());
