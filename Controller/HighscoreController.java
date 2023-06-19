@@ -51,7 +51,7 @@ public class HighscoreController {
     }
     
     public ResultSet getAllHighscores() throws SQLException {
-        String query = "SELECT name, highscore FROM PLAYER WHERE name != 'defaultAvatar' ORDER BY highscore DESC LIMIT 10";
+        String query = "SELECT PLAYER.name, PLAYER.highscore, UserSettings.Avatar FROM PLAYER JOIN USerSettings ON PLAYER.id = UserSettings.UserID WHERE PLAYER.name != 'defaultAvatar' ORDER BY PLAYER.highscore DESC LIMIT 10";
         PreparedStatement statement = con.prepareStatement(query);
         ResultSet resultSet = statement.executeQuery();
         return resultSet;
