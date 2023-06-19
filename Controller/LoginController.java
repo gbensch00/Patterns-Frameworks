@@ -51,7 +51,9 @@ public class LoginController {
 	 * String DBURL = "jdbc:mysql://localhost:3306/TestDB"; String DBUser = "root";
 	 * String DBPassword = ""; Statement stmt = null; ResultSet rs = null;
 	 */
-	private String defUser = "test99";
+	
+	User defUser = new User(25,"test99","1234",0); // Tobi: wird vor der Präsi gelöscht, auch der DeVlogin etc.!
+	
 	private String loggedInUserName = "guest";
 	private UserDAO userDAO;
 	private User loggedInUser;

@@ -9,11 +9,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import Controller.HighscoreController;
 import Model.User;
 import Model.UserDAO;
 import Model.UserDAOImpl;
@@ -28,6 +30,8 @@ public class Server {
     private static final int PORT = 1234;
     static UserDAO userDAO;
     static UserSettingsDAO userSettingsDAO;
+    static HighscoreController hcs;
+    
 	static String DBURL = "jdbc:mysql://localhost:3307/TestDB";
 	static String DBUser = "root";
 	static String DBPassword = "";
@@ -38,6 +42,7 @@ public class Server {
 			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
 			userDAO = new UserDAOImpl(con);
 			userSettingsDAO = new UserSettingsDAOImpl(con);
+			hcs = new HighscoreController(con);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -182,6 +187,15 @@ public class Server {
     public static UserSettings callUserSettings (String user) throws SQLException {
     	UserSettings loadedUserSettings = userSettingsDAO.getUserSettingsByUserId(user);
     	return loadedUserSettings;
+    }
+    //liefert Highscores an die HighscoreScene
+    public static ResultSet getHSc() throws SQLException {
+    	ResultSet rs = hcs.getAllHighscores();
+    	return rs;
+    }
+    
+    public static void updateHSc(String Playername, int highscore) throws SQLException {
+    	hcs.updateHighscore(Playername, highscore );
     }
 
 }

@@ -11,6 +11,7 @@ import Controller.HighscoreController;
 import Controller.LobbyController;
 import Model.Enemy;
 import Model.Player;
+import Model.Server;
 import Model.SpecialEnemy;
 import Model.User;
 import Model.GameModel;
@@ -330,9 +331,8 @@ public void updateSecondHealthBar(int health) {
     }
     
     public void  updateHighscore() throws SQLException{
-    	HighscoreController hsc = new HighscoreController();
-    	hsc.updateHighscore(PlayerName1, model.getScore());
-    	System.out.println("Highscore wurde auf " +model.getScore() + " gesetzt");
+    	Server.updateHSc(PlayerName1, model.getScore());
+    	System.out.println("Dein Punktestand wurde auf " +model.getScore() + " gesetzt");
     }
 
     public void setEnemies(List<Enemy> enemies) {

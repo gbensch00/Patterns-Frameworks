@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Controller.HighscoreController;
+import Model.Server;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,8 +22,8 @@ public class HighscoreScene {
 	@FXML
 	public void initialize() {
 		try {
-			HighscoreController highscoreController = new HighscoreController();
-			ResultSet resultSet = highscoreController.getAllHighscores();
+			
+			ResultSet resultSet = Server.getHSc();
 			int row = 0;
 			while (resultSet.next()) {
 				String name = resultSet.getString("name");
