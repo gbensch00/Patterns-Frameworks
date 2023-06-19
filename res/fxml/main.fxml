@@ -7,21 +7,37 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: black;" stylesheets="@../Style/main.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
 	<children>
-		<ImageView fitHeight="448.0" fitWidth="638.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+		<ImageView fitHeight="509.0" fitWidth="965.0" layoutX="-6.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
 			<image>
-				<Image url="/res/oberflaechen/SpaceTypeLogin.png" />
+				<Image url="@../oberflaechen/Login.png" />
 			</image>
 		</ImageView>
-		<Button fx:id="LoginButton" layoutX="104.0" layoutY="259.0" mnemonicParsing="false" onAction="#userLogin" text="Login" />
-		<Button fx:id="resetButton" layoutX="215.0" layoutY="259.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
-		<TextField fx:id="userIDField" layoutX="104.0" layoutY="191.0" promptText="username" />
-		<PasswordField fx:id="userPasswordField" layoutX="104.0" layoutY="223.0" promptText="Password" />
-		<Label layoutX="462.0" layoutY="343.0" text="Noch keinen Account?" textFill="WHITE" />
-      <Button fx:id="createUserAccount" layoutX="505.0" layoutY="360.0" mnemonicParsing="false" onAction="#switchTocreateUser" text="Hier klicken" textFill="#1c1fdd" />
-      <Button fx:id="devLogin" layoutX="510.0" layoutY="285.0" mnemonicParsing="false" onAction="#devLogin" text="DevLogin" />
-			<Button fx:id="mp" layoutX="510.0" layoutY="310.0" mnemonicParsing="false" onAction="#mp" text="mp" />
+		<Button fx:id="LoginButton" layoutX="61.0" layoutY="357.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="41.0" prefWidth="97.0" text="Login" />
+		<Button fx:id="resetButton" layoutX="175.0" layoutY="357.0" mnemonicParsing="false" onAction="#reset" prefHeight="41.0" prefWidth="97.0" text="Reset" />
+		<TextField fx:id="userIDField" layoutX="61.0" layoutY="287.0" prefHeight="26.0" prefWidth="211.0" promptText="username" />
+		<PasswordField fx:id="userPasswordField" layoutX="61.0" layoutY="321.0" prefHeight="26.0" prefWidth="211.0" promptText="Password" />
+		<Label layoutX="622.0" layoutY="453.0" text="No account yet ?" textFill="WHITE" />
+      <Button fx:id="createUserAccount" layoutX="639.0" layoutY="480.0" mnemonicParsing="false" onAction="#switchTocreateUser" text="Click here" textFill="#1c1fdd" />
+      <Button fx:id="devLogin" layoutX="23.0" layoutY="546.0" mnemonicParsing="false" onAction="#devLogin" text="DevLogin" />
+			<Button fx:id="mp" layoutX="130.0" layoutY="546.0" mnemonicParsing="false" onAction="#mp" text="mp" />
+      <Label layoutX="228.0" layoutY="89.0" text="SPACE-TYPE" textFill="WHITE">
+         <font>
+            <Font size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="196.0" layoutY="548.0" text="A software project by" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="196.0" layoutY="567.0" text="Gideo, Ulf and Tobias" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
 	</children>
 </AnchorPane>

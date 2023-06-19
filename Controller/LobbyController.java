@@ -28,7 +28,6 @@ import Model.GameModel;
 import Model.User;
 import Model.UserSettings;
 import Model.UserSettingsDAO;
-import Model.UserSettingsDAOImpl;
 import View.GameView;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -70,24 +69,16 @@ public class LobbyController {
 	int width;
 	int height;
 
-	String DBURL = "jdbc:mysql://localhost:3307/TestDB";
-	String DBUser = "root";
-	String DBPassword = "";
+	
+	
+	private User user1;
 
 	private UserSettingsDAO userSettingsDAO;
 
 	// private UserDAO userDAO;
 
 	public LobbyController() {
-		try {
-			dbConnection = new DatabaseConnection("jdbc:mysql://localhost:3307/TestDB", "root", "");
-			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
-			userSettingsDAO = new UserSettingsDAOImpl(con);
-			// userDAO = new UserDAOImpl(con);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	
 	}
 
 	@FXML
@@ -116,14 +107,18 @@ public class LobbyController {
 
 	@FXML
 	public void setLoggedInUserName(User userName) {
-		UserName.setText("Hallo " + userName.getUsername() + "!");
+		UserName.setText("Hello Captain " + userName.getUsername() + "!");
 		this.loggedInUserName = userName.getUsername();
-
+	
+		this.user1 = userName;
+		
 		try {
+//NEU !!			
 			// User user = userDAO.getUserByName(userName);
 			String userID = String.valueOf(userName.getId());
 
-			UserSettings userSettings = userSettingsDAO.getUserSettingsByUserId(userID);
+		//	UserSettings userSettings = userSettingsDAO.getUserSettingsByUserId(userID);
+		UserSettings userSettings =	Model.Server.callUserSettings(userID);
 
 			// lediglich Fehlerüberprüfung kann später gelöscht werden
 			if (userSettings == null) {
@@ -159,11 +154,15 @@ public class LobbyController {
 
 				for (Node node : anchorPane.getChildren()) {
 					if (node instanceof Button) {
-						((Button) node).setFont(Font.font(fontType));
+						//((Button) node).setFont(Font.font(fontType));
+						double fontsize2 = Double.parseDouble(fontSize);
+						((Button) node).setFont(Font.font(fontType, FontWeight.NORMAL, fontsize2));
 					}
-				}
+					
+				
+					}
 
-				Stop[] stops = new Stop[] { new Stop(0, bgC), new Stop(1, Color.LIGHTBLUE) };
+				Stop[] stops = new Stop[] { new Stop(0, bgC), new Stop(1, Color.WHITE) };
 				LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
 
 				// Setze den Farbverlauf als Hintergrundbild
@@ -208,7 +207,7 @@ public class LobbyController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(width, height,false);
+		GameView view = new GameView(width, height, false, user1, this.PlayerTwoName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
@@ -243,7 +242,7 @@ public class LobbyController {
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
-		GameView view = new GameView(800, 600,true);
+		GameView view = new GameView(width, height, true,user1, this.PlayerTwoName);
 		// GameView view = new GameView(600,600, this.loggedInUserName,PlayerTwoName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
@@ -269,11 +268,14 @@ public class LobbyController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/settings.fxml"));
 		Parent root = loader.load();
 		SettingsController settingsController = loader.getController();
-		settingsController.setUserName(this.dbID); // Benutzernamen an das FXML-Controller-Objekt übergeben
+		settingsController.setUserName(user1); // Benutzerobjekt an das FXML-Controller-Objekt übergeben
 
 		Scene scene = new Scene(root);
 		Stage stage = new Stage();
+		String cssFile = getClass().getResource("/res/Style/Style.css").toExternalForm();
+		
 		stage.setScene(scene);
+		stage.getScene().getStylesheets().add(cssFile);
 		stage.show();
 	}
 

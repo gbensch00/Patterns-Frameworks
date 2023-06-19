@@ -31,6 +31,7 @@ public class GameController {
   private boolean isLeftPressed2 = false;
   private boolean isRightPressed2 = false;
   private MediaPlayer shootSound;
+  private MediaPlayer hitSound;
   private boolean isGameOver = false;
   private Player player;
   private Player player2;
@@ -46,6 +47,7 @@ public class GameController {
     view.setModel(model); 
     // Lade den Sound für das Schießen
     shootSound = new MediaPlayer(model.getshootSound());
+    hitSound = new MediaPlayer(model.getHitSound());
     Scene scene = view.getScene();
     
     bullets = view.getBulletGroup().getChildren().stream()
@@ -294,6 +296,9 @@ public void checkCollision() {
   List<ImageView> bulletsToRemove = new ArrayList<>();
   List<Enemy> enemiesToRemove = new ArrayList<>();
   List<SpecialEnemy> specialEnemiesToRemove = new ArrayList<>();
+  hitSound.stop();
+  hitSound.seek(Duration.ZERO);
+  hitSound.play();
 
   checkBulletCollision(bullets, enemies, specialEnemies, bulletsToRemove, enemiesToRemove, specialEnemiesToRemove);
 
@@ -317,6 +322,9 @@ private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, 
 
       for (Enemy enemy : enemies) {
           if (getBoundsInParent(bullet).intersects(enemy.getBounds())) {
+              Media sound = model.getHitSound();
+              MediaPlayer mediaPlayer = new MediaPlayer(sound);
+              mediaPlayer.play();
               bulletCollided = true;
               bulletsToRemove.add(bullet);
               enemiesToRemove.add(enemy);
@@ -327,6 +335,9 @@ private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, 
       if (!bulletCollided) {
           for (SpecialEnemy specialEnemy : specialEnemies) {
               if (getBoundsInParent(bullet).intersects(specialEnemy.getBounds())) {
+                  Media sound = model.getHitSound();
+                  MediaPlayer mediaPlayer = new MediaPlayer(sound);
+                  mediaPlayer.play();
                   bulletCollided = true;
                   bulletsToRemove.add(bullet);
                   specialEnemiesToRemove.add(specialEnemy);
