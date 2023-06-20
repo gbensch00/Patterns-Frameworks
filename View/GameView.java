@@ -34,10 +34,11 @@ public class GameView {
     private long lastSpecialEnemyTime = 0L;
     private Scene scene;
     private Player player;
-    public Player player1;
-    public Player player2;
+    private Player player1;
+    private Player player2;
+    private Player player3;
     private GameModel model;
-    public Group bulletGroup = new Group();  
+    private Group bulletGroup = new Group();  
     private Pane root;
     private GraphicsContext gc;
     private AnimationTimer animationTimer;
@@ -53,6 +54,7 @@ public class GameView {
     private Pane heartsPane;
     private Pane heartsPane2;
     private HealthBar healthBar;
+    private HealthBar healthBar2;
     private String PlayerName1;
     private String PlayerName2 = "guest";
 
@@ -60,11 +62,9 @@ public class GameView {
     public GameView(double width, double height, String playername) {
         
     	this.PlayerName1 = playername;
-    	System.out.println("Hello " + playername + " ready to kick some asses ?");
-    	
-       	
+    	System.out.println("Hello " + playername + " ready to kick some asses ?");	
     	enemyImage = new Image("/res/enemy/Idle.png");
-        player = new Player("/res/enemy/player.png", startingHealth);
+        player = new Player("/res/enemy/player.png", startingHealth, "one");
         player.setRotate(90);
         model = new GameModel();
 
@@ -73,7 +73,6 @@ public class GameView {
 
             heart.setTranslateX(10 + (i * 10));
             heart.setTranslateY(10);
-
             hearts.add(heart);
         }
         heartsPane = new Pane();
@@ -149,7 +148,7 @@ public class GameView {
     //Konstruktor 2 Gideon Multiplayer
     public GameView(double width, double height, boolean multiplayer) {
         enemyImage = new Image("/res/enemy/Idle.png");
-        player1 = new Player("/res/enemy/player1.png", startingHealth);
+        player1 = new Player("/res/enemy/player1.png", startingHealth, "one");
         player1.setRotate(180);
         player1.setTranslateY(200);
         player1.setFitHeight(100);
@@ -171,11 +170,13 @@ public class GameView {
         root.getChildren().addAll(heartsPane);
         healthBar = new HealthBar(player1, heartsPane);
         if (multiplayer == true) {
-           player2 = new Player("/res/enemy/player2.png", startingHealth);
+           player2 = new Player("/res/enemy/player2.png", startingHealth, "two");
+            player3 = new Player("/res/enemy/player2.png", startingHealth, "three");
         player2.setRotate(180);
         player2.setTranslateY(400);
         player2.setFitHeight(100);
         player2.setFitWidth(100);
+       
             for (int i = 0; i < startingHealth; i++) {
             ImageView heart2 = new ImageView(new Image("/res/oberflaechen/heart.png"));
 
@@ -188,7 +189,10 @@ public class GameView {
             heartsPane2.getChildren().addAll(hearts2);
             root.getChildren().addAll(player2);
             root.getChildren().addAll(heartsPane2);
+            healthBar2 =  new HealthBar(player2, heartsPane2);
+             
         }
+        
         scene = new Scene(root, width, height);
         hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);

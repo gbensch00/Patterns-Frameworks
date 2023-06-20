@@ -7,18 +7,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Player extends ImageView implements PropertyChangeListener {
-  private double velocityX = 0;
-  private double velocityY = 0;
-  //Zeile von gideon 03.05.
+  private double velocityX;
+  private double velocityY;
   private int health;
-  private int health2;
   private PropertyChangeSupport propertyChangeSupport;
+  private String playerSelector;
   
 
-  public Player(String imagePath, int startingHealth) {
+  public Player(String imagePath, int startingHealth, String playerSelector) {
     super(new Image(imagePath));
     this.health = startingHealth;
-    this.health2 = startingHealth;
+    this.playerSelector = playerSelector;
     propertyChangeSupport = new PropertyChangeSupport(this);
   }
 
@@ -31,15 +30,6 @@ public class Player extends ImageView implements PropertyChangeListener {
     this.health = newHealth;
   }
 
-  public int getHealth2() {
-    return health2;
-  }
-
-  public void setHealth2(int newHealth) {
-    this.health2 = newHealth;
-  }
-
-
   public double getVelocityX() {
     return velocityY;
   }
@@ -51,31 +41,23 @@ public class Player extends ImageView implements PropertyChangeListener {
   public void setVelocityX(double velocityX) {
     this.velocityX = velocityX;
   }
+
+  public String getPlayerSelector() {
+    return playerSelector;
+  }
+  
   public void setVelocityY(double velocityY) {
     this.velocityY = velocityY;
   }
-  
-  public void decreaseHealth(double amount) {
-    health.set(health.get() - amount);
-  }
 
   public void updateHealth(int healthChange, Player player, String playerSelector) {
-    if (playerSelector == "one") {
     int oldHealth = this.health;
-    System.out.println("before: " + this.health);
     this.health += healthChange;
-     System.out.println("before: " + this.health);
       propertyChangeSupport.firePropertyChange("health", oldHealth, health);
-    } else if (playerSelector == "two") {
-      int oldHealth = this.health2;
-    System.out.println("before: " + this.health2);
-    this.health2 += healthChange;
-     System.out.println("before: " + this.health2);
-     propertyChangeSupport.firePropertyChange("health2", oldHealth, health2);
-    }    
+    
   }
     
-   // Methods to register and unregister PropertyChangeListeners
+   // Methoden für PropertyChangeListener, werden benötigt
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
