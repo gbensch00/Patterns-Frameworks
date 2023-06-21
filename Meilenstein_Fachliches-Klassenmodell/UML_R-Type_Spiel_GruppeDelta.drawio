@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-06-18T14:00:40.187Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/111.0" etag="uCZ6VGm3KHfqbvaXtwPv" version="21.3.2" pages="2">
+<mxfile host="app.diagrams.net" modified="2023-06-21T11:55:30.166Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/111.0" etag="GRIegg6Q6zEGvImZOwSs" version="21.3.2" pages="2">
   <diagram name="mit welcome- und registrationcontroller" id="ffsZXkNofe1MwQi4akU4">
     <mxGraphModel dx="1271" dy="729" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -642,6 +642,14 @@
             <Array as="points">
               <mxPoint x="1160" y="580" />
               <mxPoint x="1161" y="567" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dntGvW02GTJOawOFwCRO-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WPHEw-IVUdy1KVsQDdNB-1" source="dntGvW02GTJOawOFwCRO-9" target="dntGvW02GTJOawOFwCRO-39">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="670" />
+              <mxPoint x="1010" y="218" />
             </Array>
           </mxGeometry>
         </mxCell>

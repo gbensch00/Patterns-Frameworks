@@ -18,6 +18,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+/**
+ * Der GameController steuert das Spielgeschehen und reagiert auf Benutzereingaben.
+ * Er ist für die Bewegung der Spieler, das Abfeuern von Kugeln, die Kollisionserkennung
+ * und die Aktualisierung des Spielstands verantwortlich.
+ */
+
 public class GameController {
   private GameModel model;
   private GameView view;
@@ -247,6 +253,11 @@ public class GameController {
   view.setSpecialEnemies(specialEnemies);
   }    
 
+  /**
+   * Schießt eine Kugel aus dem gegebenen Spielerobjekt.
+   *
+   * @param player Das Spielerobjekt, aus dem die Kugel abgefeuert wird.
+   */
   public void shoot(Player player) {
 
     shootSound.stop();
@@ -292,6 +303,10 @@ public class GameController {
     }
 }
 
+/**
+   * Überprüft Kollisionen zwischen Kugeln und Gegnern.
+   * Entfernt Kugeln und Gegner, die kollidieren, aktualisiert den Spielstand und überprüft Spielerkollisionen.
+   */
 public void checkCollision() {
   List<ImageView> bulletsToRemove = new ArrayList<>();
   List<Enemy> enemiesToRemove = new ArrayList<>();
@@ -314,6 +329,17 @@ public void checkCollision() {
   
 }
 
+/**
+   * Überprüft Kollisionen zwischen Kugeln und Gegnern.
+   * Fügt Kugeln und Gegner, die kollidieren, den entsprechenden Listen hinzu, um sie später zu entfernen.
+   *
+   * @param bullets                    Die Liste der Kugeln.
+   * @param enemies                    Die Liste der regulären Gegner.
+   * @param specialEnemies             Die Liste der speziellen Gegner.
+   * @param bulletsToRemove            Die Liste der zu entfernenden Kugeln.
+   * @param enemiesToRemove            Die Liste der zu entfernenden regulären Gegner.
+   * @param specialEnemiesToRemove     Die Liste der zu entfernenden speziellen Gegner.
+   */
 private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, List<SpecialEnemy> specialEnemies,
                                 List<ImageView> bulletsToRemove, List<Enemy> enemiesToRemove,
                                 List<SpecialEnemy> specialEnemiesToRemove) {
@@ -352,6 +378,13 @@ private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, 
   }
 }
 
+/**
+   * Entfernt die Kugeln und Gegner aus den entsprechenden Listen und der View.
+   *
+   * @param bulletsToRemove            Die Liste der zu entfernenden Kugeln.
+   * @param enemiesToRemove            Die Liste der zu entfernenden regulären Gegner.
+   * @param specialEnemiesToRemove     Die Liste der zu entfernenden speziellen Gegner.
+   */
 private void removeBulletsAndEnemies(List<ImageView> bulletsToRemove, List<Enemy> enemiesToRemove,
                                    List<SpecialEnemy> specialEnemiesToRemove) {
   view.getBulletGroup().getChildren().removeAll(bulletsToRemove);
@@ -361,6 +394,13 @@ private void removeBulletsAndEnemies(List<ImageView> bulletsToRemove, List<Enemy
   specialEnemies.removeAll(specialEnemiesToRemove);
 }
 
+/**
+   * Berechnet die Punktezunahme basierend auf den entfernten Gegnern.
+   *
+   * @param enemiesToRemove            Die Liste der zu entfernenden regulären Gegner.
+   * @param specialEnemiesToRemove     Die Liste der zu entfernenden speziellen Gegner.
+   * @return Die Punktezunahme.
+   */
 private int calculateScoreIncrease(List<Enemy> enemiesToRemove, List<SpecialEnemy> specialEnemiesToRemove) {
   int scoreIncrease = 0;
   if (!enemiesToRemove.isEmpty()) {
@@ -372,11 +412,22 @@ private int calculateScoreIncrease(List<Enemy> enemiesToRemove, List<SpecialEnem
   return scoreIncrease;
 }
 
+/**
+   * Aktualisiert den Spielstand um die gegebene Punktezunahme.
+   *
+   * @param scoreIncrease Die Punktezunahme.
+   */
 private void updateScore(int scoreIncrease) {
   model.setScore(model.getScore() + scoreIncrease);
   view.setScoreLabel(model.getScore());
 }
 
+/**
+ * Überprüft, ob der gegebene Spieler von einem Gegner getroffen wurde.
+ * Aktualisiert den Gesundheitszustand des Spielers und überprüft, ob das Spiel vorbei ist.
+ *
+ * @param player Der Spieler, der überprüft werden soll.
+ */
 private void checkPlayerHit(Player player) {
   if (isPlayerHit(player)) {
     player.updateHealth(-1, player, "one");
@@ -401,6 +452,12 @@ private void checkPlayerHit(Player player) {
   }
 } 
 
+/**
+ * Überprüft, ob der gegebene Spieler von einem Gegner getroffen wurde.
+ *
+ * @param player Der Spieler, der überprüft werden soll.
+ * @return True, wenn der Spieler getroffen wurde, ansonsten False.
+ */
 private boolean isPlayerHit(Player player) {
   double hitThreshold = player.getBoundsInParent().getHeight() * 0.5;
   Bounds playerBoundsInScene = player.localToScene(player.getBoundsInLocal());
@@ -420,14 +477,31 @@ private boolean isPlayerHit(Player player) {
   return false;
 } 
 
+/**
+ * Gibt die Grenzen des angegebenen ImageView-Objekts im Elternkontext zurück.
+ *
+ * @param imageView Das ImageView-Objekt, dessen Grenzen zurückgegeben werden sollen.
+ * @return Die Grenzen des ImageView-Objekts im Elternkontext.
+ */
 public Bounds getBoundsInParent(ImageView imageView) {
   return imageView.getBoundsInParent();
 }
 
+/**
+ * Fügt eine einzelne Kugel zum Bullet-Group-Container der GameView hinzu.
+ *
+ * @param bullet Das ImageView-Objekt der Kugel, das hinzugefügt werden soll.
+ */
 public void addBullet(ImageView bullet) {
   view.getBulletGroup().getChildren().add(bullet);  
 }
 
+/**
+ * Fügt zwei Kugeln gleichzeitig zum Bullet-Group-Container der GameView hinzu.
+ *
+ * @param bullet1 Das ImageView-Objekt der ersten Kugel, das hinzugefügt werden soll.
+ * @param bullet2 Das ImageView-Objekt der zweiten Kugel, das hinzugefügt werden soll.
+ */
 public void addBullet(ImageView bullet1, ImageView bullet2) {
   view.getBulletGroup().getChildren().addAll(bullet1, bullet2);
 }

@@ -50,7 +50,6 @@ import javafx.scene.image.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -58,6 +57,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+
+
+/**
+ * Der LobbyController ist verantwortlich für die Steuerung der Lobby-Ansicht und die Verarbeitung von Benutzereingaben.
+ */
 
 public class LobbyController {
 
@@ -105,6 +109,11 @@ public class LobbyController {
 	@FXML
 	private Button SaveSettingsButton;
 
+	/**
+     * Setzt den Benutzernamen des eingeloggten Benutzers und initialisiert die Lobby-Ansicht entsprechend.
+     *
+     * @param userName Das Benutzerobjekt des eingeloggten Benutzers.
+     */
 	@FXML
 	public void setLoggedInUserName(User userName) {
 		UserName.setText("Hello Captain " + userName.getUsername() + "!");
@@ -177,6 +186,9 @@ public class LobbyController {
 		}
 	}
 
+	/**
+     * Schließt die Verbindung zur Datenbank.
+     */
 	public void close() {
 		try {
 			dbConnection.close();
@@ -185,6 +197,11 @@ public class LobbyController {
 		}
 	}
 
+	/**
+     * Behandelt das Klicken des "Schließen"-Buttons. Zeigt einen Bestätigungsdialog an und schließt das Spiel bei Bestätigung.
+     *
+     * @param event Das ActionEvent-Objekt des Klicks.
+     */
 	@FXML
 	private void handleCloseButton(ActionEvent event) {
 		// Alert anzeigen und Benutzer fragen, ob er das Spiel wirklich beenden möchte
@@ -201,6 +218,11 @@ public class LobbyController {
 		}
 	}
 
+	/**
+     * Behandelt das Klicken des "Einzelplayer"-Buttons. Schließt das aktuelle Fenster und öffnet ein neues Fenster für das Einzelspieler-Spiel.
+     *
+     * @param event Das ActionEvent-Objekt des Klicks.
+     */
 	@FXML
 	private void handleSinglePlayerButton(ActionEvent event) {
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -213,6 +235,11 @@ public class LobbyController {
 		stage.show();
 	}
 
+	/**
+     * Behandelt das Klicken des "Mehrspieler"-Buttons. Zeigt einen Dialog an, um den zweiten Spieler einzugeben, und öffnet dann das Mehrspieler-Spiel.
+     *
+     * @param event Das ActionEvent-Objekt des Klicks.
+     */
 	@FXML
 	private void handleMultiPlayerButton(ActionEvent event) {
 
@@ -250,6 +277,12 @@ public class LobbyController {
 		System.out.println("Hallo " + PlayerTwoName + " Bist du bereit?");
 	}
 
+	/**
+     * Behandelt das Klicken des "Highscores"-Buttons. Öffnet ein neues Fenster für die Anzeige der Highscores.
+     *
+     * @param event Das ActionEvent-Objekt des Klicks.
+     * @throws IOException Falls ein Fehler beim Laden der Highscore-Ansicht auftritt.
+     */
 	@FXML
 	private void handleHighscoreButton(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
@@ -259,6 +292,13 @@ public class LobbyController {
 		stage.show();
 	}
 
+	/**
+     * Behandelt das Klicken des "Einstellungen"-Buttons. Schließt das aktuelle Fenster und öffnet ein neues Fenster für die Einstellungen.
+     *
+     * @param event Das ActionEvent-Objekt des Klicks.
+     * @throws IOException Falls ein Fehler beim Laden der Einstellungsansicht auftritt.
+     * @throws SQLException Falls ein Fehler bei der Datenbankabfrage auftritt.
+     */
 	@FXML
 	private void handleSettingsButton(ActionEvent event) throws IOException, SQLException {
 
