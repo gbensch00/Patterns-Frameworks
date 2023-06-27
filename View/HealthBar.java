@@ -1,8 +1,9 @@
-package Model;
+package View;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import View.GameView;
+
+import Model.Player;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;

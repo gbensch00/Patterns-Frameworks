@@ -8,7 +8,6 @@ import Model.Enemy;
 import Model.Player;
 import Model.SpecialEnemy;
 import Model.GameModel;
-import Model.HealthBar;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.geometry.BoundingBox;
