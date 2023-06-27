@@ -34,6 +34,7 @@ public class GameController {
   private boolean isGameOver = false;
   private Player player;
   private Player player2;
+  private Player player3;
   private List<ImageView> bullets;
   public List<Enemy> enemies;
   public List<SpecialEnemy> specialEnemies;
@@ -261,7 +262,7 @@ public class GameController {
 
         // Setze die Anfangsposition der Kugel auf der rechten Seite des Spielers
         bullet.setTranslateX(player.getTranslateX() + player.getFitWidth());
-        bullet.setTranslateY(player.getTranslateY() + player.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
+        bullet.setTranslateY(player.getTranslateY() + player.getFitHeight() / 5 - bullet.getImage().getHeight() / 2 + 24);
 
         // Füge das Kugel-ImageView der Liste der Kugeln hinzu
         bullets.add(bullet);
@@ -377,17 +378,7 @@ private void checkPlayerHit(Player player) {
     }
 
   }
-  if (view.getPlayer2() != null) { 
-    if (isPlayerHit(player2)) {
-      player.updateHealth(-1, player2, "two");
-      view.updateSecondHealthBar(player.getHealth2());
-      if (player.getHealth2() <= 0) {
-      isGameOver = true;
-      view.stop();
-      view.showAlert("Game Over", "You were hit by an enemy!");
-    }
-    }
-  }
+
 } 
 
 private boolean isPlayerHit(Player player) {

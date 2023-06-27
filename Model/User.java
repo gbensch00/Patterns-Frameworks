@@ -1,18 +1,26 @@
 package Model;
 
 public class User {
-    private int id;
+	private int id;
     private String username;
     private String password;
-    private String avatarUrl;
+    private int highscore;
 
-    public User(int id, String username, String password, String avatarUrl) {
+    public User(int id, String username, String password, int highscore) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.avatarUrl = avatarUrl;
+        this.highscore = highscore;
     }
-
+    
+    public User(String username, String password) {
+        
+        this.username = username;
+        this.password = password;
+       
+    }
+    
+    
     public int getId() {
         return id;
     }
@@ -36,12 +44,11 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public int getHighscore() {
+        return highscore;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setHighscore(int highscore) {
+        this.highscore = highscore;
     }
 }

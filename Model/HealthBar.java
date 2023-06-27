@@ -13,11 +13,11 @@ public class HealthBar implements PropertyChangeListener {
    private Pane heartsPane2;
    private Player player;
   private GameView view;
+  private int x;
 
   public HealthBar(Player player, Pane heartsPane) {
     this.player = player;
     this.heartsPane = heartsPane;
-    this.heartsPane2 = heartsPane2;
     player.addPropertyChangeListener(this);
   }
   @Override
@@ -26,25 +26,21 @@ public class HealthBar implements PropertyChangeListener {
     if (evt.getPropertyName().equals("health")) {
       int oldValue = (int) evt.getOldValue();
       int newValue = (int) evt.getNewValue();
-     
-      if (oldValue > newValue) {
-        heartsPane.getChildren().clear();
-        for (int i = 0; i < newValue; i++) {
-          ImageView heart = new ImageView(new Image("heart.png"));
+     if(player.getPlayerSelector() == "one") {
+      x = 10;
+     } else if(player.getPlayerSelector() == "two") {
+      x = 40;
+     }
+      player.setHealth(newValue);
+      heartsPane.getChildren().clear();
+      for (int i = 0; i < newValue; i++) {
+            ImageView heart = new ImageView(new Image("/res/oberflaechen/heart.png"));
 
-          heart.setTranslateX(10 + (i * 10));
-          heart.setTranslateY(10);
+            heart.setTranslateX(10 + (i * 10));
+            heart.setTranslateY(x);
 
-          heartsPane.getChildren().add(heart);
+            heartsPane.getChildren().add(heart);
         }
-      }
-    }else
-     if (evt.getPropertyName().equals("health2")) {
-      int oldValue = (int) evt.getOldValue();
-      int newValue = (int) evt.getNewValue();
-     //funktioniert nicht weil die View nicht übergeben wird, aber ist eigentlich nicht der Sinn einer Observable, dass alles extern gemacht wird... mal sehen
-      //view.updateSecondHealthBar(newValue);
-    }
   }
-  
+}
 }

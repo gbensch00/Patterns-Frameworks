@@ -1,15 +1,29 @@
 package Controller;
-import  Model.Sound;
 
 
-import java.awt.Color;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.io.StringWriter;
+import java.net.Socket;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import javafx.stage.Stage;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -20,8 +34,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import Controller.GameController;
 import Model.GameModel;
+import Model.Server;
+import Model.User;
+import Model.UserDAO;
 import View.GameView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -32,20 +48,33 @@ public class LoginController {
 	 * Tobi: Um eine Verbindung mit der DB aufgebaut zu bekommen benötigt man einen
 	 * sql connector, das ist eine Lib die man extra hinzufügen muss
 	 * (mysql-connector.java-8.0.25.jar) zu finden im Ordner Extra Lib
-	 */
+	 
 
-	String url = "jdbc:mysql://localhost:3306/TestDB";
-	String user = "root";
-	String password = "";
-	Connection con = null;
+	String DBURL = "jdbc:mysql://localhost:3306/TestDB";
+	String DBUser = "root";
+	String DBPassword = "";
 	Statement stmt = null;
 	ResultSet rs = null;
+*/
+	private String loggedInUserName = "guest";
+	private UserDAO userDAO;
+	private User loggedInUser;
+	private boolean sendSuccessful = false;
+	private boolean createUserSuccesful = false;
 	
-	private String loggedInUserName;
-	
-	
-	
-	private Sound startupSound;
+	public LoginController() {
+		// Code zur Initialisierung der Verbindung zur Datenbank
+		/*try {
+			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
+			userDAO = new UserDAOImpl(con);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}*/
+	}
+
+	public LoginController(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
 
 	@FXML
 	private Button LoginButton;
@@ -66,107 +95,127 @@ public class LoginController {
 	@FXML
 	private Button RegisterButton;
 
-
 	@FXML
 	private Button devLogin;
+
 	@FXML
 	private Button mp;
-	
-	/*
-	@FXML 
-	public void initialize() {
-		//Spielerei! beim Login wird die Intro.wav wiedergegeben	
-		
-				String filename = "/res/Sounds/intro.wav";
-				URL url = getClass().getResource(filename);
-				if (url == null) {
-				    System.err.println("Couldn't find file: " + filename);
-				    return;
-				}
-				Sound sound = new Sound(url.getFile());
-				startupSound = sound;
-				startupSound.play();
-	}
-*/
+
 	@FXML
 	public void userLogin(ActionEvent e) throws IOException {
-	
-	
+	    if (e.getSource() == LoginButton) {
+	        String userID = userIDField.getText();
+	        String password = String.valueOf(userPasswordField.getText());
 
-		
+	        // Erstelle ein XML-Dokument für die Authentifizierungsdaten
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        try {
+	            DocumentBuilder builder = factory.newDocumentBuilder();
+	            Document doc = builder.newDocument();
 
-		if (e.getSource() == LoginButton) {
-			String userID = userIDField.getText();
-			String password = String.valueOf(userPasswordField.getText());
+	            // Erstelle das <Auth> Element
+	            Element authElement = doc.createElement("Auth");
+	            doc.appendChild(authElement);
 
-			/*
-			 * Tobi: Verbindet sich mit der lokalen DB und überprüft LEIDER noch jeden
-			 * Eintrag einzeln Wollte ich gerne noch anpassen, dass sobald der gültige
-			 * Nutzer gefunden wurde dann auch der Login passiert
-			 */
-			try {
-				con = DriverManager.getConnection(this.url, this.user, this.password);
-				stmt = con.createStatement();
-				rs = stmt.executeQuery("SELECT * FROM PLAYER");
-				while (rs.next()) {
-					
-					String dbID = rs.getString("id");
-					String name = rs.getString("name");
-					String userpassword = rs.getString("password");
+	            // Füge <Username> und <Password> Elemente hinzu
+	            Element usernameElement = doc.createElement("Username");
+	            usernameElement.setTextContent(userID);
+	            authElement.appendChild(usernameElement);
 
-					if (userID.equals(name) && password.equals(password)) {
-						loggedInUserName = name; // Benutzername speichern
-						System.out.println("Login erfolgreich");
-						System.out.println(userID + " " + name + " " + userpassword + " " + password);
+	            Element passwordElement = doc.createElement("Password");
+	            passwordElement.setTextContent(password);
+	            authElement.appendChild(passwordElement);
 
-						// Login Stage wird geschlossen
-						Stage previousStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-						previousStage.close();
+	            // Konvertiere das XML-Dokument in einen String
+	            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	            Transformer transformer = transformerFactory.newTransformer();
+	            StringWriter writer = new StringWriter();
+	            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+	            String xmlString = writer.getBuffer().toString();
+	            System.out.println(xmlString);
+	           
+	            // Sende das XML an den Server           
+	            //Prüfe ob String erfolgreich übertragen wurde
+	            sendSuccessful = sendXMLToServer(xmlString);
+	            
+	            System.out.println(sendSuccessful);
+	           
+	            //wenn true lade cockpit.fxml schließe den rest
+	            if (sendSuccessful) {
+	                // XML erfolgreich an den Server gesendet
+	                // Lade Lobby.fxml
+	            	//Da erfolgreich frage das Nutzerdaten Objekt am Server ab
+	            	  loggedInUser = Server.callUser(userID);
+	            	
+	                try {
+	                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/cockpit.fxml"));
+	                    Parent root = loader.load();
+	                    LobbyController lobbyController = loader.getController();
+	            
+	                    lobbyController.setLoggedInUserName(this.loggedInUser);
+	                    Stage lobbyStage = new Stage();
+	                    lobbyStage.setScene(new Scene(root));
+	                    lobbyStage.show();
 
-						// Game Stage wird geöffnet
-						/*
-						 * Stage stage = new Stage(); GameModel model = new GameModel(); GameView view =
-						 * new GameView(); GameController controller = new GameController(model, view);
-						 * stage.setScene(view.getScene()); stage.show();
-						 */
-
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("lobby.fxml"));
-						Parent root = loader.load();
-						LobbyController lobbyController = loader.getController();
-					    lobbyController.setLoggedInUserName(loggedInUserName); // Benutzernamen an das FXML-Controller-Objekt übergeben
-					    Scene scene = new Scene(root);
-					    Stage stage = new Stage();
-					    stage.setScene(scene);
-					    stage.show();
-
+	                    // Schließe die Login-Stage
+	                    Stage loginStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+	                    loginStage.close();
+	                } catch (IOException e1) {
+	                    e1.printStackTrace();
+	                }
+	            } else {
+	            	Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Falsches Password oder Nutzer nicht gefunden");
+					alert.setHeaderText(null);
+					alert.setContentText("Falsches Password oder Nutzer nicht gefunden");
+					alert.showAndWait();
 					}
-
-					else {
-						System.out.println("Login nicht erfolgreich");
-					}
-
-				}
-
-			} catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally {
-				try {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				} catch (SQLException sqle) {
-					sqle.printStackTrace();
-				}
-			}
-
-			System.out.println("Database Connection Closed");
-
-		}
-
+	        }
+	            
+	         catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+	    }
 	}
+	
+	private static boolean sendXMLToServer(String xmlString) {
+	    try {
+	        Socket clientSocket = new Socket("localhost", 1234);  // Verbindung zum Server herstellen
+	        OutputStreamWriter writer = new OutputStreamWriter(clientSocket.getOutputStream());
+	        writer.write(xmlString);  // XML an den Server senden
+	        writer.flush();
+	        clientSocket.shutdownOutput();  // Verbindung schließen
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	        String response = reader.readLine();
+
+	        clientSocket.close();  // Verbindung schließen
+
+	        return "Authentication successful".equals(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+	private static boolean sendNewUserXMLToServer(String xmlString) {
+	    try {
+	        Socket clientSocket = new Socket("localhost", 1234);  // Verbindung zum Server herstellen
+	        OutputStreamWriter writer = new OutputStreamWriter(clientSocket.getOutputStream());
+	        writer.write(xmlString);  // XML an den Server senden
+	        writer.flush();
+	        clientSocket.shutdownOutput();  // Verbindung schließen
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	        String response = reader.readLine();
+
+	        clientSocket.close();  // Verbindung schließen
+
+	        return "Nutzer erfolgreich erstellt".equals(response);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 
 	@FXML
 	public void reset(ActionEvent e) {
@@ -181,7 +230,7 @@ public class LoginController {
 	@FXML
 	public void switchTocreateUser(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
-		Parent root = FXMLLoader.load(getClass().getResource("createrUser.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/createrUser.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
@@ -191,7 +240,7 @@ public class LoginController {
 	@FXML
 	public void switchToLoginScreen(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
-		Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/res/fxml/main.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
@@ -199,57 +248,69 @@ public class LoginController {
 	}
 
 	@FXML
-	public void createNewUser(ActionEvent event) throws IOException {
-		if (event.getSource() == RegisterButton) {
-			String userName = RegisterUserNameField.getText();
-			String password = String.valueOf(RegisterUserPasswordField.getText());
-			try {
-				con = DriverManager.getConnection(this.url, this.user, this.password);
-				stmt = con.createStatement();
-				// Überprüfung, ob Nutzername bereits vergeben ist
-				String selectQuery = "SELECT * FROM PLAYER WHERE name = '" + userName + "'";
-				ResultSet rs = stmt.executeQuery(selectQuery);
-				if (rs.next()) { // Wenn es bereits einen Eintrag mit dem Nutzernamen gibt
-					Alert alert = new Alert(AlertType.WARNING);
-					alert.setTitle("Nutzername bereits vergeben");
-					alert.setHeaderText(null);
-					alert.setContentText("Der Nutzername " + userName + " ist bereits vergeben.");
-					alert.showAndWait();
-					return; // Methode beenden, wenn Nutzername bereits vergeben ist
-				}
-				String insertQuery = "INSERT INTO PLAYER (name, password) VALUES ('" + userName + "', '" + password
-						+ "')";
-				stmt.executeUpdate(insertQuery);
-				System.out.println("Nutzer erstellt");
+	public void createNewUser(ActionEvent event) throws IOException, SQLException {
+		 if (event.getSource() == RegisterButton) {
+		        String userName = RegisterUserNameField.getText();
+		        String password = String.valueOf(RegisterUserPasswordField.getText());
 
-				// Erfolgs-Alert anzeigen
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Nutzer erstellt");
-				alert.setHeaderText(null);
-				alert.setContentText("Nutzer wurde erfolgreich erstellt");
-				final ActionEvent finalEvent = event; // Event in endgültige Variable umwandeln
-				alert.setOnHidden(evt -> {
-					Stage previousStage = (Stage) ((Node) finalEvent.getSource()).getScene().getWindow();
-					previousStage.close();
-				});
-				alert.showAndWait();
+		    //    User newUser = new User(userName, password); // Erstelle ein neues User-Objekt
 
-			} catch (SQLException sqle) {
-				sqle.printStackTrace();
-			} finally {
-				try {
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				} catch (SQLException sqle) {
-					sqle.printStackTrace();
-				}
-			}
+		        // Erstelle das XML-Dokument mit den Nutzerdaten
+		        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		        try {
+		            DocumentBuilder builder = factory.newDocumentBuilder();
+		            Document doc = builder.newDocument();
 
-			System.out.println("Database Connection Closed");
+		            // Erstelle das Root-Element "User"
+		            Element userElement = doc.createElement("NewUser");
+		            doc.appendChild(userElement);
+
+		            // Erstelle das Element "Username" und füge es dem Root-Element hinzu
+		            Element usernameElement = doc.createElement("Username");
+		            usernameElement.setTextContent(userName);
+		            userElement.appendChild(usernameElement);
+
+		            // Erstelle das Element "Password" und füge es dem Root-Element hinzu
+		            Element passwordElement = doc.createElement("Password");
+		            passwordElement.setTextContent(password);
+		            userElement.appendChild(passwordElement);
+
+		            // Konvertiere das XML-Dokument in einen String
+		            StringWriter writer = new StringWriter();
+		            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		            Transformer transformer = transformerFactory.newTransformer();
+		            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+		            String xmlString = writer.toString();
+
+		            // Sende das XML an den Server
+		            createUserSuccesful = sendNewUserXMLToServer(xmlString);
+		            if (createUserSuccesful) {
+		            	 // userDAO.createUser(newUser); // Aufruf der createUser-Methode des UserDAO
+			            System.out.println("Nutzer erstellt");
+
+			            // Erfolgs-Alert anzeigen
+			            Alert alert = new Alert(AlertType.INFORMATION);
+			            alert.setTitle("Nutzer erstellt");
+			            alert.setHeaderText(null);
+			            alert.setContentText("Nutzer wurde erfolgreich erstellt");
+			            final ActionEvent finalEvent = event; // Event in endgültige Variable umwandeln
+			            alert.setOnHidden(evt -> {
+			                Stage previousStage = (Stage) ((Node) finalEvent.getSource()).getScene().getWindow();
+			                previousStage.close();
+			            });
+			            alert.showAndWait();
+		            }
+		            else {
+		            	//FEHLERMELDUNG
+		            	 System.out.println("Fehler bei der Nutzererstellung");
+		            }
+		          
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		        }
+		    }
 		}
-	}
+	
 
 	/* Für Testzwecke eine DevLogin der die Datenbankabfrage umgeht */
 	@FXML
