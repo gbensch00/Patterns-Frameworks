@@ -12,6 +12,7 @@ import Model.Enemy;
 import Model.Player;
 import Model.Server;
 import Model.SpecialEnemy;
+import Model.UpgradeItem;
 import Model.User;
 import Model.GameModel;
 import javafx.animation.AnimationTimer;
@@ -69,7 +70,8 @@ public class GameView {
     private String PlayerName1;
     private String PlayerName2 = "guest";
     private User User1;
-  
+    private List<UpgradeItem> upgradeItems = new ArrayList<>();
+
 
     //Konstruktor 2 Gideon Multiplayer
     public GameView(double width, double height, boolean multiplayer, User Player1, String Player2) {
@@ -210,6 +212,12 @@ public class GameView {
                 addSpecialEnemy(xPos, width, height);
             }
         }
+        if (Math.random() < 0.00025) { //  Chance, ein Upgrade-Item hinzuzufügen
+            Image upgradeImage = new Image("/res/enemy/upgrade3.png");
+            UpgradeItem upgradeItem = new UpgradeItem(xPos, yPos, width, height, upgradeImage);
+            upgradeItems.add(upgradeItem);
+        }
+
     }
     
     private void addNormalEnemy(int xPos, int yPos, int width, int height) {
@@ -240,8 +248,26 @@ public class GameView {
             if (enemy.getXPos() < -100) {
                 iterator.remove();
             }
-        }     
+        }  
+        Iterator<UpgradeItem> upgradeItemIterator = upgradeItems.iterator();
+        while (upgradeItemIterator.hasNext()) {
+            UpgradeItem upgradeItem = upgradeItemIterator.next();
+            upgradeItem.move();
+            if (upgradeItem.getXPos() < -100) {
+                upgradeItemIterator.remove();
+            } else if (upgradeItem.isColliding(this.player1)) {
+                upgradeItemIterator.remove();
+                addGameTime(15_000_000_000L);
+            }
+        }
+
     }
+    
+    public void addGameTime(long nanoSeconds) {
+        startTime += nanoSeconds;
+    }
+
+    
 public void updateSecondHealthBar(int health) {
 
     int heartsToRemove = hearts2.size() - health;
@@ -261,6 +287,10 @@ public void updateSecondHealthBar(int health) {
                 gc.drawImage(enemyImage, enemy.getXPos(), enemy.getYPos(), enemy.getWidth(), enemy.getHeight());
             }
         }
+        for (UpgradeItem upgradeItem : upgradeItems) {
+            gc.drawImage(upgradeItem.getUpgradeImage(), upgradeItem.getXPos(), upgradeItem.getYPos(), upgradeItem.getWidth(), upgradeItem.getHeight());
+        }
+
     }    
 
     public void stop() {
