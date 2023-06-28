@@ -11,9 +11,7 @@ import javafx.scene.layout.Pane;
 public class HealthBar implements PropertyChangeListener {
 
   private Pane heartsPane;
-   private Pane heartsPane2;
-   private Player player;
-  private GameView view;
+  private Player player;
   private int x;
 
   public HealthBar(Player player, Pane heartsPane) {
@@ -25,7 +23,6 @@ public class HealthBar implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
     
     if (evt.getPropertyName().equals("health")) {
-      int oldValue = (int) evt.getOldValue();
       int newValue = (int) evt.getNewValue();
      if(player.getPlayerSelector() == "one") {
       x = 10;

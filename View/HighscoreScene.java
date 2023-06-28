@@ -3,29 +3,17 @@ package View;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import Controller.HighscoreController;
 import Model.Server;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Blob;
-import java.io.InputStream;
-
-import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 
 public class HighscoreScene {
 

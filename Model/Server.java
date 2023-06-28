@@ -11,18 +11,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-
 import Controller.HighscoreController;
-import Model.User;
-import Model.UserDAO;
-import Model.UserDAOImpl;
-import Model.UserSettings;
-import Model.UserSettingsDAO;
-import Model.UserSettingsDAOImpl;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -48,18 +39,19 @@ public class Server {
 		}
     	
         try {
-            // Server-Socket erstellen
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Server gestartet. Warte auf Verbindungen...");
+            try (// Server-Socket erstellen
+            ServerSocket serverSocket = new ServerSocket(PORT)) {
+                System.out.println("Server gestartet. Warte auf Verbindungen...");
 
-            while (true) {
-                // Auf eingehende Verbindungen warten
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Neue Verbindung von " + clientSocket.getInetAddress());
+                while (true) {
+                    // Auf eingehende Verbindungen warten
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Neue Verbindung von " + clientSocket.getInetAddress());
 
-                // Verbindung in eigenem Thread verarbeiten
-                Thread clientThread = new Thread(() -> handleClient(clientSocket));
-                clientThread.start();
+                    // Verbindung in eigenem Thread verarbeiten
+                    Thread clientThread = new Thread(() -> handleClient(clientSocket));
+                    clientThread.start();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

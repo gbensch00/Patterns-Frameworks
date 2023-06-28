@@ -34,7 +34,6 @@ public class GameController {
   private boolean isGameOver = false;
   private Player player;
   private Player player2;
-  private Player player3;
   private List<ImageView> bullets;
   public List<Enemy> enemies;
   public List<SpecialEnemy> specialEnemies;

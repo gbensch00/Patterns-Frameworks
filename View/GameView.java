@@ -48,7 +48,6 @@ public class GameView {
     private Player player;
     private Player player1;
     private Player player2;
-    private Player player3;
     private GameModel model;
     private Group bulletGroup = new Group();  
     private Pane root;
@@ -103,7 +102,6 @@ public class GameView {
         healthBar = new HealthBar(player1, heartsPane);
         if (multiplayer == true) {
            player2 = new Player("/res/enemy/player2.png", startingHealth, "two");
-            player3 = new Player("/res/enemy/player2.png", startingHealth, "three");
         player2.setRotate(180);
         player2.setTranslateY(400);
         player2.setFitHeight(100);
