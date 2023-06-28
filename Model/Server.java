@@ -9,10 +9,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+
+import Controller.HighscoreController;
+import Model.User;
+import Model.UserDAO;
+import Model.UserDAOImpl;
+import Model.UserSettings;
+import Model.UserSettingsDAO;
+import Model.UserSettingsDAOImpl;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,6 +29,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class Server {
     private static final int PORT = 1234;
     static UserDAO userDAO;
+    static UserSettingsDAO userSettingsDAO;
+    static HighscoreController hcs;
+    
 	static String DBURL = "jdbc:mysql://localhost:3307/TestDB";
 	static String DBUser = "root";
 	static String DBPassword = "";
@@ -29,6 +41,8 @@ public class Server {
     	try {
 			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
 			userDAO = new UserDAOImpl(con);
+			userSettingsDAO = new UserSettingsDAOImpl(con);
+			hcs = new HighscoreController(con);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -110,14 +124,16 @@ public class Server {
         String userName = doc.getElementsByTagName("Username").item(0).getTextContent();
         String password = doc.getElementsByTagName("Password").item(0).getTextContent();
 
-        
         User newUser = new User(userName, password);
-		userDAO.createUser(newUser);
+        boolean success = userDAO.createUser(newUser);
 
-		// Sende eine Bestätigung an den Client
-		sendNewUserConfirmationToClient(clientSocket);
-		System.out.println("Neuer Benutzer erstellt");
-    
+        // Sende eine Bestätigung an den Client
+        if (success) {
+            sendNewUserConfirmationToClient(clientSocket);
+            System.out.println("Neuer Benutzer erstellt");
+        } else {
+            sendUserCreationFailureToClient(clientSocket);
+        }
     }
 
     private static void sendInvalidRequestToClient(Socket clientSocket) throws IOException {
@@ -167,6 +183,19 @@ public class Server {
     public static  User callUser (String user) {
     	User callDBUser = userDAO.getUserByName(user);
     	return callDBUser;
+    }
+    public static UserSettings callUserSettings (String user) throws SQLException {
+    	UserSettings loadedUserSettings = userSettingsDAO.getUserSettingsByUserId(user);
+    	return loadedUserSettings;
+    }
+    //liefert Highscores an die HighscoreScene
+    public static ResultSet getHSc() throws SQLException {
+    	ResultSet rs = hcs.getAllHighscores();
+    	return rs;
+    }
+    
+    public static void updateHSc(String Playername, int highscore) throws SQLException {
+    	hcs.updateHighscore(Playername, highscore );
     }
 
 }

@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
-import Model.DatabaseConnection;
+
 import Model.User;
 import Model.UserDAO;
 import Model.UserDAOImpl;
@@ -27,6 +27,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -56,7 +58,6 @@ public class SettingsController {
 	String savedFontSize;
 	File avatarImage;
 	byte[] savedAvatar;
-//	byte[] imageBytes;
 	private Connection connection;
 	boolean somethingChanged = false;
 	Color savedBackgroundColor;
@@ -66,6 +67,11 @@ public class SettingsController {
 	private UserSettingsDAO userSettingsDAO;
 	private User savedUser;
 
+	/* Tobi: Um das SaveSettings-Problem zu lösen, muss im Server eine Methode geschrieben welche
+	 * Put oder SaveUserSettings heißt. 
+	 * Das Laden der UserSettings stellt kein Problem dar nur das Speichern aktuell */
+	
+	
 	String DBURL = "jdbc:mysql://localhost:3307/TestDB";
 	String DBUser = "root";
 	String DBPassword = "";
@@ -87,11 +93,11 @@ public class SettingsController {
 	@FXML
 	Button ChangeAvatarButton;
 
-	private DatabaseConnection dbConnection;
+	
 
 	public SettingsController() {
 
-		// Code zur Initialisierung der Verbindung zur Datenbank
+	// Code zur Initialisierung der Verbindung zur Datenbank
 		try {
 			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
 			userSettingsDAO = new UserSettingsDAOImpl(con);
@@ -109,7 +115,7 @@ public class SettingsController {
 	@FXML
 	public void initialize() {
 
-		List<String> fontNames = Arrays.asList("Arial", "Helvetica", "Times New Roman", "Courier New", "Verdana",
+		List<String> fontNames = Arrays.asList("Arial", "Helvetica", "Times New Roman", "Courier New", "Verdana", "Speedy",
 				"Georgia");
 		FontStyle.getItems().addAll(fontNames);
 
@@ -122,26 +128,14 @@ public class SettingsController {
 
 	}
 
-	public void initializeConnection() {
-		try {
-			connection = DriverManager.getConnection(DBURL, DBUser, DBPassword);
-			userSettingsDAO = new UserSettingsDAOImpl(connection);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	@FXML
-	public void setUserName(String userID) throws SQLException {
-
+	public void setUserName(User user) throws SQLException {
+		String userID = String.valueOf(user.getId());
 		try {
-
-			initializeConnection();
-			UserDAO userDAO = new UserDAOImpl(connection);
-			User user = userDAO.getUserByID(userID);
+			UserSettings userSettings =	Model.Server.callUserSettings(userID);
 			this.savedUser = user;
-
-			UserSettings userSettings = userSettingsDAO.getUserSettingsByUserId(userID);
 			this.savedUserSettings = userSettings;
 			if (userSettings != null) {
 				this.savedFontName = userSettings.getFontType();
@@ -172,8 +166,6 @@ public class SettingsController {
 		this.savedBackgroundColor = cP.getValue(); // Die ausgewählte Farbe
 
 		// Setzen der Hintergrundfarbe der Szene auf die ausgewählte Farbe
-		// anchorPane.setStyle("-fx-background-color: " + toRgbString(color) + ";");
-
 		// Erstelle eine Farbpalette mit den gewünschten Farben
 		Stop[] stops = new Stop[] { new Stop(0, this.savedBackgroundColor), new Stop(1, Color.LIGHTBLUE) };
 		LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
@@ -187,7 +179,18 @@ public class SettingsController {
 
 	@FXML
 	private void saveSettings(ActionEvent event) throws IOException {
-		try {
+		
+		   try {
+		        if (savedAvatar.length > 648576) {  // Überprüfe, ob die Größe des Bildes größer als 600kb ist
+		            Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle("Bild zu groß");
+		            alert.setHeaderText(null);
+		            alert.setContentText("Das ausgewählte Bild ist zu groß. Bitte wählen Sie ein Bild, das kleiner als 600KB ist.");
+		            alert.showAndWait();
+		            return;  // Beenden Sie die Methode, ohne die Einstellungen zu speichern
+		        }
+		
+		
 			String colorValue = String.format("#%02X%02X%02X", (int) (savedBackgroundColor.getRed() * 255),
 					(int) (savedBackgroundColor.getGreen() * 255), (int) (savedBackgroundColor.getBlue() * 255));
 			savedUserSettings.setBackgroundColor(colorValue);
@@ -226,10 +229,14 @@ public class SettingsController {
 
 		String FontName = FontStyle.getValue();
 		this.savedFontName = FontName;
+		int fs = Integer.parseInt(this.savedFontSize);
 
 		for (Node node : AnchorPane.getChildren()) {
 			if (node instanceof Button) {
-				((Button) node).setFont(Font.font(FontName, FontWeight.NORMAL, 14));
+				((Button) node).setFont(Font.font(FontName, FontWeight.NORMAL, fs));
+			}
+			if (node instanceof Label) {
+				((Label) node).setFont(Font.font(FontName, FontWeight.NORMAL, fs));
 			}
 		}
 	}
@@ -272,7 +279,9 @@ public class SettingsController {
 			this.savedAvatar = fis.readAllBytes();
 			fis.close();
 			System.out.println("Datei wurde gespeichert " + this.savedAvatar);
-		}
-	}
+			}
+	        }
+	    }
+	
 
-}
+

@@ -218,17 +218,30 @@ public class GameController {
     AnimationTimer timer = new AnimationTimer() {
       @Override
       public void handle(long now) {
-        checkCollision();
-         double newX = player.getTranslateX() + player.getVelocityX();
-         double newY = player.getTranslateY() + player.getVelocityY();
-         player.setTranslateX(newX);
-         player.setTranslateY(newY);
-        
-         if(view.getPlayer2() != null) {
-          double newX2 = player2.getTranslateX() + player2.getVelocityX();
-         double newY2 = player2.getTranslateY() + player2.getVelocityY();
-         player2.setTranslateX(newX2);
-         player2.setTranslateY(newY2);
+    	  checkCollision();
+    	    double newX = player.getTranslateX() + player.getVelocityX();
+    	    double newY = player.getTranslateY() + player.getVelocityY();
+    	    
+    	    // Überprüfen Sie die Grenzkollision für Spieler 1
+    	    if(newX >= 0 && newX <= scene.getWidth() - player.getFitWidth()) {
+    	        player.setTranslateX(newX);
+    	    }
+    	    if(newY >= 0 && newY <= scene.getHeight() - player.getFitHeight()) {
+    	        player.setTranslateY(newY);
+    	    }
+
+    	    // Überprüfen Sie die Grenzkollision für Spieler 2, wenn vorhanden
+    	    if(view.getPlayer2() != null) {
+    	        double newX2 = player2.getTranslateX() + player2.getVelocityX();
+    	        double newY2 = player2.getTranslateY() + player2.getVelocityY();
+    	        
+    	        if(newX2 >= 0 && newX2 <= scene.getWidth() - player2.getFitWidth()) {
+    	            player2.setTranslateX(newX2);
+    	        }
+    	        if(newY2 >= 0 && newY2 <= scene.getHeight() - player2.getFitHeight()) {
+    	            player2.setTranslateY(newY2);
+    	        }
+    	    
          }
         ArrayList<ImageView> bulletsToRemove = new ArrayList<>();
         for (ImageView bullet : bullets) {
