@@ -49,6 +49,7 @@ Eingeloggte Spieler können hier weitere Einstellungen vornehmen:
 - Anpassung der Font-Size
 - Anpassung der Window-Size (Auflösung)
 - Anpassung der Cockpit-Farbe im Cockpit-Menü
+  
 Zusätzlich ist es dort möglich sein Profilbild ändern.
 Das Profilbild sollte ein PNG sein und die größe von 1MB nicht überschreiten.
 
@@ -66,7 +67,7 @@ Der Spieler kann ein Einzelgame lokal starten.
 
 ### Multiplayer-Game
 
-Der Spieler kann hier lokal mit einen anderen Spieler gemeinsam antreten. Nach klick auf dem Button wird er gefragt, ob es einen weiteren Spieler gibt. Sollte dies der Fall sein, kann der zweite User seinen Namen eingeben.
+Der Spieler kann hier lokal mit einen anderen Spieler gemeinsam antreten. Nach klick auf dem Button wird er gefragt, ob es einen weiteren Spieler gibt. Sollte dies der Fall sein, kann der zweite User seinen Namen eingeben. Der zweite Spieler kann sein Schiff über die Pfeiltasten steuern und mit einem Druck auf die Enter-Taste schießen.
 
 ### Spielanleitung
 
