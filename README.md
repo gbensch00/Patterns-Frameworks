@@ -117,6 +117,6 @@ JavaFX
 
 ### Threading-Verwendung
 Threading wurde in der Hinsicht verwendet, dass Login, DB-Abfragen und Aktualisierung über die Server Klasse durchgeführt wird, welche in einem parallelen Thread läuft.
-Login: Da das Programm nur einen Einstiegspunkt hat (Main.java) und es nicht separaten Startbereich nur für den Server existiert, wurde hier auf Threading zurückgegriffen, da der Server auf eine eingehende Verbindung wartet und den Quellcode sonst nicht weiter ausgeführt werden kann (was ein Starten des Login-Screens verhindert).
+Login: Da das Programm nur einen Einstiegspunkt hat (Main.java) und es nicht separaten Startbereich nur für den Server existiert, wurde hier auf Threading zurückgegriffen, da der Server auf eine eingehende Verbindung wartet und der Quellcode sonst nicht weiter ausgeführt werden kann (was ein Starten des Login-Screens verhindert).
 Der Server lauscht dann auf den Port: 1234, ob sich eine Verbindung aufbaut und ob es sich dabei um einen Login (Auth) oder eine Nutzererstellung handelt (NewUser).
 
