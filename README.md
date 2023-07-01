@@ -25,6 +25,8 @@ Haken setzen bei: Use the -XX...
 ### Buildpath
 Modulpath: JavaFx20, JavaFXSDK, OpenJDK20
 Classpath: mysql-connector-java-8.0.2.5 (zu finden unter Extra Libs im Repo)
+### Font
+(optional) Für das optimale Spielerlebnis kann sich noch der Font Speedy installiert werden (im Root-Verzeichnis) 
 
 ### Setup:
 Git Clone https://github.com/gbensch00/Patterns-Frameworks.git
