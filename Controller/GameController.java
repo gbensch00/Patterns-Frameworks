@@ -18,12 +18,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-/**
- * Der GameController steuert das Spielgeschehen und reagiert auf Benutzereingaben.
- * Er ist für die Bewegung der Spieler, das Abfeuern von Kugeln, die Kollisionserkennung
- * und die Aktualisierung des Spielstands verantwortlich.
- */
-
 public class GameController {
   private GameModel model;
   private GameView view;
@@ -37,7 +31,6 @@ public class GameController {
   private boolean isLeftPressed2 = false;
   private boolean isRightPressed2 = false;
   private MediaPlayer shootSound;
-  private MediaPlayer hitSound;
   private boolean isGameOver = false;
   private Player player;
   private Player player2;
@@ -53,7 +46,6 @@ public class GameController {
     view.setModel(model); 
     // Lade den Sound für das Schießen
     shootSound = new MediaPlayer(model.getshootSound());
-    hitSound = new MediaPlayer(model.getHitSound());
     Scene scene = view.getScene();
     
     bullets = view.getBulletGroup().getChildren().stream()
@@ -225,17 +217,30 @@ public class GameController {
     AnimationTimer timer = new AnimationTimer() {
       @Override
       public void handle(long now) {
-        checkCollision();
-         double newX = player.getTranslateX() + player.getVelocityX();
-         double newY = player.getTranslateY() + player.getVelocityY();
-         player.setTranslateX(newX);
-         player.setTranslateY(newY);
-        
-         if(view.getPlayer2() != null) {
-          double newX2 = player2.getTranslateX() + player2.getVelocityX();
-         double newY2 = player2.getTranslateY() + player2.getVelocityY();
-         player2.setTranslateX(newX2);
-         player2.setTranslateY(newY2);
+    	  checkCollision();
+    	    double newX = player.getTranslateX() + player.getVelocityX();
+    	    double newY = player.getTranslateY() + player.getVelocityY();
+    	    
+    	    // Überprüfen Sie die Grenzkollision für Spieler 1
+    	    if(newX >= 0 && newX <= scene.getWidth() - player.getFitWidth()) {
+    	        player.setTranslateX(newX);
+    	    }
+    	    if(newY >= 0 && newY <= scene.getHeight() - player.getFitHeight()) {
+    	        player.setTranslateY(newY);
+    	    }
+
+    	    // Überprüfen Sie die Grenzkollision für Spieler 2, wenn vorhanden
+    	    if(view.getPlayer2() != null) {
+    	        double newX2 = player2.getTranslateX() + player2.getVelocityX();
+    	        double newY2 = player2.getTranslateY() + player2.getVelocityY();
+    	        
+    	        if(newX2 >= 0 && newX2 <= scene.getWidth() - player2.getFitWidth()) {
+    	            player2.setTranslateX(newX2);
+    	        }
+    	        if(newY2 >= 0 && newY2 <= scene.getHeight() - player2.getFitHeight()) {
+    	            player2.setTranslateY(newY2);
+    	        }
+    	    
          }
         ArrayList<ImageView> bulletsToRemove = new ArrayList<>();
         for (ImageView bullet : bullets) {
@@ -253,11 +258,6 @@ public class GameController {
   view.setSpecialEnemies(specialEnemies);
   }    
 
-  /**
-   * Schießt eine Kugel aus dem gegebenen Spielerobjekt.
-   *
-   * @param player Das Spielerobjekt, aus dem die Kugel abgefeuert wird.
-   */
   public void shoot(Player player) {
 
     shootSound.stop();
@@ -274,7 +274,7 @@ public class GameController {
 
         // Setze die Anfangsposition der Kugel auf der rechten Seite des Spielers
         bullet.setTranslateX(player.getTranslateX() + player.getFitWidth());
-        bullet.setTranslateY(player.getTranslateY() + player.getFitHeight() / 2 - bullet.getImage().getHeight() / 2 + 24);
+        bullet.setTranslateY(player.getTranslateY() + player.getFitHeight() / 5 - bullet.getImage().getHeight() / 2 + 24);
 
         // Füge das Kugel-ImageView der Liste der Kugeln hinzu
         bullets.add(bullet);
@@ -303,17 +303,10 @@ public class GameController {
     }
 }
 
-/**
-   * Überprüft Kollisionen zwischen Kugeln und Gegnern.
-   * Entfernt Kugeln und Gegner, die kollidieren, aktualisiert den Spielstand und überprüft Spielerkollisionen.
-   */
 public void checkCollision() {
   List<ImageView> bulletsToRemove = new ArrayList<>();
   List<Enemy> enemiesToRemove = new ArrayList<>();
   List<SpecialEnemy> specialEnemiesToRemove = new ArrayList<>();
-  hitSound.stop();
-  hitSound.seek(Duration.ZERO);
-  hitSound.play();
 
   checkBulletCollision(bullets, enemies, specialEnemies, bulletsToRemove, enemiesToRemove, specialEnemiesToRemove);
 
@@ -329,17 +322,6 @@ public void checkCollision() {
   
 }
 
-/**
-   * Überprüft Kollisionen zwischen Kugeln und Gegnern.
-   * Fügt Kugeln und Gegner, die kollidieren, den entsprechenden Listen hinzu, um sie später zu entfernen.
-   *
-   * @param bullets                    Die Liste der Kugeln.
-   * @param enemies                    Die Liste der regulären Gegner.
-   * @param specialEnemies             Die Liste der speziellen Gegner.
-   * @param bulletsToRemove            Die Liste der zu entfernenden Kugeln.
-   * @param enemiesToRemove            Die Liste der zu entfernenden regulären Gegner.
-   * @param specialEnemiesToRemove     Die Liste der zu entfernenden speziellen Gegner.
-   */
 private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, List<SpecialEnemy> specialEnemies,
                                 List<ImageView> bulletsToRemove, List<Enemy> enemiesToRemove,
                                 List<SpecialEnemy> specialEnemiesToRemove) {
@@ -348,9 +330,6 @@ private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, 
 
       for (Enemy enemy : enemies) {
           if (getBoundsInParent(bullet).intersects(enemy.getBounds())) {
-              Media sound = model.getHitSound();
-              MediaPlayer mediaPlayer = new MediaPlayer(sound);
-              mediaPlayer.play();
               bulletCollided = true;
               bulletsToRemove.add(bullet);
               enemiesToRemove.add(enemy);
@@ -361,9 +340,6 @@ private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, 
       if (!bulletCollided) {
           for (SpecialEnemy specialEnemy : specialEnemies) {
               if (getBoundsInParent(bullet).intersects(specialEnemy.getBounds())) {
-                  Media sound = model.getHitSound();
-                  MediaPlayer mediaPlayer = new MediaPlayer(sound);
-                  mediaPlayer.play();
                   bulletCollided = true;
                   bulletsToRemove.add(bullet);
                   specialEnemiesToRemove.add(specialEnemy);
@@ -378,13 +354,6 @@ private void checkBulletCollision(List<ImageView> bullets, List<Enemy> enemies, 
   }
 }
 
-/**
-   * Entfernt die Kugeln und Gegner aus den entsprechenden Listen und der View.
-   *
-   * @param bulletsToRemove            Die Liste der zu entfernenden Kugeln.
-   * @param enemiesToRemove            Die Liste der zu entfernenden regulären Gegner.
-   * @param specialEnemiesToRemove     Die Liste der zu entfernenden speziellen Gegner.
-   */
 private void removeBulletsAndEnemies(List<ImageView> bulletsToRemove, List<Enemy> enemiesToRemove,
                                    List<SpecialEnemy> specialEnemiesToRemove) {
   view.getBulletGroup().getChildren().removeAll(bulletsToRemove);
@@ -394,13 +363,6 @@ private void removeBulletsAndEnemies(List<ImageView> bulletsToRemove, List<Enemy
   specialEnemies.removeAll(specialEnemiesToRemove);
 }
 
-/**
-   * Berechnet die Punktezunahme basierend auf den entfernten Gegnern.
-   *
-   * @param enemiesToRemove            Die Liste der zu entfernenden regulären Gegner.
-   * @param specialEnemiesToRemove     Die Liste der zu entfernenden speziellen Gegner.
-   * @return Die Punktezunahme.
-   */
 private int calculateScoreIncrease(List<Enemy> enemiesToRemove, List<SpecialEnemy> specialEnemiesToRemove) {
   int scoreIncrease = 0;
   if (!enemiesToRemove.isEmpty()) {
@@ -412,22 +374,11 @@ private int calculateScoreIncrease(List<Enemy> enemiesToRemove, List<SpecialEnem
   return scoreIncrease;
 }
 
-/**
-   * Aktualisiert den Spielstand um die gegebene Punktezunahme.
-   *
-   * @param scoreIncrease Die Punktezunahme.
-   */
 private void updateScore(int scoreIncrease) {
   model.setScore(model.getScore() + scoreIncrease);
   view.setScoreLabel(model.getScore());
 }
 
-/**
- * Überprüft, ob der gegebene Spieler von einem Gegner getroffen wurde.
- * Aktualisiert den Gesundheitszustand des Spielers und überprüft, ob das Spiel vorbei ist.
- *
- * @param player Der Spieler, der überprüft werden soll.
- */
 private void checkPlayerHit(Player player) {
   if (isPlayerHit(player)) {
     player.updateHealth(-1, player, "one");
@@ -439,25 +390,9 @@ private void checkPlayerHit(Player player) {
     }
 
   }
-  if (view.getPlayer2() != null) { 
-    if (isPlayerHit(player2)) {
-      player.updateHealth(-1, player2, "two");
-      view.updateSecondHealthBar(player.getHealth2());
-      if (player.getHealth2() <= 0) {
-      isGameOver = true;
-      view.stop();
-      view.showAlert("Game Over", "You were hit by an enemy!");
-    }
-    }
-  }
+
 } 
 
-/**
- * Überprüft, ob der gegebene Spieler von einem Gegner getroffen wurde.
- *
- * @param player Der Spieler, der überprüft werden soll.
- * @return True, wenn der Spieler getroffen wurde, ansonsten False.
- */
 private boolean isPlayerHit(Player player) {
   double hitThreshold = player.getBoundsInParent().getHeight() * 0.5;
   Bounds playerBoundsInScene = player.localToScene(player.getBoundsInLocal());
@@ -477,31 +412,14 @@ private boolean isPlayerHit(Player player) {
   return false;
 } 
 
-/**
- * Gibt die Grenzen des angegebenen ImageView-Objekts im Elternkontext zurück.
- *
- * @param imageView Das ImageView-Objekt, dessen Grenzen zurückgegeben werden sollen.
- * @return Die Grenzen des ImageView-Objekts im Elternkontext.
- */
 public Bounds getBoundsInParent(ImageView imageView) {
   return imageView.getBoundsInParent();
 }
 
-/**
- * Fügt eine einzelne Kugel zum Bullet-Group-Container der GameView hinzu.
- *
- * @param bullet Das ImageView-Objekt der Kugel, das hinzugefügt werden soll.
- */
 public void addBullet(ImageView bullet) {
   view.getBulletGroup().getChildren().add(bullet);  
 }
 
-/**
- * Fügt zwei Kugeln gleichzeitig zum Bullet-Group-Container der GameView hinzu.
- *
- * @param bullet1 Das ImageView-Objekt der ersten Kugel, das hinzugefügt werden soll.
- * @param bullet2 Das ImageView-Objekt der zweiten Kugel, das hinzugefügt werden soll.
- */
 public void addBullet(ImageView bullet1, ImageView bullet2) {
   view.getBulletGroup().getChildren().addAll(bullet1, bullet2);
 }

@@ -40,9 +40,6 @@ import View.GameView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-/**
- * Der LoginController ist verantwortlich für die Steuerung der Login-Ansicht und die Verarbeitung von Benutzereingaben.
- */
 public class LoginController {
 
 	/*
@@ -54,7 +51,9 @@ public class LoginController {
 	 * String DBURL = "jdbc:mysql://localhost:3306/TestDB"; String DBUser = "root";
 	 * String DBPassword = ""; Statement stmt = null; ResultSet rs = null;
 	 */
-	private String defUser = "test99";
+	
+	User defUser = new User(25,"test99","1234",0); // Tobi: wird vor der Präsi gelöscht, auch der DeVlogin etc.!
+	
 	private String loggedInUserName = "guest";
 	private UserDAO userDAO;
 	private User loggedInUser;
@@ -70,11 +69,6 @@ public class LoginController {
 		 */
 	}
 
-	/**
-     * Konstruktor für den LoginController mit einem UserDAO-Objekt als Parameter.
-     *
-     * @param userDAO Das UserDAO-Objekt zur Datenbankkommunikation.
-     */
 	public LoginController(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
@@ -104,12 +98,6 @@ public class LoginController {
 	@FXML
 	private Button mp;
 
-	/**
-     * Behandelt das Klicken des "Login"-Buttons. Überprüft die eingegebenen Benutzerdaten, sendet diese an den Server und öffnet bei erfolgreicher Authentifizierung die Lobby-Ansicht.
-     *
-     * @param e Das ActionEvent-Objekt des Klicks.
-     * @throws IOException Falls ein Fehler beim Laden der Lobby-Ansicht auftritt.
-     */
 	@FXML
 	public void userLogin(ActionEvent e) throws IOException {
 		if (e.getSource() == LoginButton) {
@@ -187,12 +175,6 @@ public class LoginController {
 		}
 	}
 
-	/**
-     * Sendet das XML an den Server und überprüft die Antwort.
-     *
-     * @param xmlString Das XML, das an den Server gesendet werden soll.
-     * @return true, wenn die Übertragung erfolgreich war und die Antwort des Servers "Authentication successful" ist, sonst false.
-     */
 	private static boolean sendXMLToServer(String xmlString) {
 		try {
 			Socket clientSocket = new Socket("localhost", 1234); // Verbindung zum Server herstellen
@@ -231,11 +213,6 @@ public class LoginController {
 		}
 	}
 
-	/**
-     * Behandelt das Klicken des "Zurücksetzen"-Buttons. Setzt die Textfelder für Benutzername und Passwort zurück.
-     *
-     * @param e Das ActionEvent-Objekt des Klicks.
-     */
 	@FXML
 	public void reset(ActionEvent e) {
 
@@ -246,12 +223,6 @@ public class LoginController {
 
 	}
 
-	/**
-     * Wechselt zur Benutzerregistrierungsansicht.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     * @throws IOException Falls ein Fehler beim Laden der Registrierungsansicht auftritt.
-     */
 	@FXML
 	public void switchTocreateUser(ActionEvent event) throws IOException {
 
@@ -261,12 +232,6 @@ public class LoginController {
 		currentStage.setScene(scene);
 	}
 
-	/**
-     * Wechselt zur Login-Ansicht.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     * @throws IOException Falls ein Fehler beim Laden der Login-Ansicht auftritt.
-     */
 	@FXML
 	public void switchToLoginScreen(ActionEvent event) throws IOException {
 
@@ -276,13 +241,6 @@ public class LoginController {
 		currentStage.setScene(scene);
 	}
 
-	/**
-     * Erstellt einen neuen Benutzer anhand der eingegebenen Registrierungsdaten und sendet diese an den Server.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     * @throws IOException  Falls ein Fehler beim Laden der Login-Ansicht auftritt.
-     * @throws SQLException Falls ein Fehler bei der Datenbankabfrage auftritt.
-     */
 	@FXML
 	public void createNewUser(ActionEvent event) throws IOException, SQLException {
 		if (event.getSource() == RegisterButton) {

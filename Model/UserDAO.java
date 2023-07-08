@@ -1,7 +1,5 @@
 package Model;
 
-import java.sql.SQLException;
-
 public interface UserDAO {
 	 	User getUserByName(String name);
 	 	User getUserByID(String dbid);

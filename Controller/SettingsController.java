@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
-import Model.DatabaseConnection;
+
 import Model.User;
 import Model.UserDAO;
 import Model.UserDAOImpl;
@@ -50,9 +50,6 @@ import java.io.File;
 import javafx.stage.FileChooser;
 import javafx.scene.text.Text;
 
-/**
- * Der SettingsController ist verantwortlich für die Steuerung der Einstellungsansicht und die Verarbeitung von Benutzereingaben.
- */
 public class SettingsController {
 
 	String loggedInUserName;
@@ -96,7 +93,7 @@ public class SettingsController {
 	@FXML
 	Button ChangeAvatarButton;
 
-	private DatabaseConnection dbConnection;
+	
 
 	public SettingsController() {
 
@@ -111,18 +108,10 @@ public class SettingsController {
 		}
 	}
 
-	/**
-     * Konstruktor für den SettingsController mit einem UserSettingsDAO-Objekt.
-     *
-     * @param userSettingsDAO Das UserSettingsDAO-Objekt, das für den Zugriff auf die Benutzereinstellungen verwendet wird.
-     */
 	public SettingsController(UserSettingsDAO userSettingsDAO) {
 		this.userSettingsDAO = userSettingsDAO;
 	}
 
-	/**
-     * Initialisiert die Einstellungsansicht und lädt die Benutzereinstellungen.
-     */
 	@FXML
 	public void initialize() {
 
@@ -140,12 +129,7 @@ public class SettingsController {
 	}
 
 	
-	/**
-     * Setzt den Benutzernamen und lädt die Benutzereinstellungen.
-     *
-     * @param user Der Benutzer, dessen Benutzernamen und Einstellungen gesetzt werden sollen.
-     * @throws SQLException Falls ein Fehler beim Abrufen der Benutzereinstellungen aus der Datenbank auftritt.
-     */
+
 	@FXML
 	public void setUserName(User user) throws SQLException {
 		String userID = String.valueOf(user.getId());
@@ -176,11 +160,7 @@ public class SettingsController {
 		}
 	}
 
-	/**
-     * Behandelt die Auswahl einer neuen Farbe.
-     *
-     * @param e Das ActionEvent-Objekt des Farbwechsel-Ereignisses.
-     */
+	// Methode, die aufgerufen wird, wenn eine neue Farbe ausgewählt wird
 	@FXML
 	private void colorChange(ActionEvent e) {
 		this.savedBackgroundColor = cP.getValue(); // Die ausgewählte Farbe
@@ -197,12 +177,6 @@ public class SettingsController {
 
 	}
 
-	/**
-     * Speichert die Benutzereinstellungen.
-     *
-     * @param event Das ActionEvent-Objekt des Speichern-Buttons.
-     * @throws IOException Falls ein Fehler beim Speichern der Benutzereinstellungen auftritt.
-     */
 	@FXML
 	private void saveSettings(ActionEvent event) throws IOException {
 		
@@ -232,15 +206,10 @@ public class SettingsController {
 		}
 	}
 
-	/**
-     * Behandelt den Klick auf den Zurück-Button.
-     *
-     * @param e Das ActionEvent-Objekt des Zurück-Buttons.
-     * @throws IOException Falls ein Fehler beim Zurückkehren zur Lobby auftritt.
-     */
 	@FXML
 	public void handleBackButton(ActionEvent e) throws IOException {
 
+	
 		// Rückkehr zur Lobby
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/cockpit.fxml"));
@@ -255,11 +224,6 @@ public class SettingsController {
 		previousStage.close();
 	}
 
-	/**
-     * Behandelt die Änderung der Schriftart.
-     *
-     * @param event Das ActionEvent-Objekt der Schriftartänderung.
-     */
 	@FXML
 	private void FontChange(ActionEvent event) {
 
@@ -277,11 +241,6 @@ public class SettingsController {
 		}
 	}
 
-	/**
-     * Behandelt die Änderung der Schriftgröße.
-     *
-     * @param event Das ActionEvent-Objekt der Schriftgrößenänderung.
-     */
 	@FXML
 	private void FontSizeChange(ActionEvent event) {
 		String selectedFontSize = FontSize.getValue();
@@ -301,22 +260,11 @@ public class SettingsController {
 		}
 	}
 
-	/**
-     * Behandelt die Änderung der Auflösung.
-     *
-     * @param event Das ActionEvent-Objekt der Auflösungsänderung.
-     */
 	@FXML
 	private void ResolutionChange(ActionEvent event) {
 		this.savedResolution = WindowSize.getValue();
 	}
 
-	/**
-     * Behandelt die Änderung des Avatars.
-     *
-     * @param e Das ActionEvent-Objekt der Avataränderung.
-     * @throws IOException Falls ein Fehler beim Ändern des Avatars auftritt.
-     */
 	public void AvatarChange(ActionEvent e) throws IOException {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Avatar Image");

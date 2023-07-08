@@ -7,22 +7,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import Controller.HighscoreController;
 import Controller.LobbyController;
 import Model.Enemy;
 import Model.Player;
+import Model.Server;
 import Model.SpecialEnemy;
+import Model.UpgradeItem;
 import Model.User;
 import Model.GameModel;
-import Model.HealthBar;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -32,6 +31,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -45,10 +46,10 @@ public class GameView {
     private long lastSpecialEnemyTime = 0L;
     private Scene scene;
     private Player player;
-    public Player player1;
-    public Player player2;
+    private Player player1;
+    private Player player2;
     private GameModel model;
-    public Group bulletGroup = new Group();  
+    private Group bulletGroup = new Group();  
     private Pane root;
     private GraphicsContext gc;
     private AnimationTimer animationTimer;
@@ -64,22 +65,25 @@ public class GameView {
     private Pane heartsPane;
     private Pane heartsPane2;
     private HealthBar healthBar;
+    private HealthBar healthBar2;
     private String PlayerName1;
     private String PlayerName2 = "guest";
-    
     private User User1;
+    private List<UpgradeItem> upgradeItems = new ArrayList<>();
 
-  
 
     //Konstruktor 2 Gideon Multiplayer
     public GameView(double width, double height, boolean multiplayer, User Player1, String Player2) {
-        this.User1 = Player1;
+    	this.User1 = Player1;
+        this.PlayerName1 = User1.getUsername();
         this.PlayerName2 = Player2;
     	
-    	enemyImage = new Image("/res/enemy/Idle.png");
-        player1 = new Player("/res/enemy/player.png", startingHealth);
-        player1.setRotate(90);
+        enemyImage = new Image("/res/enemy/Idle.png");
+        player1 = new Player("/res/enemy/player1.png", startingHealth, "one");
+        player1.setRotate(180);
         player1.setTranslateY(200);
+        player1.setFitHeight(100);
+        player1.setFitWidth(100);
 
         model = new GameModel();
         enemies = new ArrayList<>();
@@ -97,9 +101,12 @@ public class GameView {
         root.getChildren().addAll(heartsPane);
         healthBar = new HealthBar(player1, heartsPane);
         if (multiplayer == true) {
-            player2 = new Player("/res/enemy/player.png", startingHealth);
-            player2.setRotate(90);
-            player2.setTranslateY(300);
+           player2 = new Player("/res/enemy/player2.png", startingHealth, "two");
+        player2.setRotate(180);
+        player2.setTranslateY(400);
+        player2.setFitHeight(100);
+        player2.setFitWidth(100);
+       
             for (int i = 0; i < startingHealth; i++) {
             ImageView heart2 = new ImageView(new Image("/res/oberflaechen/heart.png"));
 
@@ -112,7 +119,10 @@ public class GameView {
             heartsPane2.getChildren().addAll(hearts2);
             root.getChildren().addAll(player2);
             root.getChildren().addAll(heartsPane2);
+            healthBar2 =  new HealthBar(player2, heartsPane2);
+             
         }
+        
         scene = new Scene(root, width, height);
         hitSound = new MediaPlayer(model.getHitSound());
         Canvas canvas = new Canvas(width, height);
@@ -122,18 +132,15 @@ public class GameView {
         // Hintergrundbild erstellen und der Szene hinzufügen
         ImageView background = new ImageView(new Image("/res/enemy/planet.jpg"));
         root.getChildren().add(0, background); // Hinzufügen als unterstes Element im Pane
-     
-        /*TOBI: Passt den Background an die Auflösung an die gesetzt wird!
-        	width sollte  nicht verwendet werden, da das Bild dann exakt auf die Auflösung gedrückt wird
-         	was dazu führt das wir im weißen Bereich des Bildes spielen.  */
-        //  background.setFitWidth(width);
         background.setFitHeight(height);
         
         // Erstellung des Labels für die Punkte
         scoreLabel = new Label("Score:0");
-        scoreLabel.setTranslateX(10); // Platzieren des Labels am linken Rand
-        scoreLabel.setTranslateY(10); // Platzieren des Labels am oberen Rand
-        scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen
+    
+        scoreLabel.setTextFill(Color.WHITE); // Schriftfarbe auf Weiß setzen      
+        scoreLabel.setLayoutY(10); // Platzieren des Labels am oberen Rand
+        scoreLabel.setPrefWidth(width);
+        scoreLabel.setAlignment(Pos.CENTER); 
         root.getChildren().add(scoreLabel); // Hinzufügen des Labels zum Root-Pane
 
         // Erstellung des Labels für die verbleibende Zeit
@@ -203,6 +210,12 @@ public class GameView {
                 addSpecialEnemy(xPos, width, height);
             }
         }
+        if (Math.random() < 0.00025) { //  Chance, ein Upgrade-Item hinzuzufügen
+            Image upgradeImage = new Image("/res/enemy/upgrade3.png");
+            UpgradeItem upgradeItem = new UpgradeItem(xPos, yPos, width, height, upgradeImage);
+            upgradeItems.add(upgradeItem);
+        }
+
     }
     
     private void addNormalEnemy(int xPos, int yPos, int width, int height) {
@@ -233,8 +246,26 @@ public class GameView {
             if (enemy.getXPos() < -100) {
                 iterator.remove();
             }
-        }     
+        }  
+        Iterator<UpgradeItem> upgradeItemIterator = upgradeItems.iterator();
+        while (upgradeItemIterator.hasNext()) {
+            UpgradeItem upgradeItem = upgradeItemIterator.next();
+            upgradeItem.move();
+            if (upgradeItem.getXPos() < -100) {
+                upgradeItemIterator.remove();
+            } else if (upgradeItem.isColliding(this.player1)) {
+                upgradeItemIterator.remove();
+                addGameTime(15_000_000_000L);
+            }
+        }
+
     }
+    
+    public void addGameTime(long nanoSeconds) {
+        startTime += nanoSeconds;
+    }
+
+    
 public void updateSecondHealthBar(int health) {
 
     int heartsToRemove = hearts2.size() - health;
@@ -254,6 +285,10 @@ public void updateSecondHealthBar(int health) {
                 gc.drawImage(enemyImage, enemy.getXPos(), enemy.getYPos(), enemy.getWidth(), enemy.getHeight());
             }
         }
+        for (UpgradeItem upgradeItem : upgradeItems) {
+            gc.drawImage(upgradeItem.getUpgradeImage(), upgradeItem.getXPos(), upgradeItem.getYPos(), upgradeItem.getWidth(), upgradeItem.getHeight());
+        }
+
     }    
 
     public void stop() {
@@ -271,22 +306,13 @@ public void updateSecondHealthBar(int health) {
             alert.setTitle("Game Over");
             alert.setHeaderText("Du bist getroffen!");
             alert.setContentText("Game Over! Deine Punktzahl ist: " + model.getScore());
-            try {
-				updateHighscore();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            alert.showAndWait();
-        });
-    }
-
-    public void showAlertWon(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Spielende");
-            alert.setHeaderText("Du bist ein Champion");
-            alert.setContentText("Deine Punktzahl ist: " + model.getScore());
+            animationTimer.stop();
+            // Consume "SPACE"-Event
+            alert.getDialogPane().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.getCode() == KeyCode.SPACE) {
+                    event.consume();
+                }
+            });
             try {
 				updateHighscore();
 			} catch (SQLException e) {
@@ -302,6 +328,36 @@ public void updateSecondHealthBar(int health) {
 			}
         });
     }
+
+    public void showAlertWon(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Spielende");
+            alert.setHeaderText("Du bist ein Champion");
+            alert.setContentText("Deine Punktzahl ist: " + model.getScore());
+            animationTimer.stop();
+            
+            // Consume "SPACE"-Event
+            alert.getDialogPane().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.getCode() == KeyCode.SPACE) {
+                    event.consume();
+                }
+            });
+            
+            try {
+                updateHighscore();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            alert.showAndWait();
+            try {
+                backToMainMenu();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     
     public void backToMainMenu() throws IOException {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/cockpit.fxml"));
@@ -319,10 +375,10 @@ public void updateSecondHealthBar(int health) {
     }
     
     public void  updateHighscore() throws SQLException{
-    	HighscoreController hsc = new HighscoreController();
-    	hsc.updateHighscore(PlayerName1, model.getScore());
-    	System.out.println("Highscore wurde auf " +model.getScore() + " gesetzt");
+    	Server.updateHSc(PlayerName1, model.getScore());
+    	System.out.println("Dein Punktestand wurde auf " +model.getScore() + " gesetzt");
     }
+    
 
     public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;

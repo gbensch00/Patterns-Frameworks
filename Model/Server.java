@@ -9,18 +9,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-
-import Model.User;
-import Model.UserDAO;
-import Model.UserDAOImpl;
-import Model.UserSettings;
-import Model.UserSettingsDAO;
-import Model.UserSettingsDAOImpl;
-
+import Controller.HighscoreController;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -28,6 +21,8 @@ public class Server {
     private static final int PORT = 1234;
     static UserDAO userDAO;
     static UserSettingsDAO userSettingsDAO;
+    static HighscoreController hcs;
+    
 	static String DBURL = "jdbc:mysql://localhost:3307/TestDB";
 	static String DBUser = "root";
 	static String DBPassword = "";
@@ -38,23 +33,25 @@ public class Server {
 			Connection con = DriverManager.getConnection(DBURL, DBUser, DBPassword);
 			userDAO = new UserDAOImpl(con);
 			userSettingsDAO = new UserSettingsDAOImpl(con);
+			hcs = new HighscoreController(con);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
     	
         try {
-            // Server-Socket erstellen
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Server gestartet. Warte auf Verbindungen...");
+            try (// Server-Socket erstellen
+            ServerSocket serverSocket = new ServerSocket(PORT)) {
+                System.out.println("Server gestartet. Warte auf Verbindungen...");
 
-            while (true) {
-                // Auf eingehende Verbindungen warten
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Neue Verbindung von " + clientSocket.getInetAddress());
+                while (true) {
+                    // Auf eingehende Verbindungen warten
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Neue Verbindung von " + clientSocket.getInetAddress());
 
-                // Verbindung in eigenem Thread verarbeiten
-                Thread clientThread = new Thread(() -> handleClient(clientSocket));
-                clientThread.start();
+                    // Verbindung in eigenem Thread verarbeiten
+                    Thread clientThread = new Thread(() -> handleClient(clientSocket));
+                    clientThread.start();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -182,6 +179,15 @@ public class Server {
     public static UserSettings callUserSettings (String user) throws SQLException {
     	UserSettings loadedUserSettings = userSettingsDAO.getUserSettingsByUserId(user);
     	return loadedUserSettings;
+    }
+    //liefert Highscores an die HighscoreScene
+    public static ResultSet getHSc() throws SQLException {
+    	ResultSet rs = hcs.getAllHighscores();
+    	return rs;
+    }
+    
+    public static void updateHSc(String Playername, int highscore) throws SQLException {
+    	hcs.updateHighscore(Playername, highscore );
     }
 
 }

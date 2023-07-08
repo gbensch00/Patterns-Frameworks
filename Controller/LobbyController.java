@@ -1,35 +1,18 @@
 package Controller;
 
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.nio.file.Files;
 import javafx.scene.control.TextInputDialog;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-
-import Model.DatabaseConnection;
 import Model.GameModel;
 import Model.User;
 import Model.UserSettings;
 import Model.UserSettingsDAO;
 import View.GameView;
-import javafx.embed.swing.SwingFXUtils;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,25 +33,21 @@ import javafx.scene.image.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
+
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-
-
-/**
- * Der LobbyController ist verantwortlich für die Steuerung der Lobby-Ansicht und die Verarbeitung von Benutzereingaben.
- */
 
 public class LobbyController {
 
 	String loggedInUserName;
 	String PlayerTwoName = "guest";
 	String dbID;
-	private DatabaseConnection dbConnection;
+
 	String resolution;
 	int width;
 	int height;
@@ -79,7 +58,7 @@ public class LobbyController {
 
 	private UserSettingsDAO userSettingsDAO;
 
-	// private UserDAO userDAO;
+
 
 	public LobbyController() {
 	
@@ -109,11 +88,6 @@ public class LobbyController {
 	@FXML
 	private Button SaveSettingsButton;
 
-	/**
-     * Setzt den Benutzernamen des eingeloggten Benutzers und initialisiert die Lobby-Ansicht entsprechend.
-     *
-     * @param userName Das Benutzerobjekt des eingeloggten Benutzers.
-     */
 	@FXML
 	public void setLoggedInUserName(User userName) {
 		UserName.setText("Hello Captain " + userName.getUsername() + "!");
@@ -186,22 +160,8 @@ public class LobbyController {
 		}
 	}
 
-	/**
-     * Schließt die Verbindung zur Datenbank.
-     */
-	public void close() {
-		try {
-			dbConnection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
-	/**
-     * Behandelt das Klicken des "Schließen"-Buttons. Zeigt einen Bestätigungsdialog an und schließt das Spiel bei Bestätigung.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     */
 	@FXML
 	private void handleCloseButton(ActionEvent event) {
 		// Alert anzeigen und Benutzer fragen, ob er das Spiel wirklich beenden möchte
@@ -218,11 +178,6 @@ public class LobbyController {
 		}
 	}
 
-	/**
-     * Behandelt das Klicken des "Einzelplayer"-Buttons. Schließt das aktuelle Fenster und öffnet ein neues Fenster für das Einzelspieler-Spiel.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     */
 	@FXML
 	private void handleSinglePlayerButton(ActionEvent event) {
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -235,11 +190,6 @@ public class LobbyController {
 		stage.show();
 	}
 
-	/**
-     * Behandelt das Klicken des "Mehrspieler"-Buttons. Zeigt einen Dialog an, um den zweiten Spieler einzugeben, und öffnet dann das Mehrspieler-Spiel.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     */
 	@FXML
 	private void handleMultiPlayerButton(ActionEvent event) {
 
@@ -256,33 +206,31 @@ public class LobbyController {
 		ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
 
 		if (result == buttonTypeYes) {
-			TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Spielername");
-			dialog.setHeaderText(null);
-			dialog.setContentText("Wie heißt der zweite Spieler?");
-			Optional<String> resultName = dialog.showAndWait();
-			this.PlayerTwoName = resultName.orElse("guest");
-
+		    TextInputDialog dialog = new TextInputDialog();
+		    dialog.setTitle("Spielername");
+		    dialog.setHeaderText(null);
+		    dialog.setContentText("Wie heißt der zweite Spieler?");
+		    Optional<String> resultName = dialog.showAndWait();
+		    
+		    if (!resultName.isPresent() || resultName.get().trim().isEmpty()) {
+		        this.PlayerTwoName = "guest";
+		    } else {
+		        this.PlayerTwoName = resultName.get();
+		    }
 		}
+
 
 		Stage previousStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		previousStage.close();
 		Stage stage = new Stage();
 		GameModel model = new GameModel();
 		GameView view = new GameView(width, height, true,user1, this.PlayerTwoName);
-		// GameView view = new GameView(600,600, this.loggedInUserName,PlayerTwoName);
 		GameController controller = new GameController(model, view);
 		stage.setScene(view.getScene());
 		stage.show();
 		System.out.println("Hallo " + PlayerTwoName + " Bist du bereit?");
 	}
 
-	/**
-     * Behandelt das Klicken des "Highscores"-Buttons. Öffnet ein neues Fenster für die Anzeige der Highscores.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     * @throws IOException Falls ein Fehler beim Laden der Highscore-Ansicht auftritt.
-     */
 	@FXML
 	private void handleHighscoreButton(ActionEvent event) throws IOException {
 		Stage stage = new Stage();
@@ -292,13 +240,6 @@ public class LobbyController {
 		stage.show();
 	}
 
-	/**
-     * Behandelt das Klicken des "Einstellungen"-Buttons. Schließt das aktuelle Fenster und öffnet ein neues Fenster für die Einstellungen.
-     *
-     * @param event Das ActionEvent-Objekt des Klicks.
-     * @throws IOException Falls ein Fehler beim Laden der Einstellungsansicht auftritt.
-     * @throws SQLException Falls ein Fehler bei der Datenbankabfrage auftritt.
-     */
 	@FXML
 	private void handleSettingsButton(ActionEvent event) throws IOException, SQLException {
 

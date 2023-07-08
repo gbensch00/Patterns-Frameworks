@@ -7,4 +7,3 @@ public interface UserSettingsDAO {
 	    void updateUserSettings(UserSettings userSettings) throws SQLException;
 		UserSettings getUserSettingsByUserId(String userId) throws SQLException;
 }
-
