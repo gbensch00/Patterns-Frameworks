@@ -111,7 +111,7 @@ Geschäftslogik: Dies sind die übrigen Teile der Anwendung, die auf die Datenba
 In unserem Spiel sind diese drei Hauptkomponenten User, UserSettings, UserDAO, UserSettingsDAO, UserDAOImpl und UserSettingsDAOImpl
 
 ### Dokumentation
-
+ 
 ### UI-Frameworks
 JavaFX
 
