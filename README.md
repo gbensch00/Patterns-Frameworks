@@ -6,7 +6,7 @@
 
 
 ## Spiel
-Space-Type Shoot'em Up 
+Space-Type Shoot'em Up  
 
 ## Idee
 Bei Space-Type handelt es sich um ein Softwareprojekt von drei Studenten der Berliner Hochschule für Technik.
